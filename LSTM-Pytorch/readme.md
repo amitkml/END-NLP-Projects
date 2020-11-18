@@ -16,4 +16,4 @@ Change this code in such a way that:
 - Have increased no of hidden dimension from 256 to 512
 - Have freezed Embedding layers after 10 epoch when validation accuracy was flattening
 - Have then made the training data to original and trained further and accuracy on test data did not improve further
-- Final test data accuracy stands at 85.60%
+- Final test data accuracy stands at 86.40%
