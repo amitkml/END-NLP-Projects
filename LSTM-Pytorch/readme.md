@@ -2,7 +2,7 @@
 Use this as a [reference](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/2%20-%20Upgraded%20Sentiment%20Analysis.ipynb.)
 
 # Final Assignment
-I have two noteook intentionally kept to show incremental improvement and enhancement of the mode. V5.0 is the final model which has 86.52% accuracy.
+I have two noteook intentionally kept to show incremental improvement and enhancement of the mode. V5.0 is the final model which has 86.52% accuracy. Please refer to the notebook [END_NLP_Session_4_2_Upgraded_Sentiment_Analysis_Assignment_FINAL_5_0.ipynb](https://github.com/amitkml/END-NLP-Projects/blob/main/LSTM-Pytorch/END_NLP_Session_4_2_Upgraded_Sentiment_Analysis_Assignment_FINAL_5_0.ipynb) as final submission.
 
 ## Tasks
 Change this code in such a way that:
