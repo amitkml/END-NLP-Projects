@@ -1,6 +1,9 @@
 # Session 4 Assignment Instructions
 Use this as a [reference](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/2%20-%20Upgraded%20Sentiment%20Analysis.ipynb.)
 
+# Final Assignment
+I have two noteook intentionally kept to show incremental improvement and enhancement of the mode. V5.0 is the final model which has 86.52% accuracy.
+
 ## Tasks
 Change this code in such a way that:
 - it has 3 LSTM layers
@@ -17,7 +20,7 @@ Change this code in such a way that:
 - Have increased no of hidden dimension from 256 to 512
 - Have freezed Embedding layers after 10 epoch when validation accuracy was flattening. Have used Gloves 100d pretrained embedding layer and allowed to get trained for initial 10 epoch till validtaion accuracy incresed. Then have freezed embedding layer and allow FC layers to train further.
 - Have then made the training data to original and trained further and accuracy on test data did not improve further
-- Final test data accuracy stands at 86.40%
+- **Final test data accuracy stands at 86.52%**
 
 ## Observations made during Training
 - SGD Optimizer performance was very bad compare to Adam
