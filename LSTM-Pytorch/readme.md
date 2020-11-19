@@ -12,10 +12,11 @@ Change this code in such a way that:
 - trained on the text that is reversed (for example "my name is Rohan" becomes "Rohan is name my"
 - achieves 87% or more accuracy
 ## Proposed Network Design
-- Have done the training data reverse after spliting of training and test data
-- Have used nn.ModuleList to store multiple LSTM Layers with layer no as 1 and bidirectional set as False
+- Looked into training and test data set and found data is not skewed and almost balanced across Positive and Negative sentiment. So this means, we dont need to handle class imbalance.
+- Done the training data reverse after spliting of training and test data. Did not touch the test data and validation data at all.
+- Used nn.ModuleList to store multiple LSTM Layers with layer no as 1 and bidirectional set as False
 - Added additional layer of FC Layer
-- Have stored only 2nd layer hidden cell value and the same to pass on to FC Layer. So I did not not pass 1st and 3rd LSTM layer hidden cell value.
+- Stored only 2nd layer hidden cell value and the same to pass on to FC Layer. So I did not not pass 1st and 3rd LSTM layer hidden cell value.
 - Forward function have for loop to extract LSTM layers and pass on earlier LSTM layer output, hidden layer value and cell state.
 - Have increased no of hidden dimension from 256 to 512
 - Have freezed Embedding layers after 10 epoch when validation accuracy was flattening. Have used Gloves 100d pretrained embedding layer and allowed to get trained for initial 10 epoch till validtaion accuracy incresed. Then have freezed embedding layer and allow FC layers to train further.
