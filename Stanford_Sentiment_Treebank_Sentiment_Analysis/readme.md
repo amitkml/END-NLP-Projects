@@ -173,6 +173,7 @@ PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 
 - Embedding layer is being pretrained from Gloves 100d
 - Embedding layer being kept as Frozen during Training
+- **Val Accuracy achieved after 15 epoch is 74.17%** 
 
 ```
 	Train Loss: 0.693 | Train Acc: 56.20%
@@ -221,13 +222,52 @@ PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 	 Val. Loss: 0.565 |  Val. Acc: 74.17% 
 ```
 
+```
+
+```
+
+
+
+# StanfordSentimentAnalysis Dataset Solution - Three class
+
+Three Level of sentiments such as positive, negative, and neutral. 
+
+- 0 to 0.4 - Negative
+- 0.4 to 0.6 - Neutral
+- 0.6 to 1 - Positive
+
+## Network hyperparameters and Architecture
+
+```
+classifier(
+  (embedding): Embedding(16524, 100, padding_idx=1)
+  (encoder): LSTM(100, 256, num_layers=3, batch_first=True, dropout=0.2, bidirectional=True)
+  (dropout): Dropout(p=0.2, inplace=False)
+  (fc): Linear(in_features=256, out_features=2, bias=True)
+)
+The model has 5,540,018 trainable parameters
+```
+
+```
+# Define hyperparameters
+size_of_vocab = len(Sentence.vocab)
+embedding_dim = 100
+num_hidden_nodes = 256
+num_output_nodes = 2
+num_layers = 3
+dropout = 0.2
+bidirectional = True
+PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
+```
+
 ## Network Performance
 
 - Embedding layer is being pretrained from Gloves 100d
 - Embedding layer being kept as Frozen during Training
+- **Val Accuracy achieved after 15 epoch is 61.59%** 
 
 ```
-100%|█████████▉| 399269/400000 [00:29<00:00, 22457.79it/s]	Train Loss: 1.041 | Train Acc: 47.25%
+	Train Loss: 1.041 | Train Acc: 47.25%
 	 Val. Loss: 1.104 |  Val. Acc: 43.18% 
 
 	Train Loss: 0.985 | Train Acc: 55.55%
@@ -271,40 +311,6 @@ PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 
 	Train Loss: 0.758 | Train Acc: 79.78%
 	 Val. Loss: 0.923 |  Val. Acc: 61.59% 
-```
-
-
-
-# StanfordSentimentAnalysis Dataset Solution - Three class
-
-Three Level of sentiments such as positive, negative, and neutral. 
-
-- 0 to 0.4 - Negative
-- 0.4 to 0.6 - Neutral
-- 0.6 to 1 - Positive
-
-## Network hyperparameters and Architecture
-
-```
-classifier(
-  (embedding): Embedding(16524, 100, padding_idx=1)
-  (encoder): LSTM(100, 256, num_layers=3, batch_first=True, dropout=0.2, bidirectional=True)
-  (dropout): Dropout(p=0.2, inplace=False)
-  (fc): Linear(in_features=256, out_features=2, bias=True)
-)
-The model has 5,540,018 trainable parameters
-```
-
-```
-# Define hyperparameters
-size_of_vocab = len(Sentence.vocab)
-embedding_dim = 100
-num_hidden_nodes = 256
-num_output_nodes = 2
-num_layers = 3
-dropout = 0.2
-bidirectional = True
-PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 ```
 
 
