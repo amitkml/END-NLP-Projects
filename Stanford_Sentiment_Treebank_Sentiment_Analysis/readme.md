@@ -145,7 +145,7 @@ Data augmenting of text always far more complex w.r.t to other type of data due 
 
 Here sentiment sentences been marked to Positive or negative depending on my cutoff value of 0.5. So any sentence having sentiment value <= 0.5 being marked as Negative. Otherwise it is being marked as Positive.
 
-## Network hyperparameters and Arhitecture
+## Network hyperparameters and Architecture
 
 ```
 classifier(
@@ -221,6 +221,58 @@ PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 	 Val. Loss: 0.565 |  Val. Acc: 74.17% 
 ```
 
+## Network Performance
+
+- Embedding layer is being pretrained from Gloves 100d
+- Embedding layer being kept as Frozen during Training
+
+```
+100%|█████████▉| 399269/400000 [00:29<00:00, 22457.79it/s]	Train Loss: 1.041 | Train Acc: 47.25%
+	 Val. Loss: 1.104 |  Val. Acc: 43.18% 
+
+	Train Loss: 0.985 | Train Acc: 55.55%
+	 Val. Loss: 0.980 |  Val. Acc: 55.11% 
+
+	Train Loss: 0.937 | Train Acc: 60.28%
+	 Val. Loss: 0.981 |  Val. Acc: 55.59% 
+
+	Train Loss: 0.918 | Train Acc: 62.42%
+	 Val. Loss: 0.933 |  Val. Acc: 60.87% 
+
+	Train Loss: 0.901 | Train Acc: 64.52%
+	 Val. Loss: 0.926 |  Val. Acc: 61.91% 
+
+	Train Loss: 0.880 | Train Acc: 66.56%
+	 Val. Loss: 0.916 |  Val. Acc: 62.42% 
+
+	Train Loss: 0.857 | Train Acc: 69.15%
+	 Val. Loss: 0.928 |  Val. Acc: 60.63% 
+
+	Train Loss: 0.839 | Train Acc: 71.20%
+	 Val. Loss: 0.921 |  Val. Acc: 61.99% 
+
+	Train Loss: 0.828 | Train Acc: 72.34%
+	 Val. Loss: 0.924 |  Val. Acc: 61.69% 
+
+	Train Loss: 0.810 | Train Acc: 74.05%
+	 Val. Loss: 0.939 |  Val. Acc: 60.34% 
+
+	Train Loss: 0.798 | Train Acc: 75.68%
+	 Val. Loss: 0.919 |  Val. Acc: 62.44% 
+
+	Train Loss: 0.786 | Train Acc: 76.72%
+	 Val. Loss: 0.920 |  Val. Acc: 61.59% 
+
+	Train Loss: 0.778 | Train Acc: 77.46%
+	 Val. Loss: 0.930 |  Val. Acc: 61.34% 
+
+	Train Loss: 0.772 | Train Acc: 78.00%
+	 Val. Loss: 0.921 |  Val. Acc: 61.67% 
+
+	Train Loss: 0.758 | Train Acc: 79.78%
+	 Val. Loss: 0.923 |  Val. Acc: 61.59% 
+```
+
 
 
 # StanfordSentimentAnalysis Dataset Solution - Three class
@@ -230,6 +282,32 @@ Three Level of sentiments such as positive, negative, and neutral.
 - 0 to 0.4 - Negative
 - 0.4 to 0.6 - Neutral
 - 0.6 to 1 - Positive
+
+## Network hyperparameters and Architecture
+
+```
+classifier(
+  (embedding): Embedding(16524, 100, padding_idx=1)
+  (encoder): LSTM(100, 256, num_layers=3, batch_first=True, dropout=0.2, bidirectional=True)
+  (dropout): Dropout(p=0.2, inplace=False)
+  (fc): Linear(in_features=256, out_features=2, bias=True)
+)
+The model has 5,540,018 trainable parameters
+```
+
+```
+# Define hyperparameters
+size_of_vocab = len(Sentence.vocab)
+embedding_dim = 100
+num_hidden_nodes = 256
+num_output_nodes = 2
+num_layers = 3
+dropout = 0.2
+bidirectional = True
+PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
+```
+
+
 
 # StanfordSentimentAnalysis Dataset Solution - Fine Grained Analysis
 
