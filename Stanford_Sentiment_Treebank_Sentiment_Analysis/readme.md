@@ -141,6 +141,85 @@ Data augmenting of text always far more complex w.r.t to other type of data due 
       - synonym replacement, 
       - etc.
 
+# StanfordSentimentAnalysis Dataset - Fine Grained Final Solution
+
+## Data Segregation to map with Phrases
+
+I have used the merge between sentiment_labels.txt, datasetSentences.txt, dictionary.txt and datasetSplit.txt
+
+```
+sentiment_labels = pd.read_csv(os.path.join(sst_dir, "sentiment_labels.txt"), sep="|")
+sentence_ids = pd.read_csv(os.path.join(sst_dir, "datasetSentences.txt"), sep="\t")
+dictionary = pd.read_csv(os.path.join(sst_dir, "dictionary.txt"), sep="|", names=['phrase', 'phrase ids'])
+train_test_split = pd.read_csv(os.path.join(sst_dir, "datasetSplit.txt"))
+sentence_phrase_merge = pd.merge(sentence_ids, dictionary, left_on='sentence', right_on='phrase')
+sentence_phrase_split = pd.merge(sentence_phrase_merge, train_test_split, on='sentence_index')
+return pd.merge(sentence_phrase_split, sentiment_labels, on='phrase ids').sample(frac=1)
+```
+
+After this merge operation, my training dataset looks like as follows..
+
+![1607609152882](C:\Users\akayal\AppData\Roaming\Typora\typora-user-images\1607609152882.png)
+
+
+
+## Network Architecture
+
+- glove.6B.200d being used as pretrained and kept initial 15 epoch embedding layer frozen
+- Five Level of sentiments such as positive, negative, and neutral. 
+  - 0 to 0.2-  Too Negative
+  - 0.2 to 0.4 - Negative
+  - 0.4 to 0.6 - Neutral
+  - 0.6 - 0.8 - Positive
+  - 0.8 to 1.0 - Too Positive
+
+```
+def discretize_label(self, label):
+    print(type(label))
+    if label <= 0.2: return 0
+    if label <= 0.4: return 1
+    if label <= 0.6: return 2
+    if label <= 0.8: return 3
+    return 4
+```
+
+
+
+## Data Augmentation
+
+Following data augmentation strategy being applied and I have used nlpaug for this. I have saved each of these augmented data into its dataframe and later have done the union of them to prepare a mega training data set.
+
+- Substitute word by WordNet's synonym
+- Swap word randomly
+- Delete a set of contunous word will be removed randomly
+- Delete word randomly augmentation
+
+**Here is how I have applied my data augmentation.**
+
+```
+aug = naw.SynonymAug(aug_src='wordnet') ## Substitute word by WordNet's synonym¶
+
+augmented_text = aug.augment(train_st_data['sentence'].iloc[0])
+print("Original:")
+print(train_st_data['sentence'].iloc[0])
+print("Augmented Text:")
+print(augmented_text)
+train_st_data_SynonymAug_aug = train_st_data
+train_st_data_SynonymAug_aug['sentence_aug'] = train_st_data_SynonymAug_aug.apply(lambda x: aug.augment(x['sentence']),axis=1)  ## Swap word randomly¶
+```
+
+Later I have done the **concatenation of these dataset** and prepare the mega training dataset.
+
+```
+## Now I need to add all these data frames
+combined_data_aug = pd.concat([train_st_data_delete_aug, train_st_data_swap_aug, train_st_data_SynonymAug_aug], axis=0)
+## after this, now I need to drop the sentence column and rename sentence_aug to sentence
+combined_data_aug.drop('sentence', axis=1, inplace=True)
+combined_data_aug.rename(columns = {'sentence_aug':'sentence'}, inplace = True) 
+```
+
+## 
+
 # StanfordSentimentAnalysis Dataset Solution - High Level Sentiment Analysis - Two class
 
 Here sentiment sentences been marked to Positive or negative depending on my cutoff value of 0.5. So any sentence having sentiment value <= 0.5 being marked as Negative. Otherwise it is being marked as Positive.
@@ -792,7 +871,7 @@ Sentence.build_vocab(train,
 	 Val. Loss: 1.509 |  Val. Acc: 39.38% 
 ```
 
-#### Data Augmentation and Gloves 200D
+#### Data Augmentation and Gloves 200D 
 
 **Network Hyperparameter**
 
