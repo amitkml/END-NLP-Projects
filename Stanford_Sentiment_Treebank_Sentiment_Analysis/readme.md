@@ -143,6 +143,8 @@ Data augmenting of text always far more complex w.r.t to other type of data due 
 
 # StanfordSentimentAnalysis Dataset - Fine Grained Final Solution
 
+**Notebook has been loaded into** [LSTM-Fine-grained Sentiment Analysis](https://github.com/amitkml/END-NLP-Projects/blob/main/Stanford_Sentiment_Treebank_Sentiment_Analysis/src/END_NLP_Assignment_7_StanfordSentimentAnalysis_LSTM_FineGrained_2_1.ipynb)
+
 ## Data Segregation to map with Phrases and sentiment values
 
 I have used the merge between sentiment_labels.txt, datasetSentences.txt, dictionary.txt and datasetSplit.txt
