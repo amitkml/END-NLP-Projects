@@ -143,7 +143,7 @@ Data augmenting of text always far more complex w.r.t to other type of data due 
 
 # StanfordSentimentAnalysis Dataset - Fine Grained Final Solution
 
-## Data Segregation to map with Phrases
+## Data Segregation to map with Phrases and sentiment values
 
 I have used the merge between sentiment_labels.txt, datasetSentences.txt, dictionary.txt and datasetSplit.txt
 
@@ -159,9 +159,7 @@ return pd.merge(sentence_phrase_split, sentiment_labels, on='phrase ids').sample
 
 After this merge operation, my training dataset looks like as follows..
 
-![1607609152882](C:\Users\akayal\AppData\Roaming\Typora\typora-user-images\1607609152882.png)
-
-
+![image](https://github.com/amitkml/END-NLP-Projects/blob/main/Stanford_Sentiment_Treebank_Sentiment_Analysis/src/training_data.JPG?raw=true)
 
 ## Network Architecture
 
@@ -182,8 +180,6 @@ def discretize_label(self, label):
     if label <= 0.8: return 3
     return 4
 ```
-
-
 
 ## Data Augmentation
 
@@ -218,7 +214,59 @@ combined_data_aug.drop('sentence', axis=1, inplace=True)
 combined_data_aug.rename(columns = {'sentence_aug':'sentence'}, inplace = True) 
 ```
 
-## 
+## Network Performance
+
+- Kept Embedding layer frozen for 15 epoch and trained. Got highest validation accuracy of 37.90%  and training accuracy of 67.33%
+- Unfreeze Embedding layer for 15 epoch and trained. Got highest validation accuracy of 36.97% and training accuracy of 91.15%%
+- Network has huge overfitting but even adding high dropout this is not resolved
+
+```
+	Train Loss: 1.336 | Train Acc: 57.57%
+	 Val. Loss: 1.520 |  Val. Acc: 36.16% 
+
+	Train Loss: 1.240 | Train Acc: 67.21%
+	 Val. Loss: 1.527 |  Val. Acc: 36.02% 
+
+	Train Loss: 1.204 | Train Acc: 70.97%
+	 Val. Loss: 1.540 |  Val. Acc: 34.41% 
+
+	Train Loss: 1.182 | Train Acc: 73.01%
+	 Val. Loss: 1.532 |  Val. Acc: 35.34% 
+
+	Train Loss: 1.177 | Train Acc: 73.71%
+	 Val. Loss: 1.517 |  Val. Acc: 38.13% 
+
+	Train Loss: 1.171 | Train Acc: 74.26%
+	 Val. Loss: 1.525 |  Val. Acc: 36.55% 
+
+	Train Loss: 1.166 | Train Acc: 74.56%
+	 Val. Loss: 1.540 |  Val. Acc: 35.27% 
+
+	Train Loss: 1.160 | Train Acc: 75.33%
+	 Val. Loss: 1.535 |  Val. Acc: 36.34% 
+
+	Train Loss: 1.154 | Train Acc: 75.87%
+	 Val. Loss: 1.533 |  Val. Acc: 36.70% 
+
+	Train Loss: 1.150 | Train Acc: 76.24%
+	 Val. Loss: 1.559 |  Val. Acc: 34.15% 
+
+	Train Loss: 1.149 | Train Acc: 76.21%
+	 Val. Loss: 1.543 |  Val. Acc: 34.89% 
+
+	Train Loss: 1.144 | Train Acc: 77.10%
+	 Val. Loss: 1.532 |  Val. Acc: 36.33% 
+
+	Train Loss: 1.143 | Train Acc: 76.82%
+	 Val. Loss: 1.540 |  Val. Acc: 35.32% 
+
+	Train Loss: 1.139 | Train Acc: 77.30%
+	 Val. Loss: 1.532 |  Val. Acc: 36.76% 
+
+	Train Loss: 1.138 | Train Acc: 77.40%
+```
+
+
 
 # StanfordSentimentAnalysis Dataset Solution - High Level Sentiment Analysis - Two class
 
