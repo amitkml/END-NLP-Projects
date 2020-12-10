@@ -315,6 +315,99 @@ PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
 
 
 
+# StanfordSentimentAnalysis Dataset Solution - Three class - With Data Augmentation
+
+Three Level of sentiments such as positive, negative, and neutral. 
+
+- 0 to 0.4 - Negative
+- 0.4 to 0.6 - Neutral
+- 0.6 to 1 - Positive
+
+## Network hyperparameters and Architecture
+
+- Used following data augmentation for training data
+  - Substitute word by WordNet's synonym
+  - Swap word randomly
+  - Delete word randomly augmentation
+
+```
+classifier(
+  (embedding): Embedding(16524, 100, padding_idx=1)
+  (encoder): LSTM(100, 256, num_layers=3, batch_first=True, dropout=0.2, bidirectional=True)
+  (dropout): Dropout(p=0.2, inplace=False)
+  (fc): Linear(in_features=256, out_features=2, bias=True)
+)
+The model has 5,540,018 trainable parameters
+```
+
+```
+# Define hyperparameters
+size_of_vocab = len(Sentence.vocab)
+embedding_dim = 100
+num_hidden_nodes = 256
+num_output_nodes = 2
+num_layers = 3
+dropout = 0.2
+bidirectional = True
+PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
+```
+
+## Network Performance
+
+- Embedding layer is being pretrained from Gloves 100d
+- Embedding layer being kept as Frozen during Training
+- **Highest Val Accuracy achieved after 15 epoch is 63.01%** 
+- Starting accuracy of Validation data is 60.83% which is quite good compare to earlier initial starting accuracy 43.18%
+
+```
+	Train Loss: 0.992 | Train Acc: 54.29%
+	 Val. Loss: 0.933 |  Val. Acc: 60.83% 
+
+	Train Loss: 0.919 | Train Acc: 62.74%
+	 Val. Loss: 0.939 |  Val. Acc: 60.30% 
+
+	Train Loss: 0.864 | Train Acc: 68.61%
+	 Val. Loss: 0.927 |  Val. Acc: 61.78% 
+
+	Train Loss: 0.825 | Train Acc: 72.79%
+	 Val. Loss: 0.918 |  Val. Acc: 63.01% 
+
+	Train Loss: 0.794 | Train Acc: 75.70%
+	 Val. Loss: 0.925 |  Val. Acc: 61.12% 
+
+	Train Loss: 0.766 | Train Acc: 78.52%
+	 Val. Loss: 0.917 |  Val. Acc: 62.54% 
+
+	Train Loss: 0.745 | Train Acc: 80.85%
+	 Val. Loss: 0.918 |  Val. Acc: 62.35% 
+
+	Train Loss: 0.731 | Train Acc: 82.18%
+	 Val. Loss: 0.912 |  Val. Acc: 63.24% 
+
+	Train Loss: 0.712 | Train Acc: 84.14%
+	 Val. Loss: 0.934 |  Val. Acc: 60.85% 
+
+	Train Loss: 0.702 | Train Acc: 85.24%
+	 Val. Loss: 0.938 |  Val. Acc: 60.55% 
+
+	Train Loss: 0.695 | Train Acc: 85.89%
+	 Val. Loss: 0.933 |  Val. Acc: 61.12% 
+
+	Train Loss: 0.692 | Train Acc: 86.22%
+	 Val. Loss: 0.931 |  Val. Acc: 61.21% 
+
+	Train Loss: 0.679 | Train Acc: 87.37%
+	 Val. Loss: 0.938 |  Val. Acc: 60.21% 
+
+	Train Loss: 0.676 | Train Acc: 87.81%
+	 Val. Loss: 0.923 |  Val. Acc: 62.05% 
+
+	Train Loss: 0.673 | Train Acc: 88.17%
+	 Val. Loss: 0.923 |  Val. Acc: 62.31% 
+```
+
+
+
 # StanfordSentimentAnalysis Dataset Solution - Fine Grained Analysis
 
 ## Preprocessing
@@ -699,9 +792,157 @@ Sentence.build_vocab(train,
 	 Val. Loss: 1.509 |  Val. Acc: 39.38% 
 ```
 
+#### Data Augmentation and Gloves 200D
+
+**Network Hyperparameter**
+
+- Gloves 200d has been used
+
+- Embedded layer has been frozen
+
+  ```
+  classifier(
+    (embedding): Embedding(17052, 200, padding_idx=1)
+    (encoder): LSTM(200, 256, num_layers=3, batch_first=True, dropout=0.2, bidirectional=True)
+    (dropout): Dropout(p=0.2, inplace=False)
+    (fc): Linear(in_features=256, out_features=5, bias=True)
+  )
+  The model has 7,503,589 trainable parameters
+  ```
+
+  
+
+**Network Performance**
+
+- Highest validation accuracy is **51.38% which is almost 12%** higher compare to previous one
+
+```
+	Train Loss: 1.476 | Train Acc: 42.70%
+	 Val. Loss: 1.408 |  Val. Acc: 47.80% 
+
+	Train Loss: 1.398 | Train Acc: 51.32%
+	 Val. Loss: 1.402 |  Val. Acc: 48.90% 
+
+	Train Loss: 1.339 | Train Acc: 57.50%
+	 Val. Loss: 1.410 |  Val. Acc: 48.37% 
+
+	Train Loss: 1.279 | Train Acc: 64.02%
+	 Val. Loss: 1.387 |  Val. Acc: 51.38% 
+
+	Train Loss: 1.239 | Train Acc: 67.94%
+	 Val. Loss: 1.390 |  Val. Acc: 50.68% 
+
+	Train Loss: 1.208 | Train Acc: 71.08%
+	 Val. Loss: 1.391 |  Val. Acc: 50.21% 
+
+	Train Loss: 1.186 | Train Acc: 73.49%
+	 Val. Loss: 1.390 |  Val. Acc: 51.00% 
+
+	Train Loss: 1.166 | Train Acc: 75.43%
+	 Val. Loss: 1.415 |  Val. Acc: 48.28% 
+
+	Train Loss: 1.152 | Train Acc: 76.78%
+	 Val. Loss: 1.418 |  Val. Acc: 48.12% 
+
+	Train Loss: 1.139 | Train Acc: 78.30%
+	 Val. Loss: 1.417 |  Val. Acc: 48.37% 
+
+	Train Loss: 1.130 | Train Acc: 79.20%
+	 Val. Loss: 1.409 |  Val. Acc: 48.88% 
+
+	Train Loss: 1.120 | Train Acc: 80.00%
+	 Val. Loss: 1.399 |  Val. Acc: 50.04% 
+
+	Train Loss: 1.114 | Train Acc: 80.68%
+	 Val. Loss: 1.403 |  Val. Acc: 49.89% 
+
+	Train Loss: 1.105 | Train Acc: 81.79%
+	 Val. Loss: 1.400 |  Val. Acc: 50.15% 
+
+	Train Loss: 1.105 | Train Acc: 81.58%
+	 Val. Loss: 1.410 |  Val. Acc: 49.13% 
+```
+
 
 
 ### GRU
 
-### Multilayer LSTM with Bidirectional with Data Augemnetatopn
+### Multilayer with Bidirectional and Data Augmentation
+
+#### Network Architecture
+
+```
+classifier(
+  (embedding): Embedding(17033, 200, padding_idx=1)
+  (encoder): GRU(200, 256, num_layers=5, batch_first=True, dropout=0.4, bidirectional=True)
+  (dropout): Dropout(p=0.4, inplace=False)
+  (fc): Linear(in_features=256, out_features=5, bias=True)
+)
+The model has 8,842,253 trainable parameters
+```
+
+```
+# Define hyperparameters
+size_of_vocab = len(Sentence.vocab)
+embedding_dim = 200
+num_hidden_nodes = 256
+num_output_nodes = 5
+num_layers = 5
+dropout = 0.4
+bidirectional = True
+PAD_IDX = Sentence.vocab.stoi[Sentence.pad_token]
+
+# Instantiate the model
+model = classifier(size_of_vocab, embedding_dim, num_hidden_nodes, num_output_nodes, num_layers, dropout, bidirectional,PAD_IDX)
+```
+
+#### Network Performance
+
+```
+	Train Loss: 1.536 | Train Acc: 35.11%
+	 Val. Loss: 1.492 |  Val. Acc: 39.38% 
+
+	Train Loss: 1.448 | Train Acc: 45.68%
+	 Val. Loss: 1.496 |  Val. Acc: 39.58% 
+
+	Train Loss: 1.372 | Train Acc: 53.58%
+	 Val. Loss: 1.507 |  Val. Acc: 37.69% 
+
+	Train Loss: 1.331 | Train Acc: 58.04%
+	 Val. Loss: 1.506 |  Val. Acc: 37.54% 
+
+	Train Loss: 1.299 | Train Acc: 61.12%
+	 Val. Loss: 1.506 |  Val. Acc: 38.31% 
+
+	Train Loss: 1.279 | Train Acc: 63.08%
+	 Val. Loss: 1.508 |  Val. Acc: 38.83% 
+
+	Train Loss: 1.265 | Train Acc: 64.72%
+	 Val. Loss: 1.518 |  Val. Acc: 38.54% 
+
+	Train Loss: 1.258 | Train Acc: 65.57%
+	 Val. Loss: 1.505 |  Val. Acc: 39.09% 
+
+	Train Loss: 1.250 | Train Acc: 66.24%
+	 Val. Loss: 1.510 |  Val. Acc: 38.73% 
+
+	Train Loss: 1.249 | Train Acc: 66.04%
+	 Val. Loss: 1.512 |  Val. Acc: 37.92% 
+
+	Train Loss: 1.242 | Train Acc: 66.82%
+	 Val. Loss: 1.508 |  Val. Acc: 38.67% 
+
+	Train Loss: 1.242 | Train Acc: 66.92%
+	 Val. Loss: 1.499 |  Val. Acc: 40.25% 
+
+	Train Loss: 1.239 | Train Acc: 67.09%
+	 Val. Loss: 1.535 |  Val. Acc: 36.04% 
+
+	Train Loss: 1.241 | Train Acc: 66.95%
+	 Val. Loss: 1.529 |  Val. Acc: 36.27% 
+
+	Train Loss: 1.239 | Train Acc: 66.97%
+	 Val. Loss: 1.503 |  Val. Acc: 39.77% 
+
+```
 
