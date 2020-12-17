@@ -780,3 +780,55 @@ ItemId = [54, 65, 76]
 names = ["Hard Disk", "Laptop", "RAM"]
 itemDictionary = dict(zip(ItemId, names))
 print(itemDictionary)
+
+# Alternate cases in String 
+
+test_str = "geeksforgeeks"
+res = "" 
+for idx in range(len(test_str)): 
+    if not idx % 2 : 
+       res = res + test_str[idx].upper() 
+    else: 
+       res = res + test_str[idx].lower() 
+print(res)
+
+# Write a Python program to validate an Email 
+import re 
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+def check(email):
+  if(re.search(regex,email)):
+    print("Valid Email")
+  else:
+    print("Invalid Email")
+
+email = "ankitrai326@gmail.com"
+check(email)
+
+# Write a Program to implement validation of a Password
+
+class Password:
+    def __init__(self, password):
+        self.password = password
+
+    def validate(self):        
+        vals = {
+        'Password must contain an uppercase letter.': lambda s: any(x.isupper() for x in s),
+        'Password must contain a lowercase letter.': lambda s: any(x.islower() for x in s),
+        'Password must contain a digit.': lambda s: any(x.isdigit() for x in s),
+        'Password must be at least 8 characters.': lambda s: len(s) >= 8,
+        'Password cannot contain white spaces.': lambda s: not any(x.isspace() for x in s)            
+        } 
+        valid = True  
+        for n, val in vals.items():                         
+           if not val(self.password):                   
+               valid = False
+               return n
+        return valid                
+
+
+input_password = "Amit@12Su@ 1'"
+p = Password(input_password)
+if p.validate() is True:
+  print('Password Valid')
+else:
+  print(p.validate())
