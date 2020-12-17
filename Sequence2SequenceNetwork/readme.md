@@ -221,6 +221,12 @@ Epoch: 30 | Time: 1m 44s
 	 Val. Loss: 4.003 |  Val. PPL:  54.747
 ```
 
+## Further Enhancement
+
+- We can implement Beam Search method which allows us to choose from a set of word. This is quite better than Greedy Search Algorithm. Refer the video [Beam Search](https://www.youtube.com/watch?v=UXW6Cs82UKo) to understand more.
+
+
+
 # Input Data Generation for English to Python Code
 
 
