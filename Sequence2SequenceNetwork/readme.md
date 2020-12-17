@@ -5,7 +5,11 @@
 1. Change the languages from german<>english to french<>german
 2. Change the model such that it has 3 layers instead of 2
 
-# Model Performance Measurement
+## Solution
+
+Solution has been loaded into github and link is [**END_NLP_Session_8_Assignment_B_Sequence_to_Sequence_Learning_with_Neural_Networks**](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/END_NLP_Session_8_Assignment_B_Sequence_to_Sequence_Learning_with_Neural_Networks.ipynb)
+
+## Model Performance Measurement
 
 A NLP model is being said to be a good model when it can assign higher probability to real/frequently observed sentence than rarely observed ones.
 
@@ -218,6 +222,14 @@ Epoch: 30 | Time: 1m 44s
 ```
 
 # Input Data Generation for English to Python Code
+
+
+
+## Solution
+
+Solution has been loaded into github and link is [**END_NLP_Session_8_Assignment_PythonGeneration.ipynb**](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/END_NLP_Session_8_Assignment_PythonGeneration.ipynb)
+
+## Further details
 
 This repo contains the mapping of description and te the code to be written (starts with #), and the code it should generate. It will be later used for network training.
 
