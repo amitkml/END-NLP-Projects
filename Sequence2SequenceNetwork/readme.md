@@ -225,7 +225,7 @@ Epoch: 30 | Time: 1m 44s
 
 - We can implement Beam Search method which allows us to choose from a set of word. This is quite better than Greedy Search Algorithm. Refer the video [Beam Search](https://www.youtube.com/watch?v=UXW6Cs82UKo) to understand more.
 
-
+![image-20201217225749174](C:\Users\akayal\AppData\Roaming\Typora\typora-user-images\image-20201217225749174.png)
 
 # Input Data Generation for English to Python Code
 
