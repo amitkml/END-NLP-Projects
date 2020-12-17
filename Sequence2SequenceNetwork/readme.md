@@ -1,3 +1,11 @@
+# Sequence to Sequence Network
+
+
+
+
+
+
+
 This repo contains the mapping of description ibe the code to be written (starts with #), and the code it should generate. It will be later used for network training.
 
 Here are some examples:
@@ -6,3 +14,4 @@ Here are some examples:
 - write a function to test the time it takes to run a function
 - write a program to remove stop words from a sentence provided,
 - etc
+
