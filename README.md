@@ -1,7 +1,11 @@
 # END-NLP-Projects
-This repo contains all my nlp work and learning. Made public so that others can learn and get benefits.
+This repo contains all my nlp work and learning. Made public so that others can learn and get benefits.The repo will contain all my project related to NLP learning and vision model deployment using mediapipe.
 
-The repo will contain all my project related to NLP learning and vision model deployment using mediapipe.
+![image](https://media.giphy.com/media/YknAouVrcbkiDvWUOR/giphy.gif)
+
+![image](https://media.giphy.com/media/26xBtSyoi5hUUkCEo/giphy.gif)
+
+![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
 ## Curated resource in NLP
 This section will contain my curated resources which helped me during NLP learning
