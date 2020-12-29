@@ -1,0 +1,1903 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8.2"
+    },
+    "colab": {
+      "name": "END_NLP_Class_9_Assgn_QASC_NMT_Model_1_RNN Encoder-Decoder for ML-1.0.ipynb",
+      "provenance": [],
+      "collapsed_sections": [
+        "hFN65G2G-XKf"
+      ]
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "EzxOJwN7EzFO"
+      },
+      "source": [
+        "# 2 - Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation\n",
+        "\n",
+        "In this second notebook on sequence-to-sequence models using PyTorch and TorchText, we'll be implementing the model from [Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation](https://arxiv.org/abs/1406.1078). This model will achieve improved test perplexity whilst only using a single layer RNN in both the encoder and the decoder.\n",
+        "\n",
+        "## Introduction\n",
+        "\n",
+        "Let's remind ourselves of the general encoder-decoder model.\n",
+        "\n",
+        "![](https://github.com/bentrevett/pytorch-seq2seq/blob/master/assets/seq2seq1.png?raw=1)\n",
+        "\n",
+        "We use our encoder (green) over the embedded source sequence (yellow) to create a context vector (red). We then use that context vector with the decoder (blue) and a linear layer (purple) to generate the target sentence.\n",
+        "\n",
+        "In the previous model, we used an multi-layered LSTM as the encoder and decoder.\n",
+        "\n",
+        "![](https://github.com/bentrevett/pytorch-seq2seq/blob/master/assets/seq2seq4.png?raw=1)\n",
+        "\n",
+        "One downside of the previous model is that the decoder is trying to cram lots of information into the hidden states. Whilst decoding, the hidden state will need to contain information about the whole of the source sequence, as well as all of the tokens have been decoded so far. By alleviating some of this information compression, we can create a better model!\n",
+        "\n",
+        "We'll also be using a GRU (Gated Recurrent Unit) instead of an LSTM (Long Short-Term Memory). Why? Mainly because that's what they did in the paper (this paper also introduced GRUs) and also because we used LSTMs last time. To understand how GRUs (and LSTMs) differ from standard RNNS, check out [this](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) link. Is a GRU better than an LSTM? [Research](https://arxiv.org/abs/1412.3555) has shown they're pretty much the same, and both are better than standard RNNs. \n",
+        "\n",
+        "## Preparing Data\n",
+        "\n",
+        "All of the data preparation will be (almost) the same as last time, so we'll very briefly detail what each code block does. See the previous notebook for a recap.\n",
+        "\n",
+        "We'll import PyTorch, TorchText, spaCy and a few standard modules."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "uUnMLdevEzFT"
+      },
+      "source": [
+        "import torch\n",
+        "import torch.nn as nn\n",
+        "import torch.optim as optim\n",
+        "\n",
+        "from torchtext.datasets import Multi30k\n",
+        "from torchtext.data import Field, BucketIterator\n",
+        "\n",
+        "import spacy\n",
+        "import numpy as np\n",
+        "\n",
+        "import random\n",
+        "import math\n",
+        "import time"
+      ],
+      "execution_count": 155,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PMmB3A3Ytoy9"
+      },
+      "source": [
+        "SEED = 1234\r\n",
+        "random.seed(SEED)\r\n",
+        "np.random.seed(SEED)\r\n",
+        "torch.manual_seed(SEED)\r\n",
+        "torch.cuda.manual_seed(SEED)\r\n",
+        "torch.backends.cudnn.deterministic = True"
+      ],
+      "execution_count": 156,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5lKZOljLtPXy",
+        "outputId": "82917b92-dfa1-4985-ec1b-50d3ff75ec1e"
+      },
+      "source": [
+        "%%bash\r\n",
+        "python -m spacy download en\r\n",
+        "# python -m spacy download de"
+      ],
+      "execution_count": 157,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Requirement already satisfied: en_core_web_sm==2.2.5 from https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz#egg=en_core_web_sm==2.2.5 in /usr/local/lib/python3.6/dist-packages (2.2.5)\n",
+            "Requirement already satisfied: spacy>=2.2.2 in /usr/local/lib/python3.6/dist-packages (from en_core_web_sm==2.2.5) (2.2.4)\n",
+            "Requirement already satisfied: blis<0.5.0,>=0.4.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (0.4.1)\n",
+            "Requirement already satisfied: plac<1.2.0,>=0.9.6 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (1.1.3)\n",
+            "Requirement already satisfied: thinc==7.4.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (7.4.0)\n",
+            "Requirement already satisfied: preshed<3.1.0,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (3.0.5)\n",
+            "Requirement already satisfied: srsly<1.1.0,>=1.0.2 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (1.0.5)\n",
+            "Requirement already satisfied: setuptools in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (51.0.0)\n",
+            "Requirement already satisfied: tqdm<5.0.0,>=4.38.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (4.41.1)\n",
+            "Requirement already satisfied: cymem<2.1.0,>=2.0.2 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (2.0.5)\n",
+            "Requirement already satisfied: catalogue<1.1.0,>=0.0.7 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (1.0.0)\n",
+            "Requirement already satisfied: requests<3.0.0,>=2.13.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (2.23.0)\n",
+            "Requirement already satisfied: murmurhash<1.1.0,>=0.28.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (1.0.5)\n",
+            "Requirement already satisfied: numpy>=1.15.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (1.19.4)\n",
+            "Requirement already satisfied: wasabi<1.1.0,>=0.4.0 in /usr/local/lib/python3.6/dist-packages (from spacy>=2.2.2->en_core_web_sm==2.2.5) (0.8.0)\n",
+            "Requirement already satisfied: importlib-metadata>=0.20; python_version < \"3.8\" in /usr/local/lib/python3.6/dist-packages (from catalogue<1.1.0,>=0.0.7->spacy>=2.2.2->en_core_web_sm==2.2.5) (3.3.0)\n",
+            "Requirement already satisfied: chardet<4,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests<3.0.0,>=2.13.0->spacy>=2.2.2->en_core_web_sm==2.2.5) (3.0.4)\n",
+            "Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.6/dist-packages (from requests<3.0.0,>=2.13.0->spacy>=2.2.2->en_core_web_sm==2.2.5) (2.10)\n",
+            "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests<3.0.0,>=2.13.0->spacy>=2.2.2->en_core_web_sm==2.2.5) (1.24.3)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests<3.0.0,>=2.13.0->spacy>=2.2.2->en_core_web_sm==2.2.5) (2020.12.5)\n",
+            "Requirement already satisfied: typing-extensions>=3.6.4; python_version < \"3.8\" in /usr/local/lib/python3.6/dist-packages (from importlib-metadata>=0.20; python_version < \"3.8\"->catalogue<1.1.0,>=0.0.7->spacy>=2.2.2->en_core_web_sm==2.2.5) (3.7.4.3)\n",
+            "Requirement already satisfied: zipp>=0.5 in /usr/local/lib/python3.6/dist-packages (from importlib-metadata>=0.20; python_version < \"3.8\"->catalogue<1.1.0,>=0.0.7->spacy>=2.2.2->en_core_web_sm==2.2.5) (3.4.0)\n",
+            "\u001b[38;5;2m✔ Download and installation successful\u001b[0m\n",
+            "You can now load the model via spacy.load('en_core_web_sm')\n",
+            "\u001b[38;5;2m✔ Linking successful\u001b[0m\n",
+            "/usr/local/lib/python3.6/dist-packages/en_core_web_sm -->\n",
+            "/usr/local/lib/python3.6/dist-packages/spacy/data/en\n",
+            "You can now load the model via spacy.load('en')\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "m2IF3FT_tVUL"
+      },
+      "source": [
+        ""
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "r5Am1eK24TLt"
+      },
+      "source": [
+        "## Data Download and Preparation"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "03sSSoCYv3pz"
+      },
+      "source": [
+        "### There are three QASC files:\r\n",
+        "\r\n",
+        "**Dataset:**\r\n",
+        "\r\n",
+        "It has following fields\r\n",
+        "- ID\r\n",
+        "- Question Stem\t\r\n",
+        "- Choices\r\n",
+        "- Complete Question\t\r\n",
+        "- Answer Key\r\n",
+        "\r\n",
+        "**Lets understand dataset more and see how we can define dataset for our model which needs questions and answer.**\r\n",
+        "- Our model should look into the Question stem and generate answer. So if our question stem is \"The sun is responsible for\" then answer will be \"plants sprouting, blooming and wilting\"\r\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Pl9xgfZUrey2"
+      },
+      "source": [
+        "#### QASC record"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "IN_yePs3q3O9"
+      },
+      "source": [
+        "from requests import get, models\r\n",
+        "import json\r\n",
+        "from IPython.display import HTML\r\n",
+        "\r\n",
+        "render_template = \"\"\"\r\n",
+        "<script src=\"https://rawgit.com/caldwell/renderjson/master/renderjson.js\"></script>\r\n",
+        "<script>\r\n",
+        "renderjson.set_show_to_level(1)\r\n",
+        "document.body.appendChild(renderjson(%s))\r\n",
+        "new ResizeObserver(google.colab.output.resizeIframeToContent).observe(document.body)\r\n",
+        "</script>\r\n",
+        "\"\"\"\r\n",
+        "models.Response._repr_html_ = lambda rsp: render_template % rsp.text\r\n",
+        "\r\n",
+        "def render(jsondict):\r\n",
+        "  return HTML(render_template % json.dumps(jsondict))"
+      ],
+      "execution_count": 158,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 124
+        },
+        "id": "iDkxPopkq40h",
+        "outputId": "4eff6cb1-c5c5-480b-b180-d8e31a64fa7a"
+      },
+      "source": [
+        "jsondict = {\"id\":\"3B1NLC6UGZVERVLZFT7OUYQLD1SGPZ\",\"question\":{\"stem\":\"By what time had mouse-sized viviparous mammals evolved?\",\"choices\":[{\"text\":\"Corvidae\",\"label\":\"A\"},{\"text\":\"arthropods\",\"label\":\"B\"},{\"text\":\"birds\",\"label\":\"C\"},{\"text\":\"backbones\",\"label\":\"D\"},{\"text\":\"keratin\",\"label\":\"E\"},{\"text\":\"Jurassic\",\"label\":\"F\"},{\"text\":\"front paws\",\"label\":\"G\"},{\"text\":\"Parakeets.\",\"label\":\"H\"}]},\"formatted_question\":\"By what time had mouse-sized viviparous mammals evolved? (A) Corvidae (B) arthropods (C) birds (D) backbones (E) keratin (F) Jurassic (G) front paws (H) Parakeets.\"}\r\n",
+        "render(jsondict)"
+      ],
+      "execution_count": 159,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "\n",
+              "<script src=\"https://rawgit.com/caldwell/renderjson/master/renderjson.js\"></script>\n",
+              "<script>\n",
+              "renderjson.set_show_to_level(1)\n",
+              "document.body.appendChild(renderjson({\"id\": \"3B1NLC6UGZVERVLZFT7OUYQLD1SGPZ\", \"question\": {\"stem\": \"By what time had mouse-sized viviparous mammals evolved?\", \"choices\": [{\"text\": \"Corvidae\", \"label\": \"A\"}, {\"text\": \"arthropods\", \"label\": \"B\"}, {\"text\": \"birds\", \"label\": \"C\"}, {\"text\": \"backbones\", \"label\": \"D\"}, {\"text\": \"keratin\", \"label\": \"E\"}, {\"text\": \"Jurassic\", \"label\": \"F\"}, {\"text\": \"front paws\", \"label\": \"G\"}, {\"text\": \"Parakeets.\", \"label\": \"H\"}]}, \"formatted_question\": \"By what time had mouse-sized viviparous mammals evolved? (A) Corvidae (B) arthropods (C) birds (D) backbones (E) keratin (F) Jurassic (G) front paws (H) Parakeets.\"}))\n",
+              "new ResizeObserver(google.colab.output.resizeIframeToContent).observe(document.body)\n",
+              "</script>\n"
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 159
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "8Yejdi7TeTP1"
+      },
+      "source": [
+        "import numpy as np # linear algebra\r\n",
+        "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\r\n",
+        "import os\r\n",
+        "import matplotlib.pyplot as plt\r\n",
+        "import string\r\n",
+        "import json # to read json"
+      ],
+      "execution_count": 160,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "c3Sns-MYlWR_",
+        "outputId": "1a9589ac-4034-4ea8-b8e8-8a9f33576db1"
+      },
+      "source": [
+        "!wget http://data.allenai.org/downloads/qasc/qasc_dataset.tar.gz\r\n",
+        "!tar xvfz qasc_dataset.tar.gz\r\n",
+        "!rm qasc_dataset.tar.gz"
+      ],
+      "execution_count": 161,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "--2020-12-29 18:24:40--  http://data.allenai.org/downloads/qasc/qasc_dataset.tar.gz\n",
+            "Resolving data.allenai.org (data.allenai.org)... 52.218.228.114\n",
+            "Connecting to data.allenai.org (data.allenai.org)|52.218.228.114|:80... connected.\n",
+            "HTTP request sent, awaiting response... 200 OK\n",
+            "Length: 1616514 (1.5M) [application/x-gzip]\n",
+            "Saving to: ‘qasc_dataset.tar.gz’\n",
+            "\n",
+            "qasc_dataset.tar.gz 100%[===================>]   1.54M  2.76MB/s    in 0.6s    \n",
+            "\n",
+            "2020-12-29 18:24:40 (2.76 MB/s) - ‘qasc_dataset.tar.gz’ saved [1616514/1616514]\n",
+            "\n",
+            "QASC_Dataset/\n",
+            "QASC_Dataset/train.jsonl\n",
+            "QASC_Dataset/test.jsonl\n",
+            "QASC_Dataset/dev.jsonl\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "aMeKSBfXc3fT"
+      },
+      "source": [
+        "column_names = [\"question\", \"answer\"]\r\n",
+        "QASC_Dataset_train = pd.DataFrame(columns = column_names)\r\n",
+        "QASC_Dataset_dev = pd.DataFrame(columns = column_names)\r\n",
+        "QASC_Dataset_test = pd.DataFrame(columns = column_names)"
+      ],
+      "execution_count": 162,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "H75rF3qneDaj"
+      },
+      "source": [
+        "## Lets read train file first/.\r\n",
+        "def _read_train(file_path):\r\n",
+        "  answer = \"\"\r\n",
+        "  with open(file_path, \"r\") as f:\r\n",
+        "    lst = []\r\n",
+        "    for line_num, line in enumerate(f):\r\n",
+        "      line = line.strip(\"\\n\")\r\n",
+        "      line = json.loads(line)\r\n",
+        "      if not line:\r\n",
+        "        continue\r\n",
+        "      question = line['question']['stem']\r\n",
+        "      answerkey = line['answerKey']\r\n",
+        "      if answerkey == 'A':\r\n",
+        "        answer = line['question']['choices'][0]['text']\r\n",
+        "      elif answerkey == 'B':\r\n",
+        "        answer = line['question']['choices'][1]['text']\r\n",
+        "      elif answerkey == 'C':\r\n",
+        "        answer = line['question']['choices'][2]['text']\r\n",
+        "      elif answerkey == 'D':\r\n",
+        "        answer = line['question']['choices'][3]['text']\r\n",
+        "      elif answerkey == 'E':\r\n",
+        "        answer = line['question']['choices'][4]['text']\r\n",
+        "      elif answerkey == 'F':\r\n",
+        "        answer = line['question']['choices'][5]['text']\r\n",
+        "      elif answerkey == 'G':\r\n",
+        "        answer = line['question']['choices'][6]['text']\r\n",
+        "      elif answerkey == 'H':\r\n",
+        "        answer = line['question']['choices'][7]['text']\r\n",
+        "      else:\r\n",
+        "        answer =\"Not Available\"\r\n",
+        "      lst.append([question,answer])\r\n",
+        "      # print(lst)\r\n",
+        "  df = pd.DataFrame(lst,columns = column_names) \r\n",
+        "  # df = df.append(a_series, ignore_index=True)\r\n",
+        "  return df"
+      ],
+      "execution_count": 163,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "9EQTTsV9gTSo"
+      },
+      "source": [
+        "## Lets read val file first/.\r\n",
+        "def _read_val(file_path):\r\n",
+        "  answer = \"\"\r\n",
+        "  with open(file_path, \"r\") as f:\r\n",
+        "    lst = []\r\n",
+        "    for line_num, line in enumerate(f):\r\n",
+        "      line = line.strip(\"\\n\")\r\n",
+        "      line = json.loads(line)\r\n",
+        "      if not line:\r\n",
+        "        continue\r\n",
+        "      question = line['question']['stem']\r\n",
+        "      answerkey = line['answerKey']\r\n",
+        "      if answerkey == 'A':\r\n",
+        "        answer = line['question']['choices'][0]['text']\r\n",
+        "      elif answerkey == 'B':\r\n",
+        "        answer = line['question']['choices'][1]['text']\r\n",
+        "      elif answerkey == 'C':\r\n",
+        "        answer = line['question']['choices'][2]['text']\r\n",
+        "      elif answerkey == 'D':\r\n",
+        "        answer = line['question']['choices'][3]['text']\r\n",
+        "      elif answerkey == 'E':\r\n",
+        "        answer = line['question']['choices'][4]['text']\r\n",
+        "      elif answerkey == 'F':\r\n",
+        "        answer = line['question']['choices'][5]['text']\r\n",
+        "      elif answerkey == 'G':\r\n",
+        "        answer = line['question']['choices'][6]['text']\r\n",
+        "      elif answerkey == 'H':\r\n",
+        "        answer = line['question']['choices'][7]['text']\r\n",
+        "      else:\r\n",
+        "        answer =\"Not Available\"\r\n",
+        "      lst.append([question,answer])\r\n",
+        "      # print(lst)\r\n",
+        "  df = pd.DataFrame(lst,columns = column_names) \r\n",
+        "  # df = df.append(a_series, ignore_index=True)\r\n",
+        "  return df"
+      ],
+      "execution_count": 164,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xrF1qGA8ilmJ"
+      },
+      "source": [
+        "## Lets read val file first/.\r\n",
+        "def _read_test(file_path):\r\n",
+        "  answer = \"\"\r\n",
+        "  with open(file_path, \"r\") as f:\r\n",
+        "    lst = []\r\n",
+        "    for line_num, line in enumerate(f):\r\n",
+        "      line = line.strip(\"\\n\")\r\n",
+        "      line = json.loads(line)\r\n",
+        "      if not line:\r\n",
+        "        continue\r\n",
+        "      question = line['question']['stem']\r\n",
+        "      lst.append([question,answer])\r\n",
+        "      # print(lst)\r\n",
+        "  df = pd.DataFrame(lst,columns = column_names) \r\n",
+        "  # df = df.append(a_series, ignore_index=True)\r\n",
+        "  return df"
+      ],
+      "execution_count": 165,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "hgb5L67w3CXR"
+      },
+      "source": [
+        "QASC_Dataset_train = _read_train(\"/content/QASC_Dataset/train.jsonl\")\r\n",
+        "QASC_Dataset_dev = _read_val(\"/content/QASC_Dataset/dev.jsonl\")\r\n",
+        "QASC_Dataset_test = _read_test(\"/content/QASC_Dataset/test.jsonl\")"
+      ],
+      "execution_count": 166,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Uk5xshFgA76J",
+        "outputId": "f3a590a6-d47b-4248-bdbf-6a948510ccf4"
+      },
+      "source": [
+        "print(f\"Train Data:\\n {QASC_Dataset_train.head(2)}\")\r\n",
+        "print(f\"Val Data:\\n{QASC_Dataset_dev.head(2)}\")\r\n",
+        "print(f\"Test Data:\\n{QASC_Dataset_test.head(2)}\")"
+      ],
+      "execution_count": 167,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Train Data:\n",
+            "                                             question                       answer\n",
+            "0  What type of water formation is formed by clouds?                        beads\n",
+            "1                 Where do beads of water come from?  Vapor turning into a liquid\n",
+            "Val Data:\n",
+            "                                           question                    answer\n",
+            "0  Climate is generally described in terms of what?  local weather conditions\n",
+            "1                          what varies by altitude?  temperature and moisture\n",
+            "Test Data:\n",
+            "                                            question answer\n",
+            "0        What type of birth do therian mammals have?       \n",
+            "1  By what time had mouse-sized viviparous mammal...       \n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "e2syAcDnD4Rp",
+        "outputId": "7e5c7557-c86f-4bd6-f84d-b555c9f44f44"
+      },
+      "source": [
+        "QASC_Dataset_train.columns"
+      ],
+      "execution_count": 168,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Index(['question', 'answer'], dtype='object')"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 168
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "WSeLH8-LP74e",
+        "outputId": "917213b3-c366-41dd-8a4f-e5338e3fe7e6"
+      },
+      "source": [
+        "print(f\"QASC_Dataset_train Dataset size:{QASC_Dataset_train.shape}\")\r\n",
+        "print(f\"QASC_Dataset_dev Dataset size:{QASC_Dataset_dev.shape}\")\r\n",
+        "print(f\"QASC_Dataset_test Dataset size:{QASC_Dataset_test.shape}\")"
+      ],
+      "execution_count": 169,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "QASC_Dataset_train Dataset size:(8134, 2)\n",
+            "QASC_Dataset_dev Dataset size:(926, 2)\n",
+            "QASC_Dataset_test Dataset size:(920, 2)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "QtxJBHCUAiwx"
+      },
+      "source": [
+        "### Data Preparation"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "vHTEL5WBz-2E"
+      },
+      "source": [
+        "import random\r\n",
+        "import torch, torchtext\r\n",
+        "from torchtext import data "
+      ],
+      "execution_count": 170,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hFN65G2G-XKf"
+      },
+      "source": [
+        "### Utility Functions"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "YmryKW4a-ahZ"
+      },
+      "source": [
+        "**Random Deletion**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "MgJ5--pd-Zv8"
+      },
+      "source": [
+        "# randomly delete words from a sentence with a given probability\r\n",
+        "\r\n",
+        "def random_deletion(sentence, p=0.5): \r\n",
+        "    # return if single word\r\n",
+        "    if len(sentence) == 1: \r\n",
+        "        return sentence\r\n",
+        "    # delete words\r\n",
+        "    remaining = list(filter(lambda x: random.uniform(0,1) > p, sentence)) \r\n",
+        "    # if nothing left, sample a random word\r\n",
+        "    if len(remaining) == 0: \r\n",
+        "        return [random.choice(sentence)] \r\n",
+        "    else:\r\n",
+        "        return remaining"
+      ],
+      "execution_count": 171,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tKBzYhoq-jxC"
+      },
+      "source": [
+        "**Random Swap**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "3xkzJDwP-oYi"
+      },
+      "source": [
+        "# randomly swap a pair of words in a sentence for a given # of times\r\n",
+        "\r\n",
+        "def random_swap(sentence, n=5): \r\n",
+        "    if len(sentence) < 2:\r\n",
+        "      return sentence\r\n",
+        "    length = range(len(sentence)) \r\n",
+        "    for _ in range(n):\r\n",
+        "        idx1, idx2 = random.sample(length, 2)\r\n",
+        "        sentence[idx1], sentence[idx2] = sentence[idx2], sentence[idx1] \r\n",
+        "    return sentence"
+      ],
+      "execution_count": 172,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "LWJ9afQd-rkd"
+      },
+      "source": [
+        "**Back Translation**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "QpmCtjuD-zhz"
+      },
+      "source": [
+        "# translate a sentence to a random language,\r\n",
+        "# and translate back to original language\r\n",
+        "\r\n",
+        "def back_translate(sentence, p=0.1):\r\n",
+        "  # do nothing with probability of 1-p\r\n",
+        "  if random.uniform(0,1) > p:\r\n",
+        "    return sentence\r\n",
+        "\r\n",
+        "  # combine tokenized sentence into one string\r\n",
+        "  sentence = ' '.join(sentence)\r\n",
+        "\r\n",
+        "  # instantiate translator\r\n",
+        "  translator = google_translator()\r\n",
+        "\r\n",
+        "  # choose a target language\r\n",
+        "  available_langs = list(google_trans_new.LANGUAGES.keys()) \r\n",
+        "  trans_lang = random.choice(available_langs) \r\n",
+        "  #print(f\"Translating to {google_trans_new.LANGUAGES[trans_lang]}\")\r\n",
+        "\r\n",
+        "  # translate to the target language\r\n",
+        "  translations = translator.translate(sentence, lang_tgt=trans_lang) \r\n",
+        "  #print(translations)\r\n",
+        "\r\n",
+        "  # translate back to original language\r\n",
+        "  translations_en_random = translator.translate(translations, lang_src=trans_lang, lang_tgt='en') \r\n",
+        "  #print(translations_en_random)\r\n",
+        "\r\n",
+        "  # select only one translation\r\n",
+        "  if len(translations_en_random) > 1:\r\n",
+        "    translations_en_random = translations_en_random[0]\r\n",
+        "\r\n",
+        "  return word_tokenize(translations_en_random)"
+      ],
+      "execution_count": 173,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "mLlGDxkI-41A"
+      },
+      "source": [
+        "**Carry Out Data Augmentation**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "37UZpAEd_e5k"
+      },
+      "source": [
+        "# for example in train.examples: \r\n",
+        "#   example.tweets = back_translate(example.tweets, p=0.01)\r\n",
+        "#   example.tweets = random_deletion(example.tweets, p=0.1)\r\n",
+        "#   example.tweets = random_swap(example.tweets, n=1)"
+      ],
+      "execution_count": 174,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "phs47VOfCayt"
+      },
+      "source": [
+        "### Tabular File Reading"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "EhwqXgVCxv9Q"
+      },
+      "source": [
+        "import torch\r\n",
+        "import torch.nn as nn\r\n",
+        "import torch.optim as optim\r\n",
+        "import torch.nn.functional as F\r\n",
+        "import os\r\n",
+        "# from torchtext.datasets import Multi30k\r\n",
+        "from torchtext.data import Field, BucketIterator\r\n",
+        "from torchtext import data\r\n",
+        "from torchtext import datasets\r\n",
+        "\r\n",
+        "import spacy\r\n",
+        "import numpy as np\r\n",
+        "\r\n",
+        "import random\r\n",
+        "import math\r\n",
+        "import time\r\n",
+        "import torch\r\n",
+        "from torchtext import data\r\n",
+        "from torchtext import datasets\r\n",
+        "import pandas as pd"
+      ],
+      "execution_count": 175,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "myNJfEKPvdHs"
+      },
+      "source": [
+        "# Creating my home directory for keeping all the CSV files\r\n",
+        "directory = 'data'\r\n",
+        "if not os.path.exists(directory):\r\n",
+        "    os.makedirs('data')\r\n",
+        "    print(\"Directory '% s' created\" % directory)"
+      ],
+      "execution_count": 176,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "w4Q-omAP7IqD"
+      },
+      "source": [
+        "# saving all the dataframe into CSV file.\r\n",
+        "QASC_Dataset_train.to_csv(\"/content/data/QASC_Dataset_train.csv\", index=False)\r\n",
+        "QASC_Dataset_dev.to_csv(\"/content/data/QASC_Dataset_dev.csv\", index=False)\r\n",
+        "QASC_Dataset_test.to_csv(\"/content/data/QASC_Dataset_test.csv\", index=False)"
+      ],
+      "execution_count": 177,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TUF8cnMhy_oY",
+        "outputId": "ada0ba04-0f8b-4165-f64f-064a4394da4d"
+      },
+      "source": [
+        "## Now lets check how many null we have in training data\r\n",
+        "QASC_Dataset_train = pd.read_csv(\"/content/data/QASC_Dataset_train.csv\")\r\n",
+        "hotspot_trn_train_null = QASC_Dataset_train.columns[QASC_Dataset_train.isnull().any()]\r\n",
+        "QASC_Dataset_train[hotspot_trn_train_null].isnull().sum()"
+      ],
+      "execution_count": 178,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Series([], dtype: float64)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 178
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "38EEii_wgZQk",
+        "outputId": "af02598c-6024-48eb-b34e-e2878012042a"
+      },
+      "source": [
+        "## Check for null in valid data\r\n",
+        "## Now lets check how many null we have in training data\r\n",
+        "QASC_Dataset_train = pd.read_csv(\"/content/data/QASC_Dataset_dev.csv\")\r\n",
+        "hotspot_trn_train_null = QASC_Dataset_train.columns[QASC_Dataset_train.isnull().any()]\r\n",
+        "QASC_Dataset_train[hotspot_trn_train_null].isnull().sum()"
+      ],
+      "execution_count": 179,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Series([], dtype: float64)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 179
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "6GMcVy5U-WfP"
+      },
+      "source": [
+        "from torchtext.data import Field, BucketIterator\r\n",
+        "from torchtext import data\r\n",
+        "from torchtext import datasets"
+      ],
+      "execution_count": 180,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ASTvwOHA7rrj"
+      },
+      "source": [
+        "# !shuf -n 63543 /content/data/Tweet_valid_nl.csv > /content/data/Tweet_Train_reduced.csv\r\n",
+        "# !{ echo 'text_x, text_y'; cat /content/data/Tweet_Train_reduced.csv; } > /content/data/Tweet_Train_reduced_fn.csv"
+      ],
+      "execution_count": 181,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NTllvW5MuAZ0"
+      },
+      "source": [
+        "# create Field objects\r\n",
+        "QUESTION = data.Field(\r\n",
+        "    # sequential = True,\r\n",
+        "    tokenize = 'spacy', \r\n",
+        "    # batch_first =True,\r\n",
+        "    #  use_vocab=True,\r\n",
+        "    lower = True,\r\n",
+        "    init_token = '<sos>', \r\n",
+        "    eos_token = '<eos>', \r\n",
+        "    #  include_lengths=True\r\n",
+        "    )\r\n",
+        "\r\n",
+        "RESPONSE = data.Field(tokenize ='spacy',\r\n",
+        "                      # sequential = True, \r\n",
+        "                      # include_lengths=True,\r\n",
+        "                      lower = True,\r\n",
+        "                      # is_target=True,\r\n",
+        "                      init_token = '<sos>', \r\n",
+        "                      eos_token = '<eos>', \r\n",
+        "                      # batch_first =True\r\n",
+        "                      )\r\n",
+        "\r\n",
+        "fields = [('question', QUESTION), ('answer', RESPONSE)]"
+      ],
+      "execution_count": 182,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qg8C9cert5V1",
+        "outputId": "cce52172-6e38-46e9-bada-2acd93b583cb"
+      },
+      "source": [
+        "# load the dataset in json format\r\n",
+        "train_ds, valid_ds, test_ds = data.TabularDataset.splits(\r\n",
+        "   path = 'data',\r\n",
+        "   train = 'QASC_Dataset_train.csv',\r\n",
+        "   validation = 'QASC_Dataset_dev.csv',\r\n",
+        "   test = 'QASC_Dataset_test.csv',\r\n",
+        "   format = 'csv',\r\n",
+        "   fields = fields,\r\n",
+        "   skip_header = True\r\n",
+        ")\r\n",
+        "\r\n",
+        "# check an example\r\n",
+        "print(vars(train_ds[0]))"
+      ],
+      "execution_count": 183,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "{'question': ['what', 'type', 'of', 'water', 'formation', 'is', 'formed', 'by', 'clouds', '?'], 'answer': ['beads']}\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "a7oSDrAUv0Ky",
+        "outputId": "93de13ae-bca2-4b07-9edc-eac00b58d04e"
+      },
+      "source": [
+        "train_ds[0].__dict__.keys()"
+      ],
+      "execution_count": 184,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "dict_keys(['question', 'answer'])"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 184
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TLGpYWTyETSE",
+        "outputId": "ad5d3573-c30d-441d-99b3-bff043fadf5c"
+      },
+      "source": [
+        "## we get an Example object. The Example object bundles the attributes of a single data point together. \r\n",
+        "# We also see that the text has already been tokenized for us, but has not yet been converted to integers\r\n",
+        "vars(train_ds.examples[10])"
+      ],
+      "execution_count": 185,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'answer': ['dehydration', 'and', 'salting'],\n",
+              " 'question': ['what', 'are', 'two', 'ways', 'you', 'can', 'save', 'food', '?']}"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 185
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "12rnzGTnx6BM",
+        "outputId": "5ce26cc4-0b04-4cba-d64f-03113e601f6e"
+      },
+      "source": [
+        "try:\r\n",
+        "    print(len(train_ds[10]))\r\n",
+        "except:\r\n",
+        "    print(train_ds[10].question)"
+      ],
+      "execution_count": 186,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "['what', 'are', 'two', 'ways', 'you', 'can', 'save', 'food', '?']\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "tK-5PItlE8eu"
+      },
+      "source": [
+        "# Before creating iterators of the Datasets we need to build the vocabulary for each Field object:\r\n",
+        "# This makes torchtext go through all the elements in the training set, check the contents corresponding to the TEXT field, \r\n",
+        "# and register the words in its vocabulary. Torchtext has its own class called Vocab for handling the vocabulary. \r\n",
+        "# The Vocab class holds a mapping from word to id in its stoi attribute and a reverse mapping in its itos attribute\r\n",
+        "QUESTION.build_vocab(train_ds,\r\n",
+        "                  # max_size=20000,\r\n",
+        "                  min_freq=2)\r\n",
+        "RESPONSE.build_vocab(train_ds,\r\n",
+        "                    #  max_size=20000,\r\n",
+        "                     min_freq=2\r\n",
+        "                     )"
+      ],
+      "execution_count": 187,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "WegtEqfsFU1P",
+        "outputId": "a3b50923-3dd9-46fe-87b7-f4478b3930e8"
+      },
+      "source": [
+        "print(f\"Unique tokens in source (QASC) vocabulary: {len(QUESTION.vocab)}\")\r\n",
+        "print(f\"Unique tokens in target (QASC) vocabulary: {len(RESPONSE.vocab)}\")"
+      ],
+      "execution_count": 188,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Unique tokens in source (QASC) vocabulary: 2498\n",
+            "Unique tokens in target (QASC) vocabulary: 1691\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "TCbFK17rvcJO"
+      },
+      "source": [
+        "BATCH_SIZE = 64\r\n",
+        "train_iterator, valid_iterator, test_iterator = data.BucketIterator.splits(\r\n",
+        "    (train_ds, valid_ds,test_ds),\r\n",
+        "    # sort_key=lambda x: len(x.text_x), # the BucketIterator needs to be told what function it should use to group the data.\r\n",
+        "    # sort_within_batch=True,\r\n",
+        "    batch_size = BATCH_SIZE,\r\n",
+        "    sort_key=lambda x: len(x.question),\r\n",
+        "    sort = True,\r\n",
+        "    # repeat=False, # we pass repeat=False because we want to wrap this Iterator layer\r\n",
+        "    device = device)\r\n",
+        "# https://torchtext.readthedocs.io/en/latest/examples.html"
+      ],
+      "execution_count": 189,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "eoNS1q0KveVO",
+        "outputId": "cc4d4c29-d77f-4b31-c1f4-8f8068b0ae8f"
+      },
+      "source": [
+        "b = next(iter(train_iterator)); vars(b).keys()"
+      ],
+      "execution_count": 190,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "dict_keys(['batch_size', 'dataset', 'fields', 'input_fields', 'target_fields', 'question', 'answer'])"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 190
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "XpAogEe3vhAV",
+        "outputId": "8d961949-69fe-49a1-9165-bad69f937681"
+      },
+      "source": [
+        "train_ds.fields"
+      ],
+      "execution_count": 191,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'answer': <torchtext.data.field.Field at 0x7f84b4c67b70>,\n",
+              " 'question': <torchtext.data.field.Field at 0x7f84b5158588>}"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 191
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "iLSTVoravmQY",
+        "outputId": "d8ffdbd3-b95a-438a-c613-146b7faceafa"
+      },
+      "source": [
+        "type(train_iterator)\r\n",
+        "type(train_ds)"
+      ],
+      "execution_count": 192,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "torchtext.data.dataset.TabularDataset"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 192
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Jq7BwOO4EzFd"
+      },
+      "source": [
+        "## Building the Seq2Seq Model\n",
+        "\n",
+        "### Encoder\n",
+        "\n",
+        "The encoder is similar to the previous one, with the multi-layer LSTM swapped for a single-layer GRU. We also don't pass the dropout as an argument to the GRU as that dropout is used between each layer of a multi-layered RNN. As we only have a single layer, PyTorch will display a warning if we try and use pass a dropout value to it.\n",
+        "\n",
+        "Another thing to note about the GRU is that it only requires and returns a hidden state, there is no cell state like in the LSTM.\n",
+        "\n",
+        "$$\\begin{align*}\n",
+        "h_t &= \\text{GRU}(e(x_t), h_{t-1})\\\\\n",
+        "(h_t, c_t) &= \\text{LSTM}(e(x_t), h_{t-1}, c_{t-1})\\\\\n",
+        "h_t &= \\text{RNN}(e(x_t), h_{t-1})\n",
+        "\\end{align*}$$\n",
+        "\n",
+        "From the equations above, it looks like the RNN and the GRU are identical. Inside the GRU, however, is a number of *gating mechanisms* that control the information flow in to and out of the hidden state (similar to an LSTM). Again, for more info, check out [this](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) excellent post. \n",
+        "\n",
+        "The rest of the encoder should be very familar from the last session, it takes in a sequence, $X = \\{x_1, x_2, ... , x_T\\}$, passes it through the embedding layer, recurrently calculates hidden states, $H = \\{h_1, h_2, ..., h_T\\}$, and returns a context vector (the final hidden state), $z=h_T$.\n",
+        "\n",
+        "$$h_t = \\text{EncoderGRU}(e(x_t), h_{t-1})$$\n",
+        "\n",
+        "This is identical to the encoder of the general seq2seq model, with all the \"magic\" happening inside the GRU (green).\n",
+        "\n",
+        "![](https://github.com/bentrevett/pytorch-seq2seq/blob/master/assets/seq2seq5.png?raw=1)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "11CnDhTkEzFd"
+      },
+      "source": [
+        "class Encoder(nn.Module):\n",
+        "    def __init__(self, input_dim, emb_dim, hid_dim, dropout):\n",
+        "        super().__init__()\n",
+        "\n",
+        "        self.hid_dim = hid_dim\n",
+        "        \n",
+        "        self.embedding = nn.Embedding(input_dim, emb_dim) #no dropout as only one layer!\n",
+        "        \n",
+        "        self.rnn = nn.GRU(emb_dim, hid_dim)\n",
+        "        \n",
+        "        self.dropout = nn.Dropout(dropout)\n",
+        "        \n",
+        "    def forward(self, src):\n",
+        "        \n",
+        "        #src = [src len, batch size]\n",
+        "        \n",
+        "        embedded = self.dropout(self.embedding(src))\n",
+        "        \n",
+        "        #embedded = [src len, batch size, emb dim]\n",
+        "        \n",
+        "        outputs, hidden = self.rnn(embedded) #no cell state!\n",
+        "        \n",
+        "        #outputs = [src len, batch size, hid dim * n directions]\n",
+        "        #hidden = [n layers * n directions, batch size, hid dim]\n",
+        "        \n",
+        "        #outputs are always from the top hidden layer\n",
+        "        \n",
+        "        return hidden"
+      ],
+      "execution_count": 193,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FhBViJ4-EzFe"
+      },
+      "source": [
+        "## Decoder\n",
+        "\n",
+        "The decoder is where the implementation differs significantly from the previous model and we alleviate some of the information compression.\n",
+        "\n",
+        "Instead of the GRU in the decoder taking just the embedded target token, $d(y_t)$ and the previous hidden state $s_{t-1}$ as inputs, it also takes the context vector $z$. \n",
+        "\n",
+        "$$s_t = \\text{DecoderGRU}(d(y_t), s_{t-1}, z)$$\n",
+        "\n",
+        "Note how this context vector, $z$, does not have a $t$ subscript, meaning we re-use the same context vector returned by the encoder for every time-step in the decoder. \n",
+        "\n",
+        "Before, we predicted the next token, $\\hat{y}_{t+1}$, with the linear layer, $f$, only using the top-layer decoder hidden state at that time-step, $s_t$, as $\\hat{y}_{t+1}=f(s_t^L)$. Now, we also pass the embedding of current token, $d(y_t)$ and the context vector, $z$ to the linear layer.\n",
+        "\n",
+        "$$\\hat{y}_{t+1} = f(d(y_t), s_t, z)$$\n",
+        "\n",
+        "Thus, our decoder now looks something like this:\n",
+        "\n",
+        "![](https://github.com/bentrevett/pytorch-seq2seq/blob/master/assets/seq2seq6.png?raw=1)\n",
+        "\n",
+        "Note, the initial hidden state, $s_0$, is still the context vector, $z$, so when generating the first token we are actually inputting two identical context vectors into the GRU.\n",
+        "\n",
+        "How do these two changes reduce the information compression? Well, hypothetically the decoder hidden states, $s_t$, no longer need to contain information about the source sequence as it is always available as an input. Thus, it only needs to contain information about what tokens it has generated so far. The addition of $y_t$ to the linear layer also means this layer can directly see what the token is, without having to get this information from the hidden state. \n",
+        "\n",
+        "However, this hypothesis is just a hypothesis, it is impossible to determine how the model actually uses the information provided to it (don't listen to anyone that says differently). Nevertheless, it is a solid intuition and the results seem to indicate that this modifications are a good idea!\n",
+        "\n",
+        "Within the implementation, we will pass $d(y_t)$ and $z$ to the GRU by concatenating them together, so the input dimensions to the GRU are now `emb_dim + hid_dim` (as context vector will be of size `hid_dim`). The linear layer will take $d(y_t), s_t$ and $z$ also by concatenating them together, hence the input dimensions are now `emb_dim + hid_dim*2`. We also don't pass a value of dropout to the GRU as it only uses a single layer.\n",
+        "\n",
+        "`forward` now takes a `context` argument. Inside of `forward`, we concatenate $y_t$ and $z$ as `emb_con` before feeding to the GRU, and we concatenate $d(y_t)$, $s_t$ and $z$ together as `output` before feeding it through the linear layer to receive our predictions, $\\hat{y}_{t+1}$."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "wRA8hkiLEzFh"
+      },
+      "source": [
+        "class Decoder(nn.Module):\n",
+        "    def __init__(self, output_dim, emb_dim, hid_dim, dropout):\n",
+        "        super().__init__()\n",
+        "\n",
+        "        self.hid_dim = hid_dim\n",
+        "        self.output_dim = output_dim\n",
+        "        \n",
+        "        self.embedding = nn.Embedding(output_dim, emb_dim)\n",
+        "        \n",
+        "        self.rnn = nn.GRU(emb_dim + hid_dim, hid_dim)\n",
+        "        \n",
+        "        self.fc_out = nn.Linear(emb_dim + hid_dim * 2, output_dim)\n",
+        "        \n",
+        "        self.dropout = nn.Dropout(dropout)\n",
+        "        \n",
+        "    def forward(self, input, hidden, context):\n",
+        "        \n",
+        "        #input = [batch size]\n",
+        "        #hidden = [n layers * n directions, batch size, hid dim]\n",
+        "        #context = [n layers * n directions, batch size, hid dim]\n",
+        "        \n",
+        "        #n layers and n directions in the decoder will both always be 1, therefore:\n",
+        "        #hidden = [1, batch size, hid dim]\n",
+        "        #context = [1, batch size, hid dim]\n",
+        "        \n",
+        "        input = input.unsqueeze(0)\n",
+        "        \n",
+        "        #input = [1, batch size]\n",
+        "        \n",
+        "        embedded = self.dropout(self.embedding(input))\n",
+        "        \n",
+        "        #embedded = [1, batch size, emb dim]\n",
+        "                \n",
+        "        emb_con = torch.cat((embedded, context), dim = 2)\n",
+        "            \n",
+        "        #emb_con = [1, batch size, emb dim + hid dim]\n",
+        "            \n",
+        "        output, hidden = self.rnn(emb_con, hidden)\n",
+        "        \n",
+        "        #output = [seq len, batch size, hid dim * n directions]\n",
+        "        #hidden = [n layers * n directions, batch size, hid dim]\n",
+        "        \n",
+        "        #seq len, n layers and n directions will always be 1 in the decoder, therefore:\n",
+        "        #output = [1, batch size, hid dim]\n",
+        "        #hidden = [1, batch size, hid dim]\n",
+        "        \n",
+        "        output = torch.cat((embedded.squeeze(0), hidden.squeeze(0), context.squeeze(0)), \n",
+        "                           dim = 1)\n",
+        "        \n",
+        "        #output = [batch size, emb dim + hid dim * 2]\n",
+        "        \n",
+        "        prediction = self.fc_out(output)\n",
+        "        \n",
+        "        #prediction = [batch size, output dim]\n",
+        "        \n",
+        "        return prediction, hidden"
+      ],
+      "execution_count": 194,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wqR66FM2EzFj"
+      },
+      "source": [
+        "## Seq2Seq Model\n",
+        "\n",
+        "Putting the encoder and decoder together, we get:\n",
+        "\n",
+        "![](https://github.com/bentrevett/pytorch-seq2seq/blob/master/assets/seq2seq7.png?raw=1)\n",
+        "\n",
+        "Again, in this implementation we need to ensure the hidden dimensions in both the encoder and the decoder are the same.\n",
+        "\n",
+        "Briefly going over all of the steps:\n",
+        "- the `outputs` tensor is created to hold all predictions, $\\hat{Y}$\n",
+        "- the source sequence, $X$, is fed into the encoder to receive a `context` vector\n",
+        "- the initial decoder hidden state is set to be the `context` vector, $s_0 = z = h_T$\n",
+        "- we use a batch of `<sos>` tokens as the first `input`, $y_1$\n",
+        "- we then decode within a loop:\n",
+        "  - inserting the input token $y_t$, previous hidden state, $s_{t-1}$, and the context vector, $z$, into the decoder\n",
+        "  - receiving a prediction, $\\hat{y}_{t+1}$, and a new hidden state, $s_t$\n",
+        "  - we then decide if we are going to teacher force or not, setting the next input as appropriate (either the ground truth next token in the target sequence or the highest predicted next token)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "FDyNrQ8VEzFk"
+      },
+      "source": [
+        "class Seq2Seq(nn.Module):\n",
+        "    def __init__(self, encoder, decoder, device):\n",
+        "        super().__init__()\n",
+        "        \n",
+        "        self.encoder = encoder\n",
+        "        self.decoder = decoder\n",
+        "        self.device = device\n",
+        "        \n",
+        "        assert encoder.hid_dim == decoder.hid_dim, \\\n",
+        "            \"Hidden dimensions of encoder and decoder must be equal!\"\n",
+        "        \n",
+        "    def forward(self, src, trg, teacher_forcing_ratio = 0.5):\n",
+        "        \n",
+        "        #src = [src len, batch size]\n",
+        "        #trg = [trg len, batch size]\n",
+        "        #teacher_forcing_ratio is probability to use teacher forcing\n",
+        "        #e.g. if teacher_forcing_ratio is 0.75 we use ground-truth inputs 75% of the time\n",
+        "        \n",
+        "        batch_size = trg.shape[1]\n",
+        "        trg_len = trg.shape[0]\n",
+        "        trg_vocab_size = self.decoder.output_dim\n",
+        "        \n",
+        "        #tensor to store decoder outputs\n",
+        "        outputs = torch.zeros(trg_len, batch_size, trg_vocab_size).to(self.device)\n",
+        "        \n",
+        "        #last hidden state of the encoder is the context\n",
+        "        context = self.encoder(src)\n",
+        "        \n",
+        "        #context also used as the initial hidden state of the decoder\n",
+        "        hidden = context\n",
+        "        \n",
+        "        #first input to the decoder is the <sos> tokens\n",
+        "        input = trg[0,:]\n",
+        "        \n",
+        "        for t in range(1, trg_len):\n",
+        "            \n",
+        "            #insert input token embedding, previous hidden state and the context state\n",
+        "            #receive output tensor (predictions) and new hidden state\n",
+        "            output, hidden = self.decoder(input, hidden, context)\n",
+        "            \n",
+        "            #place predictions in a tensor holding predictions for each token\n",
+        "            outputs[t] = output\n",
+        "            \n",
+        "            #decide if we are going to use teacher forcing or not\n",
+        "            teacher_force = random.random() < teacher_forcing_ratio\n",
+        "            \n",
+        "            #get the highest predicted token from our predictions\n",
+        "            top1 = output.argmax(1) \n",
+        "            \n",
+        "            #if teacher forcing, use actual next token as next input\n",
+        "            #if not, use predicted token\n",
+        "            input = trg[t] if teacher_force else top1\n",
+        "\n",
+        "        return outputs"
+      ],
+      "execution_count": 195,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "uxVMMPUyEzFk"
+      },
+      "source": [
+        "# Training the Seq2Seq Model\n",
+        "\n",
+        "The rest of this session is very similar to the previous one. \n",
+        "\n",
+        "We initialise our encoder, decoder and seq2seq model (placing it on the GPU if we have one). As before, the embedding dimensions and the amount of dropout used can be different between the encoder and the decoder, but the hidden dimensions must remain the same."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "WDG6jOSuEzFk"
+      },
+      "source": [
+        "INPUT_DIM = len(QUESTION.vocab)\n",
+        "OUTPUT_DIM = len(RESPONSE.vocab)\n",
+        "ENC_EMB_DIM = 256\n",
+        "DEC_EMB_DIM = 256\n",
+        "HID_DIM = 512\n",
+        "ENC_DROPOUT = 0.5\n",
+        "DEC_DROPOUT = 0.5\n",
+        "\n",
+        "enc = Encoder(INPUT_DIM, ENC_EMB_DIM, HID_DIM, ENC_DROPOUT)\n",
+        "dec = Decoder(OUTPUT_DIM, DEC_EMB_DIM, HID_DIM, DEC_DROPOUT)\n",
+        "\n",
+        "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\n",
+        "\n",
+        "model = Seq2Seq(enc, dec, device).to(device)"
+      ],
+      "execution_count": 196,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "RLIc1l6CEzFk"
+      },
+      "source": [
+        "Next, we initialize our parameters. The paper states the parameters are initialized from a normal distribution with a mean of 0 and a standard deviation of 0.01, i.e. $\\mathcal{N}(0, 0.01)$. \n",
+        "\n",
+        "It also states we should initialize the recurrent parameters to a special initialization, however to keep things simple we'll also initialize them to $\\mathcal{N}(0, 0.01)$."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "HgqMqq-oEzFk",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "5edcce78-af07-448a-dd28-b405edfdef8a"
+      },
+      "source": [
+        "def init_weights(m):\n",
+        "    for name, param in m.named_parameters():\n",
+        "        nn.init.normal_(param.data, mean=0, std=0.01)\n",
+        "        \n",
+        "model.apply(init_weights)"
+      ],
+      "execution_count": 197,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Seq2Seq(\n",
+              "  (encoder): Encoder(\n",
+              "    (embedding): Embedding(2498, 256)\n",
+              "    (rnn): GRU(256, 512)\n",
+              "    (dropout): Dropout(p=0.5, inplace=False)\n",
+              "  )\n",
+              "  (decoder): Decoder(\n",
+              "    (embedding): Embedding(1691, 256)\n",
+              "    (rnn): GRU(768, 512)\n",
+              "    (fc_out): Linear(in_features=1280, out_features=1691, bias=True)\n",
+              "    (dropout): Dropout(p=0.5, inplace=False)\n",
+              "  )\n",
+              ")"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 197
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hd1QoOsUEzFl"
+      },
+      "source": [
+        "We print out the number of parameters.\n",
+        "\n",
+        "Even though we only have a single layer RNN for our encoder and decoder we actually have **more** parameters  than the last model. This is due to the increased size of the inputs to the GRU and the linear layer. However, it is not a significant amount of parameters and causes a minimal amount of increase in training time (~3 seconds per epoch extra)."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "IggCwIBgEzFl",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "2a3a612e-a056-466b-d376-744faa80ee05"
+      },
+      "source": [
+        "def count_parameters(model):\n",
+        "    return sum(p.numel() for p in model.parameters() if p.requires_grad)\n",
+        "\n",
+        "print(f'The model has {count_parameters(model):,} trainable parameters')"
+      ],
+      "execution_count": 198,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "The model has 6,390,427 trainable parameters\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "YiH54qzHEzFl"
+      },
+      "source": [
+        "We initiaize our optimizer."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "eO1_eoG7EzFl"
+      },
+      "source": [
+        "optimizer = optim.Adam(model.parameters())"
+      ],
+      "execution_count": 199,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "BwkV3FKlEzFl"
+      },
+      "source": [
+        "We also initialize the loss function, making sure to ignore the loss on `<pad>` tokens."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "H0DAbGbcEzFl"
+      },
+      "source": [
+        "# TRG_PAD_IDX = TRG.vocab.stoi[TRG.pad_token]\n",
+        "\n",
+        "# criterion = nn.CrossEntropyLoss(ignore_index = TRG_PAD_IDX)\n",
+        "TRG_PAD_IDX = RESPONSE.vocab.stoi[QUESTION.pad_token]\n",
+        "criterion = nn.CrossEntropyLoss(ignore_index = TRG_PAD_IDX)"
+      ],
+      "execution_count": 200,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FTay7E9rEzFm"
+      },
+      "source": [
+        "We then create the training loop..."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "A5OYuoFdEzFm"
+      },
+      "source": [
+        "def train(model, iterator, optimizer, criterion, clip, epoch):\n",
+        "    \n",
+        "    model.train()\n",
+        "    \n",
+        "    epoch_loss = 0\n",
+        "    \n",
+        "    for i, batch in enumerate(iterator):\n",
+        "        \n",
+        "        # src = batch.src\n",
+        "        src = batch.question\n",
+        "        # trg = batch.trg\n",
+        "        trg = batch.answer\n",
+        "        \n",
+        "        optimizer.zero_grad()\n",
+        "        \n",
+        "        output = model(src, trg)\n",
+        "        \n",
+        "        #trg = [trg len, batch size]\n",
+        "        #output = [trg len, batch size, output dim]\n",
+        "        \n",
+        "        output_dim = output.shape[-1]\n",
+        "        \n",
+        "        output = output[1:].view(-1, output_dim)\n",
+        "        trg = trg[1:].view(-1)\n",
+        "        \n",
+        "        #trg = [(trg len - 1) * batch size]\n",
+        "        #output = [(trg len - 1) * batch size, output dim]\n",
+        "        \n",
+        "        loss = criterion(output, trg)\n",
+        "        \n",
+        "        loss.backward()\n",
+        "        \n",
+        "        torch.nn.utils.clip_grad_norm_(model.parameters(), clip)\n",
+        "        \n",
+        "        optimizer.step()\n",
+        "        if(not i % 50):\n",
+        "          print(f\"Epoch:{epoch}, Batch:{i}, Batch Loss:{loss.item()}\")        \n",
+        "        epoch_loss += loss.item()\n",
+        "        \n",
+        "    return epoch_loss / len(iterator)"
+      ],
+      "execution_count": 201,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6rfUx5lhEzFm"
+      },
+      "source": [
+        "...and the evaluation loop, remembering to set the model to `eval` mode and turn off teaching forcing."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Jw022pw0EzFm"
+      },
+      "source": [
+        "def evaluate(model, iterator, criterion):\n",
+        "    \n",
+        "    model.eval()\n",
+        "    \n",
+        "    epoch_loss = 0\n",
+        "    \n",
+        "    with torch.no_grad():\n",
+        "    \n",
+        "        for i, batch in enumerate(iterator):\n",
+        "\n",
+        "            # src = batch.src\n",
+        "            src = batch.question\n",
+        "            # trg = batch.trg\n",
+        "            trg = batch.answer\n",
+        "\n",
+        "            output = model(src, trg, 0) #turn off teacher forcing\n",
+        "\n",
+        "            #trg = [trg len, batch size]\n",
+        "            #output = [trg len, batch size, output dim]\n",
+        "\n",
+        "            output_dim = output.shape[-1]\n",
+        "            \n",
+        "            output = output[1:].view(-1, output_dim)\n",
+        "            trg = trg[1:].view(-1)\n",
+        "\n",
+        "            #trg = [(trg len - 1) * batch size]\n",
+        "            #output = [(trg len - 1) * batch size, output dim]\n",
+        "\n",
+        "            loss = criterion(output, trg)\n",
+        "\n",
+        "            epoch_loss += loss.item()\n",
+        "        \n",
+        "    return epoch_loss / len(iterator)"
+      ],
+      "execution_count": 202,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "E43h8dnQEzFm"
+      },
+      "source": [
+        "We'll also define the function that calculates how long an epoch takes."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zTAmu3-EEzFm"
+      },
+      "source": [
+        "def epoch_time(start_time, end_time):\n",
+        "    elapsed_time = end_time - start_time\n",
+        "    elapsed_mins = int(elapsed_time / 60)\n",
+        "    elapsed_secs = int(elapsed_time - (elapsed_mins * 60))\n",
+        "    return elapsed_mins, elapsed_secs"
+      ],
+      "execution_count": 203,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "kbCGyO4ZEzFm"
+      },
+      "source": [
+        "Then, we train our model, saving the parameters that give us the best validation loss."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "jjFyRUK9EzFm",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "ecefcf3f-8bbc-4cc2-a06a-0e87a491e59a"
+      },
+      "source": [
+        "N_EPOCHS = 10\n",
+        "CLIP = 1\n",
+        "\n",
+        "best_valid_loss = float('inf')\n",
+        "\n",
+        "for epoch in range(N_EPOCHS):\n",
+        "    \n",
+        "    start_time = time.time()\n",
+        "    \n",
+        "    train_loss = train(model, train_iterator, optimizer, criterion, CLIP, epoch)\n",
+        "    valid_loss = evaluate(model, valid_iterator, criterion)\n",
+        "    \n",
+        "    end_time = time.time()\n",
+        "    \n",
+        "    epoch_mins, epoch_secs = epoch_time(start_time, end_time)\n",
+        "    \n",
+        "    if valid_loss < best_valid_loss:\n",
+        "        best_valid_loss = valid_loss\n",
+        "        torch.save(model.state_dict(), 'tut2-model.pt')\n",
+        "    \n",
+        "    print(f'Epoch: {epoch+1:02} | Time: {epoch_mins}m {epoch_secs}s')\n",
+        "    print(f'\\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}')\n",
+        "    print(f'\\t Val. Loss: {valid_loss:.3f} |  Val. PPL: {math.exp(valid_loss):7.3f}')"
+      ],
+      "execution_count": 204,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Epoch:0, Batch:0, Batch Loss:7.4310221672058105\n",
+            "Epoch:0, Batch:50, Batch Loss:4.299541473388672\n",
+            "Epoch:0, Batch:100, Batch Loss:4.082065105438232\n",
+            "Epoch: 01 | Time: 0m 2s\n",
+            "\tTrain Loss: 4.811 | Train PPL: 122.842\n",
+            "\t Val. Loss: 3.560 |  Val. PPL:  35.156\n",
+            "Epoch:1, Batch:0, Batch Loss:4.715090751647949\n",
+            "Epoch:1, Batch:50, Batch Loss:4.021053314208984\n",
+            "Epoch:1, Batch:100, Batch Loss:3.852405548095703\n",
+            "Epoch: 02 | Time: 0m 2s\n",
+            "\tTrain Loss: 4.253 | Train PPL:  70.328\n",
+            "\t Val. Loss: 3.540 |  Val. PPL:  34.471\n",
+            "Epoch:2, Batch:0, Batch Loss:4.657400608062744\n",
+            "Epoch:2, Batch:50, Batch Loss:3.7872300148010254\n",
+            "Epoch:2, Batch:100, Batch Loss:3.7478435039520264\n",
+            "Epoch: 03 | Time: 0m 2s\n",
+            "\tTrain Loss: 4.139 | Train PPL:  62.742\n",
+            "\t Val. Loss: 3.585 |  Val. PPL:  36.067\n",
+            "Epoch:3, Batch:0, Batch Loss:4.516617774963379\n",
+            "Epoch:3, Batch:50, Batch Loss:3.7915287017822266\n",
+            "Epoch:3, Batch:100, Batch Loss:3.856212854385376\n",
+            "Epoch: 04 | Time: 0m 2s\n",
+            "\tTrain Loss: 4.037 | Train PPL:  56.674\n",
+            "\t Val. Loss: 3.587 |  Val. PPL:  36.113\n",
+            "Epoch:4, Batch:0, Batch Loss:4.4303812980651855\n",
+            "Epoch:4, Batch:50, Batch Loss:3.6145498752593994\n",
+            "Epoch:4, Batch:100, Batch Loss:3.5860559940338135\n",
+            "Epoch: 05 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.947 | Train PPL:  51.793\n",
+            "\t Val. Loss: 3.602 |  Val. PPL:  36.675\n",
+            "Epoch:5, Batch:0, Batch Loss:4.2959675788879395\n",
+            "Epoch:5, Batch:50, Batch Loss:3.468031406402588\n",
+            "Epoch:5, Batch:100, Batch Loss:3.5206782817840576\n",
+            "Epoch: 06 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.851 | Train PPL:  47.051\n",
+            "\t Val. Loss: 3.692 |  Val. PPL:  40.123\n",
+            "Epoch:6, Batch:0, Batch Loss:4.193721771240234\n",
+            "Epoch:6, Batch:50, Batch Loss:3.3788115978240967\n",
+            "Epoch:6, Batch:100, Batch Loss:3.434612274169922\n",
+            "Epoch: 07 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.750 | Train PPL:  42.538\n",
+            "\t Val. Loss: 3.767 |  Val. PPL:  43.242\n",
+            "Epoch:7, Batch:0, Batch Loss:4.0607452392578125\n",
+            "Epoch:7, Batch:50, Batch Loss:3.1534149646759033\n",
+            "Epoch:7, Batch:100, Batch Loss:3.4066858291625977\n",
+            "Epoch: 08 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.615 | Train PPL:  37.134\n",
+            "\t Val. Loss: 3.814 |  Val. PPL:  45.315\n",
+            "Epoch:8, Batch:0, Batch Loss:3.92274808883667\n",
+            "Epoch:8, Batch:50, Batch Loss:3.189049482345581\n",
+            "Epoch:8, Batch:100, Batch Loss:3.40342116355896\n",
+            "Epoch: 09 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.540 | Train PPL:  34.454\n",
+            "\t Val. Loss: 3.911 |  Val. PPL:  49.929\n",
+            "Epoch:9, Batch:0, Batch Loss:4.086446285247803\n",
+            "Epoch:9, Batch:50, Batch Loss:3.3524186611175537\n",
+            "Epoch:9, Batch:100, Batch Loss:3.096930980682373\n",
+            "Epoch: 10 | Time: 0m 2s\n",
+            "\tTrain Loss: 3.467 | Train PPL:  32.051\n",
+            "\t Val. Loss: 3.925 |  Val. PPL:  50.658\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ztR5mNm8EzFn"
+      },
+      "source": [
+        "Finally, we test the model on the test set using these \"best\" parameters."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xaJo3X9aEzFn",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "4d938fe4-7786-416e-d01f-40230c4464b5"
+      },
+      "source": [
+        "model.load_state_dict(torch.load('tut2-model.pt'))\n",
+        "\n",
+        "test_loss = evaluate(model, test_iterator, criterion)\n",
+        "\n",
+        "print(f'| Test Loss: {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f} |')"
+      ],
+      "execution_count": 206,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "| Test Loss: 5.836 | Test PPL: 342.341 |\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
