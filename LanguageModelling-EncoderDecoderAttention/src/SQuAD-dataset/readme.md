@@ -8,8 +8,12 @@ Download a copy of the dataset (distributed under the CC BY-SA 4.0 license):
 - [dev-v2.0.json](https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v2.0.json)
 Following command can be used from colab to download dataset
 
+```
 !wget https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v2.0.json
 !wget https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v2.0.json
+```
+
+
 
 # What makes SQuAD so good? 
 
