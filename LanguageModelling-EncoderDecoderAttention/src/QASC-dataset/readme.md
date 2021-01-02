@@ -18,4 +18,8 @@ tar xvfz qasc_dataset.tar.gz  -C data/
 rm qasc_dataset.tar.gz
 ```
 
+# Download
+
+- For the full documentation of the dataset and its format please refer to our [Github repository](https://github.com/allenai/Break).
+- Click here to [download Break](https://github.com/allenai/Break/raw/master/break_dataset/Break-dataset.zip).
 
