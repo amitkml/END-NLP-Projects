@@ -11,7 +11,7 @@ movie metadata includes
 - character metadata included:
 - gender (for 3,774 characters)
 - position on movie credits (3,321 characters)
-[cornell](https://miro.medium.com/max/2416/1*0zi_agcEXRDs6UAkN6QP8g.jpeg)
+![cornell](https://miro.medium.com/max/2416/1*0zi_agcEXRDs6UAkN6QP8g.jpeg)
 
 # Dataset Download
 ZIP File can be downloaded from [cornell](http://www.cs.cornell.edu/~cristian/data/cornell_movie_dialogs_corpus.zip). Related corpus: [Cornell Movie-Quotes Corpus](https://www.cs.cornell.edu/~cristian/memorability.html).
