@@ -11,7 +11,11 @@ QASC is a question-answering dataset with a focus on sentence composition. It co
 
 Download and unzip the dataset into the data/QASC_Dataset folder:
 
+```
 mkdir -p data
 wget http://data.allenai.org/downloads/qasc/qasc_dataset.tar.gz
 tar xvfz qasc_dataset.tar.gz  -C data/
 rm qasc_dataset.tar.gz
+```
+
+
