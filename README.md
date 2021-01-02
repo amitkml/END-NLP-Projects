@@ -18,6 +18,10 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - Deployment: http://deployment.pratik.ai
 - [A Visual Survey of Data Augmentation in NLP](https://amitness.com/2020/05/data-augmentation-for-nlp/)
 - [NLP Augmentation Package](https://github.com/makcedward/nlpaug)
+- [Allen NLP](https://allennlp.org/)
+- [Simple Transformers](https://simpletransformers.ai/)
+- [Automatically Generate True or False questions from any content with OpenAI GPT2, Sentence BERT and Berkley Constituency parse](https://medium.com/swlh/practical-ai-automatically-generate-true-or-false-questions-from-any-content-with-openai-gpt2-9081ffe4d4c9)
+
 
 
 ## Details on Medipipe
