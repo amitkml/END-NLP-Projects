@@ -26,6 +26,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Natural Language Understanding for Chatbots](https://medium.com/neuralspace/natural-language-understanding-for-chatbots-2eb7a81b9390)
 - [Indic Transformers: An Analysis of Transformer Language Models for Indian Languages](https://medium.com/neuralspace/indic-transformers-an-analysis-of-transformer-language-models-for-indian-languages-c6b4db0643b)
 - [How Does Attention Work in Encoder-Decoder Recurrent Neural Networks](https://machinelearningmastery.com/how-does-attention-work-in-encoder-decoder-recurrent-neural-networks/)
+- [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
 
 
 ## Details on Medipipe
