@@ -21,6 +21,10 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Allen NLP](https://allennlp.org/)
 - [Simple Transformers](https://simpletransformers.ai/)
 - [Automatically Generate True or False questions from any content with OpenAI GPT2, Sentence BERT and Berkley Constituency parse](https://medium.com/swlh/practical-ai-automatically-generate-true-or-false-questions-from-any-content-with-openai-gpt2-9081ffe4d4c9)
+- [Generative Model Chatbots](https://medium.com/botsupply/generative-model-chatbots-e422ab08461e)
+- [Deep Learning for Chatbots, Part 1 – Introduction](http://www.wildml.com/2016/04/deep-learning-for-chatbots-part-1-introduction/?subscribe=success#blog_subscription-2)
+- [Natural Language Understanding for Chatbots](https://medium.com/neuralspace/natural-language-understanding-for-chatbots-2eb7a81b9390)
+- [Indic Transformers: An Analysis of Transformer Language Models for Indian Languages](https://medium.com/neuralspace/indic-transformers-an-analysis-of-transformer-language-models-for-indian-languages-c6b4db0643b)
 
 
 
