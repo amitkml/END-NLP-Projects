@@ -313,3 +313,5 @@ output_idx = outputs[1:].squeeze(1).argmax(1)
 
  ## Encoder & Decoder with combination of Attention mechanism into decoder
 
+Now, we can enhance the above Seq2Seq network with Attention mechanism.
+
