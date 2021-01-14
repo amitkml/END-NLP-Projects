@@ -1,10 +1,6 @@
-```
-{:
-[toc]
-}
-```
-
 [TOC]
+
+`{:toc}`
 
 # Language Translation Network design from Scratch
 
