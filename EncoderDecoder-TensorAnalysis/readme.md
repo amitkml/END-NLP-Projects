@@ -10,6 +10,16 @@ Have tried through following network for this English to German translation.
 
 - Translation through Encoder & Decoder Network
 - Translation through Encoder & Decoder with combination of Attention mechanism into decoder
+- Translation through Encoder & Decoder with combination of Attention mechanism into decoder with Padding and masking
+
+## Analysis Summary
+
+| Parameter        | Encoder - Decoder | Encoder Decoder with Attention | Encoder Decoder with Attention and Padding, Masking |
+| ---------------- | ----------------- | ------------------------------ | --------------------------------------------------- |
+| Final PPL        | 43.400            | 21.779                         | 23.087                                              |
+| Epoch Time       | 0m 47s            | 1m 26s                         | 0m 35s                                              |
+| No of Parameters | 18,101,509        | 20,518,917                     | 20,518,917                                          |
+|                  |                   |                                |                                                     |
 
 ## Encoder & Decoder Network
 
@@ -313,5 +323,35 @@ output_idx = outputs[1:].squeeze(1).argmax(1)
 
  ## Encoder & Decoder with combination of Attention mechanism into decoder
 
-Now, we can enhance the above Seq2Seq network with Attention mechanism.
+> A potential issue with this encoder–decoder approach is that a neural network needs to be able to compress all the necessary information of a source sentence into a fixed-length vector. This may make it difficult for the neural network to cope with long sentences, especially those that are longer than the sentences in the training corpus.
 
+— [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/abs/1409.0473), 2015.
+
+Now, we can enhance the above Seq2Seq network with Attention mechanism. Below is a picture of this approach taken from the paper. **Note the dotted lines explictly showing the use of the decoders attended hidden state output (ht) providing input to the decoder on the next timestep**.
+
+
+
+![image](https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2017/08/Feeding-Hidden-State-as-Input-to-Decoder.png)
+
+Instead of encoding the input sequence into a single fixed context vector, the attention model develops a context vector that is filtered specifically for each output time step.
+
+![im](https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2017/08/Example-of-Attention.png)
+
+# Encoder-Decoder Papers
+
+- [Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation](https://arxiv.org/abs/1406.1078), 2014.
+- [Sequence to Sequence Learning with Neural Networks](https://arxiv.org/abs/1409.3215), 2014.
+
+### Attention Papers
+
+- [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/abs/1409.0473), 2015.
+- [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044), 2015.
+- [Hierarchical Attention Networks for Document Classification](https://www.microsoft.com/en-us/research/publication/hierarchical-attention-networks-document-classification/), 2016.
+- [Attention-Based Bidirectional Long Short-Term Memory Networks for Relation Classification](http://aclweb.org/anthology/P/P16/P16-2034.pdf), 2016
+- [Effective Approaches to Attention-based Neural Machine Translation](https://arxiv.org/abs/1508.04025), 2015.
+
+### More on Attention
+
+- [Attention in Long Short-Term Memory Recurrent Neural Networks](http://machinelearningmastery.com/attention-long-short-term-memory-recurrent-neural-networks/)
+- [Lecture 10: Neural Machine Translation and Models with Attention](https://www.youtube.com/watch?v=IxQtK2SjWWM), Stanford, 2017
+- [Lecture 8 – Generating Language with Attention](https://www.youtube.com/watch?v=ah7_mfl7LD0), Oxford.
