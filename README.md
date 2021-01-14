@@ -28,6 +28,8 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [How Does Attention Work in Encoder-Decoder Recurrent Neural Networks](https://machinelearningmastery.com/how-does-attention-work-in-encoder-decoder-recurrent-neural-networks/)
 - [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
 
+## Curated repo for NLP
+- https://github.com/bentrevett/pytorch-seq2seq
 
 ## Details on Medipipe
 
