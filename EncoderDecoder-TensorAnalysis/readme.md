@@ -1,10 +1,5 @@
 [TOC]
 
-```
-* TOC
-{:toc}
-```
-
 # Language Translation Network design from Scratch
 
 It is essential for us to understand tensor size/shape during network architecture analysis and this will help us to decide how to merge/permute/concat tensors.
