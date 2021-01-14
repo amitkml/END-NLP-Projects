@@ -16,6 +16,9 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - Models: http://models.quantumstat.com
 - Notebook: http://notebooks.quantumstat.com
 - Deployment: http://deployment.pratik.ai
+- [CS224d: Deep Learning for Natural Language Processing](http://cs224d.stanford.edu/)
+- [Natural Language Processing with Python](http://www.nltk.org/book/)
+- [CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/)
 - [A Visual Survey of Data Augmentation in NLP](https://amitness.com/2020/05/data-augmentation-for-nlp/)
 - [NLP Augmentation Package](https://github.com/makcedward/nlpaug)
 - [Allen NLP](https://allennlp.org/)
@@ -30,6 +33,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
+- [SNU 4th Industrial Revolution Academy: Artificial Intelligence Agent](http://ling.snu.ac.kr/class/AI_Agent/)
 
 ## Details on Medipipe
 
