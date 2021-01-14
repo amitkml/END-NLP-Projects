@@ -1,3 +1,9 @@
+```
+{:
+[toc]
+}
+```
+
 [TOC]
 
 # Language Translation Network design from Scratch
