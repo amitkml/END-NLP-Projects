@@ -9,7 +9,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ## Curated resource in NLP
 This section will contain my curated resources which helped me during NLP learning
-For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://twitter.com/amitness) and [@nlpguy_'s](https://twitter.com/nlpguy_) curation of resources and experience is super-helpful.
+For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://twitter.com/amitness) ,[Stanford NLP Group](https://twitter.com/stanfordnlp) and [@nlpguy_'s](https://twitter.com/nlpguy_) curation of resources and experience is super-helpful.
 
 - Data: http://datasets.quantumstat.com
 - Model selection: http://models.pratik.ai
