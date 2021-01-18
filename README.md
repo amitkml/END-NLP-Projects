@@ -30,6 +30,9 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Indic Transformers: An Analysis of Transformer Language Models for Indian Languages](https://medium.com/neuralspace/indic-transformers-an-analysis-of-transformer-language-models-for-indian-languages-c6b4db0643b)
 - [How Does Attention Work in Encoder-Decoder Recurrent Neural Networks](https://machinelearningmastery.com/how-does-attention-work-in-encoder-decoder-recurrent-neural-networks/)
 - [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
+- [Extracting Keyphrases from Text: RAKE and Gensim in Python](https://medium.com/@nikitasaxena0209)
+- [PyTorch: Scene Text Detection and Recognition by CRAFT and a Four-Stage Network](https://towardsdatascience.com/pytorch-scene-text-detection-and-recognition-by-craft-and-a-four-stage-network-ec814d39db05)
+- [
 
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
