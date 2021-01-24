@@ -87,7 +87,9 @@ Sometime, we also do **k-max pooling** whereby we take k no of max values column
 
 
 
-## Convolution 1 d with Pytorch
+## Convolution1d with Pytorch
+
+Here is a sample code which explains how we can use Pytorch for conv1d. Key point here to note here is that input no of channel is word_embedding_size.
 
 ![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/conv1d_pytorch.JPG?raw=true)
 
