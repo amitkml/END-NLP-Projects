@@ -1,5 +1,7 @@
 # Sequence to Sequence Network
 
+![image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/NMT_Seq2Seq.JPG?raw=true)
+
 ## Standard Seq2Seq - Testing Time
 
 ![Image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Seq2Seq_Testing_Time.JPG?raw=true)
