@@ -5,7 +5,7 @@
 
 ## Standard Seq2Seq - Training Time
 
-[image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Sew2SeqTraining.png)
+![image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Sew2SeqTraining.png)
 
 ## Standard Seq2Seq - Testing Time
 
