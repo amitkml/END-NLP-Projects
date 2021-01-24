@@ -1,5 +1,9 @@
 # Sequence to Sequence Network
 
+## Standard Seq2Seq - Testing Time
+
+[Image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Seq2Seq_Testing_Time.JPG?raw=true)
+
 ## Business Problem
 
 1. Change the languages from german<>english to french<>german
