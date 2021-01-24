@@ -1,7 +1,5 @@
 [TOC]
 
-# 
-
 # CNN for Text Classification
 
 A PyTorch CNN for classifying the sentiment of movie reviews, based on the paper [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882) by Yoon Kim (2014).
@@ -80,6 +78,14 @@ matter *where* this appears in a review; it is a good indicator that this is a p
 ![im](https://cezannec.github.io/assets/cnn_text/maxpooling_over_time.png)
 
 Since this operation is looking at a sequence of local feature values, it is often called **maxpooling over time**
+
+Sometime, we also do **k-max pooling** whereby we take k no of max values column wise. Following example shows that we are taking here 2-max pooling.
+
+![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/con1d_kmp.JPG?raw=true)
+
+
+
+
 
 ## Convolution 1 d with Pytorch
 
