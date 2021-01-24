@@ -4,6 +4,15 @@
 
 ![Image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Seq2Seq_Testing_Time.JPG?raw=true)
 
+## Standard Seq2Seq Application
+
+- Seq2Seq is versatile
+- Many NLP task can be phrased as Seq2Se
+  - Summarization (Long Text -> Short Text)
+  - Dialogue (Previous Sentence -> Next Sentence)
+  - Parsing (Input Text -> Output is parsed as Sequence)
+  - Code Language (Natuaral Language -> Python Code)
+
 ## Business Problem
 
 1. Change the languages from german<>english to french<>german
