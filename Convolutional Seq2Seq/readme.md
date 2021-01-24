@@ -83,9 +83,11 @@ Since this operation is looking at a sequence of local feature values, it is oft
 
 ## Convolution 1 d with Pytorch
 
+![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/conv1d_pytorch.JPG?raw=true)
 
 
-![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/comv1d_pytorch.JPG?raw=true)
+
+
 
 
 
