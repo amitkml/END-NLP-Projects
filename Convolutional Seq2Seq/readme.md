@@ -1,3 +1,15 @@
+[TOC]
+
+# 
+
+# CNN for Text Classification
+
+A PyTorch CNN for classifying the sentiment of movie reviews, based on the paper [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882) by Yoon Kim (2014).
+
+![im](https://raw.githubusercontent.com/cezannec/CNN_Text_Classification/master/notebook_ims/complete_embedding_CNN.png)
+
+*Image from the original paper, Convolutional Neural Networks for Sentence Classification.*
+
 # Convolutional Seq2Seq
 
 
@@ -35,7 +47,45 @@ In the following example of 1d CONV, we see that our feature output is being shr
 
 ![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/conv_filter_output.JPG?raw=true)
 
-So, in order to avoid this, we add padding for text data also as similar to convolution.
+So, in order to avoid this, we add padding for text data also as similar to convolution as shared below. So here my output is same size as input vector.	
+
+![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/conv_filter_output_padding.JPG?raw=true)
+
+## Recognizing General Patterns
+
+There is another nice property of this convolutional operation.  Recall that similar words will have similar embeddings and a convolution  operation is just a linear operation on these vectors. So, when a  convolutional kernel is applied to different sets of similar words, it  will produce a similar output value!
+
+In the below example, **you can see that the convolutional output value  for the input 2-grams “good movie” and “fantastic song” are about the  same because the word embeddings for those pairs of words are also very  similar**. 
+
+![im](https://cezannec.github.io/assets/cnn_text/similar_phrases_conv_out.png)
+
+In this example, the convolutional kernel has learned to capture a more general feature; not just a good movie or song, but a *positive * thing, generally. Recognizing these kinds of high-level features can be
+especially useful in text classification tasks, which often rely on general grouping
+
+## 1D Convolutions
+
+A single kernel will move one-by-one down a list of input embeddings, looking at the first word embedding (and a small window of next-word embeddings) then the next word embedding, and the next, and so on. The resultant output will be a feature vector that contains about as many values as there were input embeddings, so the input sequence size does matter.
+
+![im](https://cezannec.github.io/assets/cnn_text/conv_1D_time.gif)
+
+
+
+## Maxpooling over Time
+
+ One thing to think about is how a feature vector might look when applied to an important phrase in a text source. If we are trying to classify movie reviews, and we see the phrase, “great plot,” it doesn’t 
+matter *where* this appears in a review; it is a good indicator that this is a positive review, no matter its location in the source text.
+
+**The following output shows the key word coming out after max pooling is amazing and hence it can indicate sentence key word/pattern.** 
+
+![im](https://cezannec.github.io/assets/cnn_text/maxpooling_over_time.png)
+
+Since this operation is looking at a sequence of local feature values, it is often called **maxpooling over time**
+
+
+
+
+
+
 
 
 
