@@ -29,9 +29,13 @@ summed to get a **single output value** of 0.54.
 In this way, the convolution operation can be viewed as **window-based feature extraction**,
 where the features are patterns in sequential word groupings that indicate traits like the sentiment of a text, the grammatical function of different words, and so on.
 
-**It is also worth noting that the number of input channels for this convolutional layer—a value that is typically 1 for grayscale images or 3 for RGB images; will be 1 in this case, because a single, input text** **source will be encoded as *one* list of word embeddings.**![im]()
+**It is also worth noting that the number of input channels for this convolutional layer—a value that is typically 1 for grayscale images or 3 for RGB images; will be 1 in this case, because a single, input text** **source will be encoded as *one* list of word embeddings.**
 
+In the following example of 1d CONV, we see that our feature output is being shrink and it has come to down from 7 to 5.
 
+![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/conv_filter_output.JPG?raw=true)
+
+So, in order to avoid this, we add padding for text data also as similar to convolution.
 
 
 
