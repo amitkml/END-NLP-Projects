@@ -37,6 +37,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
 - [SNU 4th Industrial Revolution Academy: Artificial Intelligence Agent](http://ling.snu.ac.kr/class/AI_Agent/)
+- [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 11 – Convolutional Networks for NLP](https://www.youtube.com/watch?v=EAJoRA0KX7I)
 
 ## Details on Medipipe
 
