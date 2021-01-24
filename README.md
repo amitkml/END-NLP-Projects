@@ -35,7 +35,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [CNNs for Text Classification](https://cezannec.github.io/CNN_Text_Classification/)
 - [Extracting Keyphrases from Text: RAKE and Gensim in Python](https://medium.com/@nikitasaxena0209)
 - [PyTorch: Scene Text Detection and Recognition by CRAFT and a Four-Stage Network](https://towardsdatascience.com/pytorch-scene-text-detection-and-recognition-by-craft-and-a-four-stage-network-ec814d39db05)
-- [
+- [CNN Text Classification](https://github.com/amitkml/CNN_Text_Classification)
 
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
