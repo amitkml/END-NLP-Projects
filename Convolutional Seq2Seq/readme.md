@@ -81,7 +81,11 @@ matter *where* this appears in a review; it is a good indicator that this is a p
 
 Since this operation is looking at a sequence of local feature values, it is often called **maxpooling over time**
 
+## Convolution 1 d with Pytorch
 
+
+
+![im](https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/src/comv1d_pytorch.JPG?raw=true)
 
 
 
