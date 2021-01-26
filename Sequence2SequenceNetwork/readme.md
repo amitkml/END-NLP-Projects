@@ -23,7 +23,6 @@ The beam search strategy tries to find an output sequence having a maximum likel
 
 ![Image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Seq2Seq_Testing_Time.JPG?raw=true)
 
-
 ## Standard Seq2Seq Application
 
 - Seq2Seq is versatile
@@ -33,7 +32,7 @@ The beam search strategy tries to find an output sequence having a maximum likel
   - Parsing (Input Text -> Output is parsed as Sequence)
   - Code Language (Natuaral Language -> Python Code)
 
-## Business Problem
+# Business Problem
 
 1. Change the languages from german<>english to french<>german
 2. Change the model such that it has 3 layers instead of 2
