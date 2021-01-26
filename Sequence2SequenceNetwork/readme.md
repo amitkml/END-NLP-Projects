@@ -8,12 +8,21 @@
 ![image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Sew2SeqTraining.png)
 
 ### Greedy Decoding
-
+This strategy selects the most probable word (i.e. argmax) from the model’s vocabulary at each decoding time-step as the candidate to output sequence.
 ![image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Greedy_Decoding.JPG)
+The problem with this approach is that once the output is chosen at any time-step t, we don’t get the flexibility to go back and change our choice. It is seen in practice that greedy decoding strategy is prone to have grammatical errors in the generated text. It will result in choosing the best at any time-step t but that might not necessarily give the best when considering the full sentence to be grammatically correct and sensible.
+![image](https://miro.medium.com/max/344/1*84ND8QjSn_P0Lb_p4WZ97A.png)
 
+### Beam Search with Fixed Beam Size
+The beam search strategy tries to find an output sequence having a maximum likelihood. It does this by extending the greedy sampling to Top-k sampling strategy. At any time-step t, it considers top-k most probable words as the candidate words for that step. Here, k is called the beam size. 
+![image](https://miro.medium.com/max/614/1*_y1AdUWcDMcMihTvFAI4CQ.png)
+    When (k=1) — It behaves like Greedy search where argmax at any time-step t is fed to later consecutive step.
+    When (k=Size of Vocabulary) — It behaves like an Exhaustive search where possible words at each time-step are whole of vocabulary and of which each gives probability distribution over the next set of vocabulary for later consecutive step.
+    
 ## Standard Seq2Seq - Testing Time
 
 ![Image](https://github.com/amitkml/END-NLP-Projects/blob/main/Sequence2SequenceNetwork/src/Seq2Seq_Testing_Time.JPG?raw=true)
+
 
 ## Standard Seq2Seq Application
 
