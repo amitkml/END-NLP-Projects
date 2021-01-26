@@ -1,6 +1,12 @@
 [TOC]
 
-# CNN for Text Classification
+# Explained CNN for Text Architecture
+
+The notebook https://github.com/amitkml/END-NLP-Projects/blob/main/Convolutional%20Seq2Seq/END_NLP_Assignment_11_Convolutional_Seq2S.ipynb has comments been added for every blocks
+
+
+
+## How CNN works for Text?
 
 A PyTorch CNN for classifying the sentiment of movie reviews, based on the paper [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882) by Yoon Kim (2014).
 
