@@ -30,6 +30,20 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Indic Transformers: An Analysis of Transformer Language Models for Indian Languages](https://medium.com/neuralspace/indic-transformers-an-analysis-of-transformer-language-models-for-indian-languages-c6b4db0643b)
 - [How Does Attention Work in Encoder-Decoder Recurrent Neural Networks](https://machinelearningmastery.com/how-does-attention-work-in-encoder-decoder-recurrent-neural-networks/)
 
+### Convolution for Text
+- [Convolutional Sequence to Sequence Learning](https://charon.me/posts/pytorch/pytorch_seq2seq_5/)
+- [Sequence models & Attention mechanism](https://charon.me/posts/dl/dl15/)
+
+
+### BERT
+- [BERT (Word Embeddings)](https://charon.me/posts/nlp/bert/)
+
+### GPT2
+- [How GPT 2 works](https://charon.me/posts/model/gpt-2/)
+
+
+
+
 ### COnvolution for NLP
 - [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
 - [CNNs for Text Classification](https://cezannec.github.io/CNN_Text_Classification/)
