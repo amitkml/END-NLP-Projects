@@ -53,6 +53,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 ### Attention? Attention is what you need!
 - [Attention why?](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)
 - [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 8 – Translation, Seq2Seq, Attention](https://www.youtube.com/watch?v=XXtpJxZBa2c)
+- [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 14 – Transformers and Self-Attention](https://www.youtube.com/watch?v=5vcj8kSwBCY)
  
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
