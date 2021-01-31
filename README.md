@@ -44,13 +44,15 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 
 
-### COnvolution for NLP
+### Convolution for NLP
 - [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
 - [CNNs for Text Classification](https://cezannec.github.io/CNN_Text_Classification/)
 - [Extracting Keyphrases from Text: RAKE and Gensim in Python](https://medium.com/@nikitasaxena0209)
 - [PyTorch: Scene Text Detection and Recognition by CRAFT and a Four-Stage Network](https://towardsdatascience.com/pytorch-scene-text-detection-and-recognition-by-craft-and-a-four-stage-network-ec814d39db05)
 - [CNN Text Classification](https://github.com/amitkml/CNN_Text_Classification)
-
+### Attention? Attention is what you need!
+- [Attention why?](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)
+ 
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
 - [SNU 4th Industrial Revolution Academy: Artificial Intelligence Agent](http://ling.snu.ac.kr/class/AI_Agent/)
