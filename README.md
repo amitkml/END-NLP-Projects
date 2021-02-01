@@ -41,19 +41,18 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 ### GPT2
 - [How GPT 2 works](https://charon.me/posts/model/gpt-2/)
 
-
-
-
 ### Convolution for NLP
 - [Translation Pytorch Tutorial NLP Part: Use TorchText for Text Classification](https://www.programmersought.com/article/93015028948/)
 - [CNNs for Text Classification](https://cezannec.github.io/CNN_Text_Classification/)
 - [Extracting Keyphrases from Text: RAKE and Gensim in Python](https://medium.com/@nikitasaxena0209)
 - [PyTorch: Scene Text Detection and Recognition by CRAFT and a Four-Stage Network](https://towardsdatascience.com/pytorch-scene-text-detection-and-recognition-by-craft-and-a-four-stage-network-ec814d39db05)
 - [CNN Text Classification](https://github.com/amitkml/CNN_Text_Classification)
+
 ### Attention? Attention is what you need!
 - [Attention why?](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)
 - [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 8 – Translation, Seq2Seq, Attention](https://www.youtube.com/watch?v=XXtpJxZBa2c)
 - [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 14 – Transformers and Self-Attention](https://www.youtube.com/watch?v=5vcj8kSwBCY)
+- [TRANSFORMERS FROM SCRATCH](http://peterbloem.nl/blog/transformers)
  
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
