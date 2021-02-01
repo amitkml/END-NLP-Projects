@@ -53,6 +53,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 8 – Translation, Seq2Seq, Attention](https://www.youtube.com/watch?v=XXtpJxZBa2c)
 - [Stanford CS224N: NLP with Deep Learning | Winter 2019 | Lecture 14 – Transformers and Self-Attention](https://www.youtube.com/watch?v=5vcj8kSwBCY)
 - [TRANSFORMERS FROM SCRATCH](http://peterbloem.nl/blog/transformers)
+- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
  
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
