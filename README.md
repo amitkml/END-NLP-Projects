@@ -57,7 +57,8 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 ### More details on Transformer
 - [🤗 Transformers Notebooks](https://huggingface.co/transformers/notebooks.html)
-
+- [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 1](https://www.youtube.com/watch?v=bHfXYQgn0Cc)
+- [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 2](https://www.youtube.com/watch?v=ZU12u6-ewP0)
  
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
