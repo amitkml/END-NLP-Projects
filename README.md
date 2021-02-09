@@ -7,6 +7,10 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## Loss Function
+- [How to mask the loss](https://www.programmersought.com/article/7809233934/)
+- [How Pytorch Customizes Loss](https://www.programmersought.com/article/4356271119/)
+
 ## Curated resource in NLP
 This section will contain my curated resources which helped me during NLP learning
 For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://twitter.com/amitness) ,[Stanford NLP Group](https://twitter.com/stanfordnlp) and [@nlpguy_'s](https://twitter.com/nlpguy_) curation of resources and experience is super-helpful.
