@@ -1,5 +1,9 @@
 # Transformer Network
 The Transformer architecture featuting a two-layer Encoder / Decoder. The Encoder processes all three elements of the input sequence (w1, w2, and w3) in parallel, whereas the Decoder generates each element sequentially (only timesteps 0 and 1, where the output sequence elements v1 and v2 are generated, are depicted). Output token generation continues until an end of the sentence token <EOS> appears.
+- The inputs to the Decoder come in two varieties: the hidden states that are outputs of the Encoder (these are used for the Encoder-Decoder Attention within each Decoder layer) and the previously generated tokens of the output sequence (for the Decoder Self-Attention, also computed at each Decoder layer). 
+ - Since during the training phase, the output sequences are already available, one can perform all the different timesteps of the Decoding process in parallel by masking (replacing with zeroes) the appropriate parts of the "previously generated" output sequences. 
+ - This masking results in the Decoder Self-Attention being uni-directional, as opposed to the Encoder one. Finally, at inference time, the output elements are generated one by one in a sequential manner.  
+ 
   
 ![image](https://blog.scaleway.com/content/images/2019/08/transformer2.jpg)
 
