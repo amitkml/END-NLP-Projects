@@ -1,3 +1,8 @@
+# Transformer Network
+[image](https://blog.scaleway.com/content/images/2019/08/transformer2.jpg)
+
+# Assignment
+
 This assignment includes developing a chatbot depending on transformer network and using loss function.
 - Take the last code 
 - Convert that code to make it into a chatbot. Refer to this Pytorch tutorial: https://pytorch.org/tutorials/beginner/chatbot_tutorial.html (Links to an external site.) for integrating the dataset. 
