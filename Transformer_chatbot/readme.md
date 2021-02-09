@@ -1,5 +1,7 @@
 # Transformer Network
-[image](https://blog.scaleway.com/content/images/2019/08/transformer2.jpg)
+The Transformer architecture featuting a two-layer Encoder / Decoder. The Encoder processes all three elements of the input sequence (w1, w2, and w3) in parallel, whereas the Decoder generates each element sequentially (only timesteps 0 and 1, where the output sequence elements v1 and v2 are generated, are depicted). Output token generation continues until an end of the sentence token <EOS> appears.
+  
+![image](https://blog.scaleway.com/content/images/2019/08/transformer2.jpg)
 
 # Assignment
 
