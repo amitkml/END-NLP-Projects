@@ -6,6 +6,23 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ![image](https://media.giphy.com/media/26xBtSyoi5hUUkCEo/giphy.gif)
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
+## Reading Content
+
+General Machine Learning
+- [Machine Learning 101 from Google's Senior Creative Engineer explains Machine Learning for engineer's and executives alike](https://docs.google.com/presentation/d/1kSuQyW5DTnkVaZEjGYCkfOxvzCqGEFzWBy4e9Uedd9k/edit?usp=sharing)
+- [AI Playbook - a16z AI playbook is a great link to forward to your managers or content for your presentations](https://aiplaybook.a16z.com/)
+- [Ruder's Blog](http://ruder.io/#open) by [Sebastian Ruder](https://twitter.com/seb_ruder) for commentary on the best of NLP Research
+- [How To Label Data](https://www.lighttag.io/how-to-label-data/) guide to managing larger linguistic annotation projects
+
+Introductions and Guides to NLP
+- [Deep Learning, NLP, and Representations](https://colah.github.io/posts/2014-07-NLP-RNNs-Representations/)
+- [The Illustrated BERT, ELMo, and co](https://jalammar.github.io/illustrated-bert/). (How NLP Cracked Transfer Learning) and The [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [The Super Duper NLP Repo (SDNLPR): Collection of Colab notebooks covering a wide array of NLP task implementations.](https://notebooks.quantumstat.com/)
+- [Natural Language Processing by Hal Daumé III](https://nlpers.blogspot.com/)
+
+
+Blogs and Newsletters
+
 
 ## Loss Function
 - [How to mask the loss](https://www.programmersought.com/article/7809233934/)
