@@ -13,6 +13,7 @@ General Machine Learning
 - [AI Playbook - a16z AI playbook is a great link to forward to your managers or content for your presentations](https://aiplaybook.a16z.com/)
 - [Ruder's Blog](http://ruder.io/#open) by [Sebastian Ruder](https://twitter.com/seb_ruder) for commentary on the best of NLP Research
 - [How To Label Data](https://www.lighttag.io/how-to-label-data/) guide to managing larger linguistic annotation projects
+- [awesome-nlp](https://github.com/keon/awesome-nlp#books)
 
 Introductions and Guides to NLP
 - [Deep Learning, NLP, and Representations](https://colah.github.io/posts/2014-07-NLP-RNNs-Representations/)
@@ -20,8 +21,26 @@ Introductions and Guides to NLP
 - [The Super Duper NLP Repo (SDNLPR): Collection of Colab notebooks covering a wide array of NLP task implementations.](https://notebooks.quantumstat.com/)
 - [Natural Language Processing by Hal Daumé III](https://nlpers.blogspot.com/)
 
+Books
+- [Speech and Language Processing - free, by Prof. Dan Jurafsy](https://web.stanford.edu/~jurafsky/slp3/)
+- [Natural Language Processing - free, NLP notes by Dr. Jacob Eisenstein at GeorgiaTech](https://github.com/jacobeisenstein/gt-nlp-class)
+- [NLP with PyTorch - Brian & Delip Rao](https://github.com/joosthub/PyTorchNLPBook)
+- [Natural Language Processing with Python](https://www.nltk.org/book/)
 
-Blogs and Newsletters
+## Annotation Tools
+- [GATE - General Architecture and Text Engineering is 15+ years old, free and open source](https://gate.ac.uk/overview.html)
+- [Anafora is free and open source, web-based raw text annotation tool](https://github.com/weitechen/anafora)
+- [brat - brat rapid annotation tool is an online environment for collaborative text annotation](https://brat.nlplab.org/)
+
+## Text Embeddings
+- word2vec - [implementation](https://code.google.com/archive/p/word2vec/) - [explainer blog](http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/)
+- [glove](https://nlp.stanford.edu/pubs/glove.pdf) - [explainer blog](https://blog.acolyer.org/2016/04/22/glove-global-vectors-for-word-representation/)
+- fasttext - [implementation](https://github.com/facebookresearch/fastText) - paper - [explainer blog](https://towardsdatascience.com/fasttext-under-the-hood-11efc57b2b3)
+
+## Sentence and Language Model Based Word Embeddings
+- [Sequence to Sequence Learning - word vectors for machine translation](https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf)
+- [Skip Thought Vectors - word representation method](https://arxiv.org/abs/1506.06726)
+
 
 
 ## Loss Function
