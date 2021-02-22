@@ -112,3 +112,6 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 I am going to follow [End To End Project Example In Mediapipe](https://medium.com/@mahakal001/end-to-end-project-example-in-mediapipe-b74a4a8ebb61) and github issue [How to put my own Trained model in mediapipe?](https://github.com/google/mediapipe/issues/507)for adding my model into mediapipe.
 
 More details on mediapipe can be found from [Background Features in Google Meet, Powered by Web ML](https://www.googblogs.com/tag/machine-perception/)
+
+## Machine Learning Projects Solved and Explained
+- [130 Machine Learning Projects Solved and Explained](https://medium.com/the-innovation/130-machine-learning-projects-solved-and-explained-605d188fb392)
