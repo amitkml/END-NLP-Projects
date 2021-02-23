@@ -6,6 +6,10 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ![image](https://media.giphy.com/media/26xBtSyoi5hUUkCEo/giphy.gif)
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
+
+## The Super Duper NLP Repo
+- [The Super Duper NLP Repo](https://notebooks.quantumstat.com/)
+
 ## Reading Content
 
 General Machine Learning
