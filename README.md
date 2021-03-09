@@ -19,6 +19,7 @@ General Machine Learning
 - [Ruder's Blog](http://ruder.io/#open) by [Sebastian Ruder](https://twitter.com/seb_ruder) for commentary on the best of NLP Research
 - [How To Label Data](https://www.lighttag.io/how-to-label-data/) guide to managing larger linguistic annotation projects
 - [awesome-nlp](https://github.com/keon/awesome-nlp#books)
+- [Zero To One For NLP](https://pakodas.substack.com/p/nlp-metablog-a-blog-of-blogs-693e3a8f1e0c)
 
 Introductions and Guides to NLP
 - [Deep Learning, NLP, and Representations](https://colah.github.io/posts/2014-07-NLP-RNNs-Representations/)
