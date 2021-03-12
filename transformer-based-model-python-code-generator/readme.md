@@ -2,6 +2,65 @@
 
 Capstone project is to write a transformer-based model that can write python code (with proper whitespace indentations).
 
+## What is Transformer Network?
+
+The transformer model is based entirely on the attention mechanism and completely gets
+rid of recurrence. The transformer uses a special type of attention mechanism called self-attention.
+
+The transformer consists of an encoder-decoder architecture. We feed the input sentence (source
+sentence) to the encoder. The encoder learns the representation of the input sentence and
+sends the representation to the decoder. The decoder receives the representation learned by
+the encoder as input and generates the output sentence (target sentence).
+
+To process a sentence we need these 3 steps:
+
+1. Word embeddings of the input sentence are computed simultaneously.
+2. Positional encodings are then applied to each embedding resulting in word vectors that also include positional information.
+3. The word vectors are passed to the first encoder block.
+
+## Transformer Encoder
+
+
+
+Each block consists of the following layers in the same order:
+
+1. A multi-head self-attention layer to find correlations between each word
+2. A [normalization](https://theaisummer.com/normalization/) layer
+3. A residual connection around the previous two sublayers
+4. A linear layer
+5. A second normalization layer
+6. A second residual connection
+
+![im](https://theaisummer.com/assets/img/posts/transformer/encoder.png)
+
+### Self-attention mechanism
+
+Consider the following sentence: A dog ate the meat because it was hungry
+
+By reading the above statement, we can easily understand pronoun “it” relates to “dog” rather that meat. But how a model automatically understand this?
+
+Model takes representation of each such word and then relate with all order it to understand which other words are strongly related to it. So, that’s how it will understand.
+
+## Transformer decoder
+
+1. The output sequence is fed in its entirety and word embeddings are computed
+2. Positional encoding are again applied
+3. And the vectors are passed to the first Decoder block
+
+Each decoder block includes:
+
+1. A **Masked** multi-head self-attention layer
+2. A normalization layer followed by a residual connection
+3. A new multi-head attention layer (known as **Encoder-Decoder attention**)
+4. A second normalization layer and a residual connection
+5. A linear layer and a third residual connection
+
+![im](https://theaisummer.com/assets/img/posts/transformer/decoder.png)
+
+## Output of Transformer
+
+The output probabilities predict the next token in the output sentence. How? In essence, we assign a probability to each word in the French language and we simply keep the one with the highest score.
+
 
 
 ## Dataset
@@ -32,7 +91,424 @@ You can find the dataset [here (Links to an external site.)](https://drive.googl
 
 ## Output from Mode
 
+### Model Output with min_freq = 1
 
+```
+Question: 47 write a python function that accepts a valid path and changes the current working directory
+Source Python:
+import os 
+ def change_dir(path ) : 
+     return os.chdir(path )
+
+
+Target Python:
+def read_and_print_file(filepath ) : 
+     with open(filepath , " r " ) as infile : 
+         print ( infile.read ( ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python program to return a set of all elements in either A or B , but not both
+Source Python:
+set1 = { 10 , 20 , 30 , 40 , 50 } 
+ set2 = { 30 , 40 , 50 , 60 , 70 } 
+ print(set1.symmetric_difference(set2 ) )
+
+
+Target Python:
+a = 60 
+ b = 13 
+ c = a python language 
+ while a < 0 : 
+   print("True " ) 
+   else : 
+     if(n%i==0 ) 
+ print("First Set after removing common element " , largest ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to return an iterator over the last n items
+Source Python:
+def tail(n , iterable ) : 
+     from collections import deque 
+     return iter(deque(iterable , maxlen = n ) )
+
+
+Target Python:
+def digits_sum ( ) : 
+	 n = 2**20 
+	 ans = sum(int(c ) for c in str(n ) ) 
+	 return str(ans ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to convert a string   into xml
+Source Python:
+import xml.etree . ElementTree as ET 
+ root = ET.fromstring(country_data_as_string )
+
+
+Target Python:
+import re 
+ def check(email ) : 
+     regex = ' ^[a - z0 - 9]+[\._]?[a - z0 - 9]+[@]\w+[.]\w{2,3}$ ' 
+     if(re.search(regex , email ) ) : 
+         print("Valid Email " ) 
+     else : 
+         print("Invalid Email " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function that returns runs a garbage collector
+Source Python:
+def clear_memory ( ) : 
+     import gc 
+     gc.collect ( )
+
+
+Target Python:
+def to_upper(s ) : 
+     return s.upper ( ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write python function to generate valid parenthesis , number of parenthesis is given as input
+Source Python:
+def generateParenthesis(n ) : 
+
+     def backtrack(S= ' ' , left=0 , right=0 ) : 
+         if len(S ) = = 2*n : 
+             output.append(S ) 
+             return 
+         if left < n : 
+             backtrack(S+ ' ( ' , left+1 , right ) 
+         if right < left : 
+             backtrack(S+ ' ) ' , left , right+1 ) 
+
+     output = [ ] 
+     backtrack ( ) 
+     return output
+
+
+Target Python:
+def power(base , exp ) : 
+     if(exp==1 ) : 
+         return(base ) 
+     if(exp!=1 ) : 
+         return(base*power(base , exp-1 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to implement bubble sort and print the result
+Source Python:
+from random import randint 
+ N = 7 
+ a = [ ] 
+ for i in range(N ) : 
+     a.append(randint(1 , 20 ) ) 
+ print(a ) 
+ for i in range(N-1 ) : 
+     for j in range(N - i-1 ) : 
+         if a[j ] > a[j+1 ] : 
+             b = a[j ] 
+             a[j ] = a[j+1 ] 
+             a[j+1 ] = b 
+ print(a )
+
+
+Target Python:
+def stoogesort(arr , l , h ) : 
+     if l > = h : 
+         return 
+     if arr[l ] > arr[h ] : 
+         arr[l ] = arr[h ] = arr[h ] 
+         t = arr[l ] = arr[h ] = arr[h ] 
+         t 
+     if h
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Sort the List According to the Second Element in Sublist
+Source Python:
+a=[['A',34],['B',21],['C',26 ] ] 
+ for i in range(0,len(a ) ) : 
+     for j in range(0,len(a)-i-1 ) : 
+         if(a[j][1]>a[j+1][1 ] ) : 
+             temp = a[j ] 
+             a[j]=a[j+1 ] 
+             a[j+1]=temp
+
+
+Target Python:
+NA 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the real of the roots of a quadratic equation else return None ax**2 + bx + c = 0
+Source Python:
+def roots_of_qad_eq(a : float , b : float , c : float ) : 
+     d = b**2 - 4*a*c 
+     if d > = 0 : 
+         return ( -b+(d)**(1/2))/2*a,(-b-(d)**(1/2))/2*a 
+     else : 
+         return None
+
+
+Target Python:
+def sum_of_roots(a : float , c : float ) : 
+     if a : 
+         return c / a 
+     else : 
+         return None 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate the Temprature T of ideal gas based on ideal gas equation Pressure P and Volume V given
+Source Python:
+def find_temp_of_ideal_gas(pressure : float , volume : float , n : float)->float : 
+     r = 8.3145 # gas constant R 
+     return ( pressure*volume)/n*r
+
+
+Target Python:
+def get_ci(p : float , r : float , t : float)->float : 
+     return round(p*((1+(r/(n*100)))**(n*t ) ) - p,2 ) 
+#########################################################################################################
+#########################################################################################################
+Question: Define a function that can accept two strings as input and print the string with maximum length in console . If two strings have the same length , then the function should print al l strings line by line .
+Source Python:
+def printValue(s1,s2 ) : 
+	 len1 = len(s1 ) 
+	 len2 = len(s2 ) 
+	 if len1 > len2 : 
+		 print s1 
+	 elif len2 > len1 : 
+		 print s2 
+	 else : 
+		 print s1 
+		 print s2
+
+
+Target Python:
+def rotate_right(input , d ) : 
+
+     Rfirst = input[0 : len(input)-d ] 
+     Rsecond = input[len(input)-d : ] 
+     return ( Rsecond + Rfirst ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function that would return the sum of first n natural numbers , where n is the input
+Source Python:
+def sum_first_n(n ) : 
+     return ( n * ( n+1 ) ) // 2
+
+
+Target Python:
+def sum_first_n_recursive(n ) : 
+     if n = = 0 : 
+         return 0 
+     return 0 
+     return sum_first_n_recursive(n-1 ) + n 
+#########################################################################################################
+#########################################################################################################
+Question: how to check if a list is a subset of another list
+Source Python:
+if(all(x in test_list for x in sub_list ) ) : 
+     flag = True
+
+
+Target Python:
+l = [ ] 
+ if not l : 
+ print("List is empty " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python program to check / test multiple variables against a value
+Source Python:
+a = 10 
+ b = 20 
+ c = 30 
+ if 10 in { a , b , c } : 
+   print("True " ) 
+ else : 
+   print("False " )
+
+
+Target Python:
+a = 10 
+ b = 20 
+ c = 30 
+ if ( c < 30 ) : 
+   print("True " ) 
+ elif ( ) 
+ else : 
+ else : 
+ break 
+ print("The original dictionary is : " + str(sample_dict ) 
+ res = { }
+#########################################################################################################
+#########################################################################################################
+Question: how to add element at first position in array python
+Source Python:
+x = [ 1,3,4 ] 
+ a = 2 
+ x.insert(1,a )
+
+
+Target Python:
+my_list = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 8 , 10 ] 
+ print(my_list[:5 ] ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function that returns the sum of digits of a given number
+Source Python:
+def digisum(num ) : 
+     sum_=0 
+     while num > 0 : 
+         dig = num % 10 
+         sum_+=dig 
+         num//=10 
+     return sum _
+
+
+Target Python:
+def sum_of_digits(num ) : 
+   if num = = 0 : 
+     return num % 10 
+   else : 
+     return num % 10 + sum_of_digits(int(num / 10 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Counting total Digits in a string
+Source Python:
+str1 = " abc4234AFde " 
+ digitCount = 0 
+ for i in range(0,len(str1 ) ) : 
+   char = str1[i ] 
+   if(char.isdigit ( ) ) : 
+     digitCount + = 1 
+ print('Number of digits : ' , digitCount )
+
+
+Target Python:
+str1 = " abc4234AFde " 
+ digitCount = 0 
+ for i in range(0,len(str1 ) ) : 
+   char = str1[i ] 
+   if(char.isalpha ( ) ) : 
+     digitCount + = 1 
+ print('Number of digits : ' , digitCount ) 
+#########################################################################################################
+#########################################################################################################
+Question: sorted ( ) to sort , lambda provides key - value addition
+Source Python:
+res = sorted(test_dict.items ( ) , key = lambda sub : sub[0 ] + sub[1 ] )
+
+
+Target Python:
+test_dict = { ' gfg ' : 5 , ' is ' : 3 , ' best ' : 4 } 
+#########################################################################################################
+#########################################################################################################
+Question: write a function to compress a given string . Suppose a character ' c ' occurs consecutively X times in the string . Replace these consecutive occurrences of the character ' c ' with   ( X , c ) in the string .
+Source Python:
+def compress(text ) : 
+     from itertools import groupby 
+     for k , g in groupby(text ) : 
+         print ( " ( { } , { } ) " .format(len(list(g ) ) , k ) , end= " ")
+
+
+Target Python:
+def moveSpaces(str1 ) : 
+     str1 = str1 = " 
+     str1 = " returns the str1 
+     if char in str1 : 
+         str1 = = ' I ' 
+     return str1 
+
+ def inner 
+#########################################################################################################
+#########################################################################################################
+Question: 3x4 matrix
+Source Python:
+Y = [ [ 5,8,1,2 ] , 
+     [ 6,7,3,0 ] , 
+     [ 4,5,9,1 ] ]
+
+
+Target Python:
+Y = [ [ 5,8,1,2 ] , 
+     [ 6,7,3,0 ] , 
+     [ 4,5,9,1 ] ] 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to print the binary value of the numbers from 1 to N
+Source Python:
+n = int(input("Enter the value of N : ") ) 
+ for i in range(1 , n+1 ) : 
+     print("Binary value of " , i , " is : " , bin(i ) )
+
+
+Target Python:
+num = 16 
+ if num < 0 : 
+    print("Enter a positive number " ) 
+ else : 
+    sum = 0 
+    while(num > 0 ) : 
+        sum + = num 
+        num -= 1 
+    print("The sum is " , sum ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the total surface area of a cube of side a
+Source Python:
+def cal_surface_area_cube(a ) : 
+     return 6*(a**2 )
+
+
+Target Python:
+def cal_cylinder_surf_area(height , radius ) : 
+     pi=3.14 
+     return 2*pi*radius**2*+2*pi*radius*height 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python program to reverse a tuple .
+Source Python:
+NA
+
+
+Target Python:
+Tuple = ( 10,20 ) 
+ def sizeOfTuple(tup ) : 
+   return f'Size of Tuple : { str(Tuple.__sizeof _ ( ) ) } bytes ' 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to return the square root of a number
+Source Python:
+def get_sqrt(i ) : 
+     import math 
+     return(math.sqrt(i ) )
+
+
+Target Python:
+def square(x ) : 
+     return x**2 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to the push the first number to the end of a list .
+Source Python:
+def move_last(num_list ) : 
+     a = [ num_list[0 ] for i in range(num_list.count(num_list[0 ] ) ) ] 
+     x = [ i for i in num_list if i ! = num_list[0 ] ] 
+     x.extend(a ) 
+     return(x )
+
+
+Target Python:
+def move_last(num_list ) : 
+     a = [ num_list[0 ] for i in range(num_list.count(num_list[0 ] ) ) ) ] 
+     x = [ i for i in l ] 
+     x in l : 
+         x + = [ i for j in l ] 
+     return [ i for
+#########################################################################################################
+#########################################################################################################
+```
+
+
+
+### Model Output with min_freq = 2
 
 ```
 Question: write a python function to return the content of a directory and the last modified date
