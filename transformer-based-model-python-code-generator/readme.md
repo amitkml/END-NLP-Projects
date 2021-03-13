@@ -527,10 +527,6 @@ str1 = " It is a great day "
 
 
 
-### Model with TEXT.build_vocab(train_data, min_freq = 2)
-
-This model has output quite a lot <unk> token as my min_freq was set to 2 and hence I did not generate output.  Model file has been loaded into 
-
 ### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special characters
 
 I have also set with min_freq = 1 during Vocab set to avoid output of <unk>. Model file has been loaded into [Model_Experiment_4](https://github.com/amitkml/END-NLP-Projects/blob/main/transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer_4_0.ipynb) .
@@ -1439,5 +1435,492 @@ def check(string ) :
          return False 
 ```
 
+### Model with TEXT.build_vocab(train_data, min_freq = 1) and higher no of Encoder and Decoder Layer
 
+I have also set with min_freq = 1 during Vocab set to avoid output of Have increased Encoder and Decoder Layer.
+
+- ENC_LAYERS = 6
+- DEC_LAYERS = 6
+
+**I have done following special charecter handling in my tokenizer**
+
+```
+text = text.replace('+', 'ADDITION')
+text = text.replace('+=', 'INCREMENT')
+text = text.replace('-', 'SUBSTRACTION')
+text = text.replace(':', 'SEMICOLON')
+text = text.replace('\n', 'NEWLINE')
+text = text.replace('<=', 'LESSEQUAL')
+text = text.replace('%s', 'STRING')
+text = text.replace('<', 'LESS')
+text = text.replace('*', 'MULTIPLY')
+text = text.replace('/', 'DIVIDE')
+text = text.replace('>>', 'REDIRECT')
+```
+
+**Since I have done above special charecter handling in my tokenizer function so in decoding function, have done following to went ahead to original Python code**
+
+Model file has been loaded into [Experiment_5]()
+
+```
+  listToStrx = listToStr.replace('ADDITION','+')
+  listToStrx = listToStrx.replace('INCREMENT','+=')
+  listToStrx = listToStrx.replace('SUBSTRACTION','-')
+  listToStrx = listToStrx.replace('SEMICOLON',':')
+  listToStrx = listToStrx.replace('NEWLINE','\n')
+  listToStrx = listToStrx.replace('LESSEQUAL','<=')
+  listToStrx = listToStrx.replace('STRING','%s')
+  listToStrx = listToStrx.replace('LESS','<')
+  listToStrx = listToStrx.replace('MULTIPLY','*')
+  listToStrx = listToStrx.replace('DIVIDE','/')
+  listToStrx = listToStrx.replace('REDIRECT','>>')`
+```
+
+Model loss has increased a bit due to this additional layer and extra tokenization logic.
+
+```
+| Test Loss: 2.631 | Test PPL:  13.883 |
+```
+
+Model output is not that great but still is quite reasonable as shared below.
+
+```
+Question: write a python program that adds the elements of a list to a set and prints the set
+Source Python:
+my_set = { 1 , 2 , 3}
+my_list = [ 4 , 5 , 6]
+my_set.update(my_list)
+print(my_set )
+
+
+Target Python:
+my_set = { 1 , 2 , 3}
+my_list = [ 4 , 5 , 6]
+my_set.update(my_list)
+print(my_set ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program which will find all such numbers which are divisible by 7 but are not a multiple of 5 ; between 2000 and 3200 ( both included )
+Source Python:
+l=[]
+for i in range(2000 , 3201):
+     if ( i%7==0 ) and ( i%5!=0):
+         l.append(str(i))
+print(','.join(l ) )
+
+
+Target Python:
+l=[]
+for i in range(2000 , 3201):
+     if ( i%7==0 ) and ( i%5!=0):
+         l.append(str(i ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to find a string in a given phrase
+Source Python:
+phrase = " the surprise is in here somewhere"
+print(phrase.find("surprise " ) )
+
+
+Target Python:
+import re
+def removeLeadingZeros(ip):
+     modified_ip = re.sub(regex , ' . ' , ip)
+     print(modified_ip)
+if _ _ _ _ _ _ main _ _ _ ' , ' :
+
+ 	 ip = " 216.08.094.196"
+ 	 removeLeadingZeros(ip ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a Python function to Find LCM and returb the value
+Source Python:
+def compute_lcm(x , y):
+    # choose the greater number
+    if x > y:
+        greater = x
+    else:
+        greater = y
+    while(True):
+        if((greater % x = = 0 ) and ( greater % y = = 0)):
+            lcm = greater
+            break
+        greater += 1
+    return lcm
+
+
+Target Python:
+import math
+def LCMofArray(a):
+   lcm = a[0]
+   for i in range(1,len(a)):
+     lcm = lcm*a[i]//math.gcd(lcm , a[i])
+   return lcm
+arr1 = [ 1,2,3]
+print("LCM of arr1 elements: " , LCMofArray(arr1 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Test if string contains upper case
+Source Python:
+word = " Hello World"
+check = word.isupper()
+print(f"String contains upper case?:{check } " )
+
+
+Target Python:
+word = " Hello World"
+check = word.isupper()
+print(f"String contains upper case?:{check } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to return hexadecimal value of a given integer
+Source Python:
+def int_to_hex(a):
+   return hex(a )
+
+
+Target Python:
+def print_hexadecimal(dec):
+    print(hex(dec ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to print week number from a date
+Source Python:
+import datetime
+print(datetime.date(2015 , 6 , 16).isocalendar()[1])
+from datetime import date , timedelta
+def all_sundays(year):
+        dt = date(year , 1 , 1)
+        dt += timedelta(days = 6 - dt.weekday())
+        while dt.year = = year:
+           yield dt
+           dt += timedelta(days = 7)
+for s in all_sundays(2020):
+     print(s )
+
+
+Target Python:
+from datetime import datetime , timedelta
+given_date = datetime(2020 , 2 , 25)
+days_to_subtract = 7
+res_date = given_date - timedelta(days = days_to_subtract)
+print(res_date ) 
+#########################################################################################################
+#########################################################################################################
+Question: Rotate dictionary by K
+Source Python:
+NA
+
+
+Target Python:
+test_dict = { " Gfg " : 3 , " is " : 10 , " : 10 , " : 10 , " : 10 , " : 10 , " : 10 , " : 10 , " : 10 , " : 10 , " : 10
+#########################################################################################################
+#########################################################################################################
+Question: Removal all the characters other than integers from string
+Source Python:
+str1 = ' I am 25 years and 10 months old'
+res = " " .join([item for item in str1 if item.isdigit()])
+print(res )
+
+
+Target Python:
+s = " Kilometer"
+print(s.lower ( ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to remove punctuations from a string
+Source Python:
+punctuations = ' ' ' ! ( ) -[]{};:'"\,<>./?@#$%^&*_~'''
+my_str = " Hello ! ! ! , he said ---and went . "
+no_punct = " " 
+for char in my_str:
+    if char not in punctuations:
+        no_punct = no_punct + char
+print(no_punct )
+
+
+Target Python:
+from itertools import product
+def all_repeat(str1 , rno):
+   chars = list(str1)
+   results = [ ] 
+   for c in product(chars , repeat = rno):
+     results.append(c)
+   return results
+print(all_repeat('xyz ' , 3 ) 
+#########################################################################################################
+#########################################################################################################
+Question: printing original dictionary
+Source Python:
+print("The original dictionary is : " + str(test_dict ) )
+
+
+Target Python:
+print("The original dictionary is : " + str(test_dict ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to print even length words in a string
+Source Python:
+
+def printWords(s):
+     s = s.split ( ' ' ) 
+     for word in s:
+         if len(word)%2==0:
+             print(word )
+
+
+Target Python:
+str1 = " I am doing fine"
+s = str1.split ( ' ' ) 
+for word in s:
+     if len(word)%2==0:
+         print(word ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write Python Program to Convert Celsius To Fahrenheit
+Source Python:
+celsius = 37.5
+fahrenheit = ( celsius * 1.8 ) + 32
+print('%0.1f degree Celsius is equal to % 0.1f degree Fahrenheit ' % ( celsius , fahrenheit ) )
+
+
+Target Python:
+celsius = 37.5
+fahrenheit = ( celsius * 1.8 ) + 32
+print('%0.1f degree Celsius is equal to % 0.1f degree Fahrenheit ' % ( celsius , fahrenheit ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: check if the string is equal to its reverse
+Source Python:
+if list(my_str ) = = list(rev_str):
+    print("The string is a palindrome . ")
+else:
+    print("The string is not a palindrome . " )
+
+
+Target Python:
+if list(my_str ) = = list(rev_str):
+    print("The string is a palindrome . ")
+else:
+    print("The string is not a palindrome . " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Multiply All the Items in a Dictionary and print the result
+Source Python:
+d={'A':10,'B':10,'C':239}
+tot=1
+for i in d:
+     tot = tot*d[i]
+print(tot )
+
+
+Target Python:
+x = { " apple " , " banana " , " cherry"}
+y = { " google " , " microsoft " , " , " , " apple"}
+x.symmetric_difference_update(y)
+print(f"Duplicate Value in Two set:{x } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: sort the list
+Source Python:
+words.sort ( )
+
+
+Target Python:
+arr = [ 1 , 2 , 3 , 4 , 5];
+
+n = 3;
+
+for i in range(0 , n):
+     # Stores the last element of array of array of array of array of array by one
+         arr[j ] = arr[j-1];
+
+
+     arr[0 ] = arr[j-1];
+
+
+     arr[0 ]
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to swap two variables , Without Using Temporary Variable
+Source Python:
+x = 5
+y = 10
+x , y = y , x
+print("x = " , x)
+print("y = " , y )
+
+
+Target Python:
+x = 5
+y = 10
+temp = x
+x = y
+y = temp
+print('The value of x after swapping: { } ' .format(x))
+print('The value of y after swapping: { } ' .format(y ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a Python program to find Maximum Frequent Character in String
+Source Python:
+test_str = " GeeksforGeeks"
+print ( " The original string is : " + test_str)
+all_freq = { } 
+for i in test_str:
+     if i in all_freq:
+         all_freq[i ] += 1
+     else:
+         all_freq[i ] = 1
+res = max(all_freq , key = all_freq.get)
+print ( " The maximum of all characters in GeeksforGeeks is : " + res )
+
+
+Target Python:
+test_str = " GeeksforGeeks"
+print ( " The original string is : " + test_str)
+all_freq = { } 
+for i in test_str:
+     if i in all_freq:
+         all_freq[i ] += 1
+     else:
+         all_freq[i ] = 1
+res = min(all_freq , key = all_freq.get)
+
+print ( " The minimum of all
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to find the   difference between two times
+Source Python:
+def difference(h1 , m1 , h2 , m2):
+     t1 = h1 * 60 + m1
+     t2 = h2 * 60 + m2
+     if ( t1 = = t2):
+         print("Both are same times")
+         return
+     else:
+         diff = t2 - t1
+     h = ( int(diff / 60 ) ) % 24
+     m = diff % 60
+     print(h , " : " , m)
+difference(7 , 20 , 9 , 45)
+difference(15 , 23 , 18 , 54)
+difference(16 , 20 , 16 , 20 )
+
+
+Target Python:
+def difference(h1 , m1 , h2 , m2):
+     t1 = h1 * 60 + m2
+     if ( t1 = = t2):
+         print("Both are same times")
+         return
+     else:
+         diff = t2 - t1
+     h = t2 - t1
+     h = t2 - t1
+
+#########################################################################################################
+#########################################################################################################
+Question: Write a python function to sum variable number of arguments
+Source Python:
+def sum_all(*args):
+total = 0
+for num in args:
+total += num
+return total
+
+
+Target Python:
+def print_factors(x):
+    print("The factors of",x,"are:")
+    for i in range(1 , x + 1):
+        if x % i = = 0:
+            print(i ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to convert keySUBSTRACTIONvalues list to flat dictionary
+Source Python:
+from itertools import product
+test_dict = { ' month ' : [ 1 , 2 , 3],
+              ' name ' : [ ' Jan ' , ' Feb ' , ' March']}
+
+print("The original dictionary is : " + str(test_dict))
+
+res = dict(zip(test_dict['month ' ] , test_dict['name']))
+print("Flattened dictionary : " + str(res ) )
+
+
+Target Python:
+def remove_duplicates(data):
+     c = Counter(data)
+     s = set(data)
+     for item in s:
+         count = c.get(item)
+         while count > 1:
+             data.pop(item)
+             count -= 1
+     return data 
+#########################################################################################################
+#########################################################################################################
+Question: Python Program to Remove Punctuations From a String
+Source Python:
+punctuations = ' ' ' ! ( ) -[]{};:'"\,<>./?@#$%^&*_~'''
+my_str = " Hello ! ! ! , he said ---and went . "
+
+
+Target Python:
+from string import punctuation
+str1 = ' /*Jon is @developer & musician!!'
+print(f"The original string is :{str1 } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Calculate number of days between two given dates
+Source Python:
+from datetime import datetime
+date_1 = datetime(2020 , 2 , 25).date()
+date_2 = datetime(2020 , 9 , 17).date()
+delta = None
+if date_1 > date_2:
+     delta = date_1 - date_2
+else:
+     delta = date_2 - date_1
+print("Difference is " , delta.days , " days " )
+
+
+Target Python:
+from datetime import datetime
+date_1 = datetime(2020 , 2 , 25).date()
+date_2 = datetime(2020 , 9 , 17).date()
+delta = None
+if date_1 > date_2:
+     delta = date_1 - date_2
+else:
+     delta = date_2 - date_1
+print("Difference is " , delta.days , " days " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to check if a number is a perfect square
+Source Python:
+def is_perfect_square(n):
+     x = n // 2
+     y = set([x])
+     while x * x ! = n:
+         x = ( x + ( n // x ) ) // 2
+         if x in y: return False
+         y.add(x)
+     return True
+
+
+Target Python:
+def is_perfect_square(n):
+     x = n // 2
+     x = set([x])
+     while x ! = 0:
+         x ! = n // 2
+         y.add(x)
+     return True 
+```
+
+### Model with TEXT.build_vocab(train_data, min_freq = 2)
+
+This model has output quite a lot <unk> token as my min_freq was set to 2 and hence I did not generate output.  Model file has been loaded into  [Model_Experiment](https://github.com/amitkml/END-NLP-Projects/blob/main/transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer.ipynb) path.
 
