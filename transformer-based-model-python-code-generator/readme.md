@@ -121,7 +121,7 @@ ENC_DROPOUT = 0.1
 DEC_DROPOUT = 0.1
 ```
 
-**Model performance on Test data has been quite good and best among all my experimentation.**
+**Model performance on Test data has been quite good and best among all my experimentation.** Model file has been loaded into [Model_experiment_2](https://github.com/amitkml/END-NLP-Projects/blob/main/transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer_3_0.ipynb) for review.
 
 ```
 | Test Loss: 2.119 | Test PPL:   8.325 |
@@ -529,7 +529,458 @@ str1 = " It is a great day "
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 2)
 
+
+
 ### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special characters
+
+I have also set with min_freq = 1 during Vocab set to avoid output of <unk>. Model file has been loaded into [Model_Experiment_4]()
+
+
+
+**I have done following special charecter handling in my tokenizer**
+
+```
+text = text.replace('+', 'ADDITION')
+text = text.replace('+=', 'INCREMENT')
+text = text.replace('-', 'SUBSTRACTION')
+text = text.replace(':', 'SEMICOLON')
+text = text.replace('\n', 'NEWLINE')
+text = text.replace('<=', 'LESSEQUAL')
+text = text.replace('%s', 'STRING')
+text = text.replace('<', 'LESS')
+text = text.replace('*', 'MULTIPLY')
+text = text.replace('/', 'DIVIDE')
+text = text.replace('>>', 'REDIRECT')
+```
+
+**Since I have done above special charecter handling in my tokenizer function so in decoding function, have done following to went ahead to original Python code**
+
+```
+  listToStrx = listToStr.replace('ADDITION','+')
+  listToStrx = listToStrx.replace('INCREMENT','+=')
+  listToStrx = listToStrx.replace('SUBSTRACTION','-')
+  listToStrx = listToStrx.replace('SEMICOLON',':')
+  listToStrx = listToStrx.replace('NEWLINE','\n')
+  listToStrx = listToStrx.replace('LESSEQUAL','<=')
+  listToStrx = listToStrx.replace('STRING','%s')
+  listToStrx = listToStrx.replace('LESS','<')
+  listToStrx = listToStrx.replace('MULTIPLY','*')
+  listToStrx = listToStrx.replace('DIVIDE','/')
+  listToStrx = listToStrx.replace('REDIRECT','>>')`
+```
+
+Model performance has deteriorated a lot compare to my earlier experimentations.
+
+```
+| Test Loss: 2.585 | Test PPL:  13.260 |
+```
+
+Model output on test data is being quite good although model PPL has not that great.
+
+```
+Question: 37 . python function to find angle between hour hand and minute hand
+Source Python:
+def calcAngle(hh , mm):
+
+     # Calculate the angles moved by
+     # hour and minute hands with
+     # reference to 12:00
+     hour_angle = 0.5 * ( hh * 60 + mm)
+     minute_angle = 6 * mm
+
+     # Find the difference between
+     # two angles
+     angle = abs(hour_angle - minute_angle)
+
+     # Return the smaller angle of two
+     # possible angles
+     angle = min(360 - angle , angle)
+
+     return angle
+
+
+Target Python:
+def calcAngle(hh , mm):
+     hour_angle = 0.5 * ( hh * 60 + mm)
+     minute_angle = 6 * mm
+     angle = abs(hour_angle - minute_angle)
+     angle = min(360 - angle , angle)
+     return angle 
+#########################################################################################################
+#########################################################################################################
+Question: Given a Python list . Turn every item of a list into its square
+Source Python:
+aList = [ 1 , 2 , 3 , 4 , 5 , 6 , 7]
+aList =   [ x * x for x in aList]
+print(aList )
+
+
+Target Python:
+x = [ 2D_matrix ] # To convert from a 2-D to 3-D 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to do bitwise multiplication on a given bin number by given shifts
+Source Python:
+def bit_mul(n , shift):
+     return n << shift
+
+
+Target Python:
+def bit_div(n , shift):
+     return n >> shift 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to sort dict keys by value and print the keys
+Source Python:
+d = { ' apple': 10 , ' orange': 20 , ' banana': 5 , ' rotten tomato': 1}
+print(sorted(d , key = d.get ) )
+
+
+Target Python:
+Dict = { 1: ' Geeks ' , 2: ' For ' , 3: ' Geeks'}
+print("\nDictionary with the use of Integer Keys: " ) 
+print(Dict ) 
+#########################################################################################################
+#########################################################################################################
+Question: Set the values in the new list to upper case
+Source Python:
+list = " AMITKAYAL"
+newlist = [ x.upper ( ) for x in list]
+print(f"New list to upper case:{newlist } " )
+
+
+Target Python:
+first_array = [ 1,2,3,4,5,6,7]
+second_array = [ 3,7,2,1,4,6]
+def finder(first_array , second_array):
+     return(sum(first_array ) - sum(second_array))
+missing_number = finder(first_array , second_array)
+print(missing_number ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to print Prime Factors of an Integer
+Source Python:
+n=24
+print("Factors are:")
+i=1
+while(i<=n):
+     k=0
+     if(n%i==0):
+         j=1
+         while(j<=i):
+             if(i%j==0):
+                 k = k+1
+             j = j+1
+         if(k==2):
+             print(i)
+     i = i+1
+
+
+Target Python:
+def smallest_multiple(n):
+     if ( n<=2):
+       return n
+     i = n * 2
+     factors = [ number   for number in range(n , 1 , -1 ) if number of 2 > n]
+     print(factors)
+     while True:
+         for a in factors:
+             if i %
+#########################################################################################################
+#########################################################################################################
+Question: Write a function that removes all special characters
+Source Python:
+def clean_str(s):
+     import re
+     return re.sub('[^A-Za-z0-9]+ ' , '' , s )
+
+
+Target Python:
+def check(string ) :
+     s = { ' 0 ' , ' 1'}
+     if s = = p or p = = = { ' 0 ' } or p = { ' 1'}:
+         return True
+     else :
+         return False 
+#########################################################################################################
+#########################################################################################################
+Question: write a program that prints dictionaries having key of the first dictionary and value of the second dictionary
+Source Python:
+test_dict1 = { " tsai " : 20 , " is " : 36 , " best " : 100}
+test_dict2 = { " tsai2 " : 26 , " is2 " : 19 , " best2 " : 70}
+keys1 = list(test_dict1.keys())
+vals2 = list(test_dict2.values())
+res = dict()
+for idx in range(len(keys1)):
+ 	 res[keys1[idx ] ] = vals2[idx]
+print("Mapped dictionary : " + str(res ) )
+
+
+Target Python:
+test_dict1 = { " tsai " : 20 , " is " : 36 , " best " : 100}
+test_dict2 = { " tsai2 " : 26 , " is2 " : 70}
+keys1 = list(test_dict1.keys())
+vals2 = list(test_dict2.values())
+res = dict()
+for idx in range(len(keys1)):
+ 	 res[keys1[idx ] ] = vals2[idx]
+print("Mapped dictionary :
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate the moment of inertia of a sphere of mass M and radius R
+Source Python:
+def cal_mi_sphere(mass:float , radius:float)- > float:
+     return ( 7/5)*mass*(radius**2 )
+
+
+Target Python:
+def cal_gforce(mass1:float , mass2:float , distance:float)- > float:
+     g = 6.674*(10)**(-11)
+     return ( g*mass1*mass2)/(distance**2 ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python function to simulate an exception and log the error using logger provided by the user .
+Source Python:
+def exception_simulator(logger):
+     try:
+         raise ValueError
+     except ValueError:
+         logger.exception("ValueError occured in the function " )
+
+
+Target Python:
+def type_conversion(typ , a):
+   if(typ)=='int':
+     return(int(a))
+   elif(typ)=='float':
+     return(float(a))
+   else:
+     return(str(a))
+type_conversion('str',1 ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to merge two sorted lists
+Source Python:
+a = [ 3 , 4 , 6 , 10 , 11 , 18]
+b = [ 1 , 5 , 7 , 12 , 13 , 19 , 21]
+a.extend(b)
+c = sorted(a)
+print(f"{c } " )
+
+
+Target Python:
+my_list = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 2 , 1 , 2 , 4 , 5 , 2 , 4 , 8]
+
+l1 = [ ] 
+
+count = 0
+
+for item in input_list:
+     if item not in
+#########################################################################################################
+#########################################################################################################
+Question: write a python function for Caesar Cipher , with given shift value and return the modified text
+Source Python:
+def caesar_cipher(text , shift=1):
+     alphabet = string.ascii_lowercase
+     shifted_alphabet = alphabet[shift: ] + alphabet[:shift]
+     table = str.maketrans(alphabet , shifted_alphabet)
+     return text.translate(table )
+
+
+Target Python:
+def power(base , exp):
+     if(exp==1):
+         return(base)
+     if(exp!=1):
+         return(base*power(base , exp-1 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to round up a number and print it
+Source Python:
+import math
+x = 2.3
+y = math.ceil(x)
+print(y )
+
+
+Target Python:
+integer = 18
+print(f"Round off value : { round(integer , -1 ) } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the torque when a force f is applied at angle thea and distance for axis of rotation to place force applied is r
+Source Python:
+def cal_torque(force:float , theta:float , r:float)- > float:
+     import math
+     return force*r*math.sin(theta )
+
+
+Target Python:
+def cal_sp_after_discount(sp:float , discount:float)- > float:
+     return sp*(1 - discount/100 ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to Count the Number of Lines in a Text File
+Source Python:
+fname = input("Enter file name: " ) 
+num_lines = 0
+with open(fname , ' r ' ) as f:
+     for line in f:
+         num_lines += 1
+print("Number of lines:")
+print(num_lines )
+
+
+Target Python:
+st = " AmmarAdil"
+count = { } 
+for a in st:
+     if a in count:
+         count[a ] = 1
+print('Count ' , count = 1
+print('Count ' , count = 1
+print('Count ' , count 
+#########################################################################################################
+#########################################################################################################
+Question: Replacing a string with another string
+Source Python:
+word = " Hello World"
+replace = " Bye"
+input = " Hello"
+after_replace = word.replace(input , replace)
+print(f"String ater replacement: { after_replace } " )
+
+
+Target Python:
+str1 = " It is wonderful and sunny day for a picnic in the park"
+str_len = 5
+res_str = [ ] 
+
+text = str1.split ( " " " " " " " " " " " ) 
+
+for x in text:
+     if len(x ) < str_len:
+         res_str.append(x)
+print("Words that are
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to convert a list of values in kilometers to feet
+Source Python:
+  kilometer = [ 39.2 , 36.5 , 37.3 , 37.8]
+ feet = map(lambda x: float(3280.8399)*x , kilometer)
+ print(list(feet ) )
+
+
+Target Python:
+a=[2 , 3 , 8 , 9 , 2 , 4 , 6]
+n = len(a)
+temp = a[0]
+a[0]=a[n-1]
+a[n-1]=temp
+print("New list is:")
+print(a ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to locate the rightmost value less than x
+Source Python:
+def find_lt(a , x):
+     from bisect import bisect_left
+     i = bisect_left(a , x)
+     if i:
+         return a[i-1]
+     raise ValueError
+
+
+Target Python:
+def index(a , x):
+     from bisect import bisect_left
+     i = bisect_left(a , x)
+     if i ! = len(a ) and a[i ] = = x:
+         return i
+         return i
+         return i
+     raise ValueError 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to count dictionaries in a list in Python and print it
+Source Python:
+test_list = [ 10 , { ' gfg ' : 1 } , { ' ide ' : 2 , ' code ' : 3 } , 20 ]
+
+
+Target Python:
+my_list = [ { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { } , { }
+#########################################################################################################
+#########################################################################################################
+Question: 42 write a python program that converts lower case letters to uppercase and vice versa
+Source Python:
+def flip_case(s):
+     s = [ int(ord(x ) ) for x in s]
+     s = [ x - 32 if x > = 97 else x + 32 for x in s]
+     s = [ chr(x ) for x in s]
+     return " " .join(s )
+
+
+Target Python:
+s = input()
+u = unicode ( s , " utf-8")
+print(u ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to return the number of whitespace separated tokens
+Source Python:
+def tokenise(string):
+     return len(string.split ( ) )
+
+
+Target Python:
+def cal_eq_triangle_area(a:float)- > float:
+     if a:
+         return ( 3**(1/2))*(a**2)/4
+     else:
+         return None 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to find power of number using recursion
+Source Python:
+def power(N , P):
+     if ( P = = 0 or P = = 1):
+         return N
+     else:
+         return ( N * power(N , P - 1))
+print(power(5 , 2 ) )
+
+
+Target Python:
+def power(N , P):
+     if ( P = = = 1):
+         return N
+     else:
+         return ( N * power(N , P - 1))
+print(power(5 , 2 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate the potential energy of an object of mass m at height h
+Source Python:
+def cal_pe(mass:float , height:float)- > float:
+     g = 9.8
+     return ( mass*g*height )
+
+
+Target Python:
+def cal_surface_area_cuboid(l , b , h):
+     return 2*(l*b+b*h+h*l ) 
+#########################################################################################################
+#########################################################################################################
+Question: printing result
+Source Python:
+print("All keys maximum : " + str(res ) )
+
+
+Target Python:
+print("The required result : " + str(res ) ) 
+
+```
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 1) and higher size of hidden layer
 
