@@ -1,3 +1,5 @@
+[TOC]
+
 # Transformer Based Model Python Code Generator
 
 Capstone project is to write a transformer-based model that can write python code (with proper whitespace indentations).
@@ -99,19 +101,439 @@ I have done several experimentation during my capstone projects and have summari
 
 Key changes done in model architecture
 
-### Model with TEXT.build_vocab(train_data, min_freq = 2)
-
-
-
 ### Model with TEXT.build_vocab(train_data, min_freq = 1)
 
+Have kept min_freq to 1 and this has helped me to get rid of <unk>.
 
+Model output has been kept as default one with 3 Encoder and Decoder layer.
+
+```
+INPUT_DIM = len(TEXT.vocab)
+OUTPUT_DIM = len(TEXT.vocab)
+HID_DIM = 256
+ENC_LAYERS = 3
+DEC_LAYERS = 3
+ENC_HEADS = 8
+DEC_HEADS = 8
+ENC_PF_DIM = 512
+DEC_PF_DIM = 512
+ENC_DROPOUT = 0.1
+DEC_DROPOUT = 0.1
+```
+
+**Model performance on Test data has been quite good and best among all my experimentation.**
+
+```
+| Test Loss: 2.119 | Test PPL:   8.325 |
+```
+
+Model Output has been quite good and quite a lot areas where model has worked quite well.
+
+```
+Question: Use a list comprehension to square each odd number in a list . The list is input by a sequence of comma - separated numbers .
+Source Python:
+values = input ( ) 
+ numbers = [ x for x in values.split ( " , " ) if int(x)%2!=0 ] 
+ print(",".join(numbers ) )
+
+
+Target Python:
+list1 = [ 1 , 2 , 3 , 4 , 5 ] 
+ list2 = [ 5 , 6 , 7 , 2 , 3 , 8 ] 
+ final = [ a+b for a in list1 for b in list1 if a ! = count+1 ] 
+ print("Odd
+#########################################################################################################
+#########################################################################################################
+Question: write a function to check if a lower case letter exists in a given string
+Source Python:
+def check_lower(str1 ) : 
+
+     for char in str1 : 
+         k = char.islower ( ) 
+         if k = = True : 
+             return True 
+     if(k ! = 1 ) : 
+         return False
+
+
+Target Python:
+def check_upper(str1 ) : 
+
+     for char in str1 : 
+         k = char.isupper ( ) 
+         if k = = True : 
+             return True 
+     if(k ! = 1 ) : 
+         return False 
+#########################################################################################################
+#########################################################################################################
+Question: access Last characters in a string
+Source Python:
+word = " Hello World " 
+ letter = word[-1 ] 
+ print(f"First Charecter in String:{letter } " )
+
+
+Target Python:
+word = " Hello World " 
+ check = word.isalpha ( ) 
+ print(f"All char are alphabetic?:{check } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Python Program to Make a Simple Calculator
+Source Python:
+NA
+
+
+Target Python:
+NA 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the area of a trapezium with base a base b and height h between parallel sides
+Source Python:
+def cal_area_trapezium(a , b , h ) : 
+     return h*(a+b)/2
+
+
+Target Python:
+def cal_area_trapezium(a , b , h ) : 
+     return h*(a+b)/2 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python function that prints the Contents of a File in Reverse Order
+Source Python:
+def reverse_content(filename ) : 
+     for line in reversed(list(open(filename ) ) ) : 
+         print(line.rstrip ( ) )
+
+
+Target Python:
+def read_and_print_file(filepath ) : 
+     with open(filepath , " r " ) as infile : 
+         print ( infile.read ( ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a function to remove i - th indexed character in a given string
+Source Python:
+def remove_char(string , i ) : 
+     str1 = string [ : i ] 
+     str2 = string[i + 1 : ] 
+
+     return str1 + str2
+
+
+Target Python:
+def remove(string , i ) : 
+     i = i + i 
+     return i 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Multiply All the Items in a Dictionary and print the result
+Source Python:
+d={'A':10,'B':10,'C':239 } 
+ tot=1 
+ for i in d : 
+     tot = tot*d[i ] 
+ print(tot )
+
+
+Target Python:
+dict1 = { ' a ' : 10 , ' b ' : 10 } 
+ dict2 = { ' : 300 , ' c ' : 300 } 
+ for key in dict1 : 
+     if key in dict2 : 
+         dict2[key ] = dict2[key ] = dict2[key ]
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to return woodall numbers
+Source Python:
+NA
+
+
+Target Python:
+def is_prod_even(num1 , num2 ) : 
+    prod = num1 * num2 
+    return not prod % 2 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function that would return the sum of first n natural numbers , where n is the input
+Source Python:
+def sum_first_n(n ) : 
+     return ( n * ( n+1 ) ) // 2
+
+
+Target Python:
+def sum_first_n_recursive(n ) : 
+     if n = = 0 : 
+         return 0 
+     return 0 
+     return sum_first_n_recursive(n-1 ) + n 
+#########################################################################################################
+#########################################################################################################
+Question: Python Challenges : Check a sequence of numbers is a geometric progression or not
+Source Python:
+def is_geometric(li ) : 
+     if len(li ) < = 1 : 
+         return True 
+     # Calculate ratio 
+     ratio = li[1]/float(li[0 ] ) 
+     # Check the ratio of the remaining 
+     for i in range(1 , len(li ) ) : 
+         if li[i]/float(li[i-1 ] ) ! = ratio : 
+             return False 
+     return True
+
+
+Target Python:
+def is_prod_even(num1 , num2 ) : 
+    sum = num1 + num2 
+    return not sum not sum % 2 
+#########################################################################################################
+#########################################################################################################
+Question: write a function to replace all occurances of a substring in a string
+Source Python:
+str1 = " Hello ! It is a Good thing " 
+ substr1 = " Good " 
+ substr2 = " bad " 
+ replaced_str = str1.replace(substr1 , substr2 ) 
+ print("String after replace : " + str(replaced_str ) )
+
+
+Target Python:
+str1 = " It is wonderful and sunny day for a picnic in the park " 
+ str_len = 5 
+ res_str = [ ] 
+
+ text = str1.split ( " ") 
+
+ for x in text : 
+     if len(x ) < str_len : 
+         res_str.append(x ) 
+ print("Words
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to check if a given string is a palindrome
+Source Python:
+def is_palindrome(string ) : 
+    return string = = string[::-1 ]
+
+
+Target Python:
+def isPalindrome(s ) : 
+     return s = = s[::-1 ] 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to calculate the geometric sum of n-1 .
+Source Python:
+def geometric_sum(n ) : 
+   if n < 0 : 
+     return 0 
+   else : 
+     return 1 / ( pow(2 , n ) ) + geometric_sum(n - 1 )
+
+
+Target Python:
+def factorial(n ) : 
+     if n = = 0 : 
+         return 1 
+     else : 
+         return n*factorial(n-1 ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to check whether a person is eligible for voting or not based on their age
+Source Python:
+def vote_eligibility(age ) : 
+	 if age>=18 : 
+	     status="Eligible " 
+	 else : 
+	     status="Not Eligible " 
+	 return status
+
+
+Target Python:
+def bmi_calculator(height , weight ) : 
+	 bmi = weight/(height**2 ) 
+	 return bmi 
+#########################################################################################################
+#########################################################################################################
+Question: use built - in function filter to filter empty value
+Source Python:
+new_str_list = list(filter(None , str_list ) ) 
+ print("After removing empty strings " ) 
+ print(new_str_list )
+
+
+Target Python:
+test_list = [ { ' gfg ' : [ 5 , 6 ] , 
+              ' best ' : [ 7 ] , 
+              ' : [ 10 ] , 
+              ' best ' : [ 10 ] , 
+              ' : [ 10 ] , 
+              ' CS '
+#########################################################################################################
+#########################################################################################################
+Question: 3 write a python program to convert a string to a char array
+Source Python:
+def char_array(string ) : 
+     return list(string )
+
+
+Target Python:
+word = " Hello World " 
+ check = word.isalpha ( ) 
+ print(f"All char are alphabetic?:{check } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate volume of Triangular Pyramid
+Source Python:
+def volumeTriangular(a , b , h ) : 
+     return ( 0.1666 ) * a * b * h
+
+
+Target Python:
+def dot_product(a , b ) : 
+     return sum ( e[0]*e[1 ] for e in zip(a , b ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to find power of number using recursion
+Source Python:
+def power(N , P ) : 
+     if ( P = = 0 or P = = 1 ) : 
+         return N 
+     else : 
+         return ( N * power(N , P - 1 ) ) 
+ print(power(5 , 2 ) )
+
+
+Target Python:
+def power(N , P ) : 
+     if ( P = = 0 and ( P = 1 ) : 
+         return N 
+     else : 
+         return ( N * power(N , P - 1 ) 
+ print(power(5 , 2 ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to print perfect numbers from the given list of integers
+Source Python:
+def checkPerfectNum(n ) : 
+	 i = 2;sum = 1 ; 
+	 while(i < = n//2 ) : 
+		 if ( n % i = = 0 ) : 
+			 sum + = i 
+
+		 i + = 1 
+		 if sum = = n : 
+			 print(n , end= ' ' ) 
+ if _ _ name _ _ = = " _ _ main _ _ " : 
+	 print("Enter list of integers : ") 
+	 list_of_intgers = list(map(int , input().split ( ) ) ) 
+	 print("Given list of integers:",list_of_intgers ) 
+	 print("Perfect numbers present in the list is : ") 
+	 for num in list_of_intgers : 
+		 checkPerfectNum(num )
+
+
+Target Python:
+a = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 8 , 9 , 10 ] 
+ b = [ 2 , 8 , 9 , 10 , 15 ] 
+ for i in zip(a , b ) : 
+     print(matrix[i][1
+#########################################################################################################
+#########################################################################################################
+Question: 3x3 matrix
+Source Python:
+X = [ [ 12,7,3 ] , 
+     [ 4 , 5,6 ] , 
+     [ 7 , 8,9 ] ]
+
+
+Target Python:
+X = [ [ 12,7,3 ] , 
+     [ 4 , 5,6 ] , 
+     [ 7 , 8,9 ] ] 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to print the uncommon elements in List
+Source Python:
+
+ test_list1 = [ [ 1 , 2 ] , [ 3 , 4 ] , [ 5 , 6 ] ] 
+ test_list2 = [ [ 3 , 4 ] , [ 5 , 7 ] , [ 1 , 2 ] ] 
+
+ res_list = [ ] 
+ for i in test_list1 : 
+     if i not in test_list2 : 
+         res_list.append(i ) 
+ for i in test_list2 : 
+     if i not in test_list1 : 
+         res_list.append(i ) 
+
+ print ( " The uncommon of two lists is : " + str(res_list ) )
+
+
+Target Python:
+list1 = [ 1 , 2 , 3 , 4 , 5 ] 
+ list2 = [ 5 , 6 , 7 , 8 , 10 ] 
+ final = [ a , b for a in list1 if b not in list1 ] 
+ print("New list after removing all
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the median of numbers in a list
+Source Python:
+def cal_median(num_list : list)->float : 
+     if num_list : 
+         if len(num_list)%2 ! = 0 : 
+             return sorted(num_list)[int(len(num_list)/2 ) - 1 ] 
+         else : 
+             return ( sorted(num_list)[int(len(num_list)/2 ) - 1 ] + sorted(num_list)[int(len(num_list)/2)])/2 
+     else : 
+         return None
+
+
+Target Python:
+def cal_median(num_list : list)->float : 
+     if num_list : 
+         if len(num_list)%2 ! = 0 : 
+             return sorted(num_list)[int(len(num_list)/2 ) - 1 ] - 1 ] - 1 ] + sorted(num_list)[int(len(num_list)/2)])/2 
+     else : 
+         return None 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to identify to count no of instances of a value   inside a dictionary
+Source Python:
+def count_value(d : dict , value)->bool : 
+     return list(v = = value for v in dict.values()).count(True )
+
+
+Target Python:
+def invert_dict_non_unique(my_dict ) : 
+   my_inverted_dict = dict ( ) 
+   for key , value in my_dict.items ( ) : 
+       my_inverted_dict.setdefault(value , list()).append(key ) 
+   return my_inverted_dict 
+#########################################################################################################
+#########################################################################################################
+Question: Python String Operations
+Source Python:
+str1 = ' Good ' 
+ str2 = ' Morning ! '
+
+
+Target Python:
+str1 = " It is a great day " 
+ print("The string are : " , str1 ) 
+ res = str1.split ( " + str(res ) ) 
+```
+
+
+
+### Model with TEXT.build_vocab(train_data, min_freq = 2)
+
+### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special characters
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 1) and higher size of hidden layer
 
-### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special charecters
-
-Model Encoder and Decoder dimension has been increased from 512 to 1024
+Model Encoder and Decoder dimension has been increased from 512 to 1024. Model File name loaded in [Model_Experiment_6](transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer_6_0.ipynb)
 
 ```
 INPUT_DIM = len(TEXT.vocab)
@@ -569,839 +991,4 @@ def check(string ) :
 ```
 
 
-
-### Model Output with min_freq = 1
-
-```
-Question: 47 write a python function that accepts a valid path and changes the current working directory
-Source Python:
-import os 
- def change_dir(path ) : 
-     return os.chdir(path )
-
-
-Target Python:
-def read_and_print_file(filepath ) : 
-     with open(filepath , " r " ) as infile : 
-         print ( infile.read ( ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python program to return a set of all elements in either A or B , but not both
-Source Python:
-set1 = { 10 , 20 , 30 , 40 , 50 } 
- set2 = { 30 , 40 , 50 , 60 , 70 } 
- print(set1.symmetric_difference(set2 ) )
-
-
-Target Python:
-a = 60 
- b = 13 
- c = a python language 
- while a < 0 : 
-   print("True " ) 
-   else : 
-     if(n%i==0 ) 
- print("First Set after removing common element " , largest ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to return an iterator over the last n items
-Source Python:
-def tail(n , iterable ) : 
-     from collections import deque 
-     return iter(deque(iterable , maxlen = n ) )
-
-
-Target Python:
-def digits_sum ( ) : 
-	 n = 2**20 
-	 ans = sum(int(c ) for c in str(n ) ) 
-	 return str(ans ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to convert a string   into xml
-Source Python:
-import xml.etree . ElementTree as ET 
- root = ET.fromstring(country_data_as_string )
-
-
-Target Python:
-import re 
- def check(email ) : 
-     regex = ' ^[a - z0 - 9]+[\._]?[a - z0 - 9]+[@]\w+[.]\w{2,3}$ ' 
-     if(re.search(regex , email ) ) : 
-         print("Valid Email " ) 
-     else : 
-         print("Invalid Email " ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function that returns runs a garbage collector
-Source Python:
-def clear_memory ( ) : 
-     import gc 
-     gc.collect ( )
-
-
-Target Python:
-def to_upper(s ) : 
-     return s.upper ( ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write python function to generate valid parenthesis , number of parenthesis is given as input
-Source Python:
-def generateParenthesis(n ) : 
-
-     def backtrack(S= ' ' , left=0 , right=0 ) : 
-         if len(S ) = = 2*n : 
-             output.append(S ) 
-             return 
-         if left < n : 
-             backtrack(S+ ' ( ' , left+1 , right ) 
-         if right < left : 
-             backtrack(S+ ' ) ' , left , right+1 ) 
-
-     output = [ ] 
-     backtrack ( ) 
-     return output
-
-
-Target Python:
-def power(base , exp ) : 
-     if(exp==1 ) : 
-         return(base ) 
-     if(exp!=1 ) : 
-         return(base*power(base , exp-1 ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a python program to implement bubble sort and print the result
-Source Python:
-from random import randint 
- N = 7 
- a = [ ] 
- for i in range(N ) : 
-     a.append(randint(1 , 20 ) ) 
- print(a ) 
- for i in range(N-1 ) : 
-     for j in range(N - i-1 ) : 
-         if a[j ] > a[j+1 ] : 
-             b = a[j ] 
-             a[j ] = a[j+1 ] 
-             a[j+1 ] = b 
- print(a )
-
-
-Target Python:
-def stoogesort(arr , l , h ) : 
-     if l > = h : 
-         return 
-     if arr[l ] > arr[h ] : 
-         arr[l ] = arr[h ] = arr[h ] 
-         t = arr[l ] = arr[h ] = arr[h ] 
-         t 
-     if h
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python Program to Sort the List According to the Second Element in Sublist
-Source Python:
-a=[['A',34],['B',21],['C',26 ] ] 
- for i in range(0,len(a ) ) : 
-     for j in range(0,len(a)-i-1 ) : 
-         if(a[j][1]>a[j+1][1 ] ) : 
-             temp = a[j ] 
-             a[j]=a[j+1 ] 
-             a[j+1]=temp
-
-
-Target Python:
-NA 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function to return the real of the roots of a quadratic equation else return None ax**2 + bx + c = 0
-Source Python:
-def roots_of_qad_eq(a : float , b : float , c : float ) : 
-     d = b**2 - 4*a*c 
-     if d > = 0 : 
-         return ( -b+(d)**(1/2))/2*a,(-b-(d)**(1/2))/2*a 
-     else : 
-         return None
-
-
-Target Python:
-def sum_of_roots(a : float , c : float ) : 
-     if a : 
-         return c / a 
-     else : 
-         return None 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function to calculate the Temprature T of ideal gas based on ideal gas equation Pressure P and Volume V given
-Source Python:
-def find_temp_of_ideal_gas(pressure : float , volume : float , n : float)->float : 
-     r = 8.3145 # gas constant R 
-     return ( pressure*volume)/n*r
-
-
-Target Python:
-def get_ci(p : float , r : float , t : float)->float : 
-     return round(p*((1+(r/(n*100)))**(n*t ) ) - p,2 ) 
-#########################################################################################################
-#########################################################################################################
-Question: Define a function that can accept two strings as input and print the string with maximum length in console . If two strings have the same length , then the function should print al l strings line by line .
-Source Python:
-def printValue(s1,s2 ) : 
-	 len1 = len(s1 ) 
-	 len2 = len(s2 ) 
-	 if len1 > len2 : 
-		 print s1 
-	 elif len2 > len1 : 
-		 print s2 
-	 else : 
-		 print s1 
-		 print s2
-
-
-Target Python:
-def rotate_right(input , d ) : 
-
-     Rfirst = input[0 : len(input)-d ] 
-     Rsecond = input[len(input)-d : ] 
-     return ( Rsecond + Rfirst ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function that would return the sum of first n natural numbers , where n is the input
-Source Python:
-def sum_first_n(n ) : 
-     return ( n * ( n+1 ) ) // 2
-
-
-Target Python:
-def sum_first_n_recursive(n ) : 
-     if n = = 0 : 
-         return 0 
-     return 0 
-     return sum_first_n_recursive(n-1 ) + n 
-#########################################################################################################
-#########################################################################################################
-Question: how to check if a list is a subset of another list
-Source Python:
-if(all(x in test_list for x in sub_list ) ) : 
-     flag = True
-
-
-Target Python:
-l = [ ] 
- if not l : 
- print("List is empty " ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python program to check / test multiple variables against a value
-Source Python:
-a = 10 
- b = 20 
- c = 30 
- if 10 in { a , b , c } : 
-   print("True " ) 
- else : 
-   print("False " )
-
-
-Target Python:
-a = 10 
- b = 20 
- c = 30 
- if ( c < 30 ) : 
-   print("True " ) 
- elif ( ) 
- else : 
- else : 
- break 
- print("The original dictionary is : " + str(sample_dict ) 
- res = { }
-#########################################################################################################
-#########################################################################################################
-Question: how to add element at first position in array python
-Source Python:
-x = [ 1,3,4 ] 
- a = 2 
- x.insert(1,a )
-
-
-Target Python:
-my_list = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 8 , 10 ] 
- print(my_list[:5 ] ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function that returns the sum of digits of a given number
-Source Python:
-def digisum(num ) : 
-     sum_=0 
-     while num > 0 : 
-         dig = num % 10 
-         sum_+=dig 
-         num//=10 
-     return sum _
-
-
-Target Python:
-def sum_of_digits(num ) : 
-   if num = = 0 : 
-     return num % 10 
-   else : 
-     return num % 10 + sum_of_digits(int(num / 10 ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: Counting total Digits in a string
-Source Python:
-str1 = " abc4234AFde " 
- digitCount = 0 
- for i in range(0,len(str1 ) ) : 
-   char = str1[i ] 
-   if(char.isdigit ( ) ) : 
-     digitCount + = 1 
- print('Number of digits : ' , digitCount )
-
-
-Target Python:
-str1 = " abc4234AFde " 
- digitCount = 0 
- for i in range(0,len(str1 ) ) : 
-   char = str1[i ] 
-   if(char.isalpha ( ) ) : 
-     digitCount + = 1 
- print('Number of digits : ' , digitCount ) 
-#########################################################################################################
-#########################################################################################################
-Question: sorted ( ) to sort , lambda provides key - value addition
-Source Python:
-res = sorted(test_dict.items ( ) , key = lambda sub : sub[0 ] + sub[1 ] )
-
-
-Target Python:
-test_dict = { ' gfg ' : 5 , ' is ' : 3 , ' best ' : 4 } 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to compress a given string . Suppose a character ' c ' occurs consecutively X times in the string . Replace these consecutive occurrences of the character ' c ' with   ( X , c ) in the string .
-Source Python:
-def compress(text ) : 
-     from itertools import groupby 
-     for k , g in groupby(text ) : 
-         print ( " ( { } , { } ) " .format(len(list(g ) ) , k ) , end= " ")
-
-
-Target Python:
-def moveSpaces(str1 ) : 
-     str1 = str1 = " 
-     str1 = " returns the str1 
-     if char in str1 : 
-         str1 = = ' I ' 
-     return str1 
-
- def inner 
-#########################################################################################################
-#########################################################################################################
-Question: 3x4 matrix
-Source Python:
-Y = [ [ 5,8,1,2 ] , 
-     [ 6,7,3,0 ] , 
-     [ 4,5,9,1 ] ]
-
-
-Target Python:
-Y = [ [ 5,8,1,2 ] , 
-     [ 6,7,3,0 ] , 
-     [ 4,5,9,1 ] ] 
-#########################################################################################################
-#########################################################################################################
-Question: write a program to print the binary value of the numbers from 1 to N
-Source Python:
-n = int(input("Enter the value of N : ") ) 
- for i in range(1 , n+1 ) : 
-     print("Binary value of " , i , " is : " , bin(i ) )
-
-
-Target Python:
-num = 16 
- if num < 0 : 
-    print("Enter a positive number " ) 
- else : 
-    sum = 0 
-    while(num > 0 ) : 
-        sum + = num 
-        num -= 1 
-    print("The sum is " , sum ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function to return the total surface area of a cube of side a
-Source Python:
-def cal_surface_area_cube(a ) : 
-     return 6*(a**2 )
-
-
-Target Python:
-def cal_cylinder_surf_area(height , radius ) : 
-     pi=3.14 
-     return 2*pi*radius**2*+2*pi*radius*height 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python program to reverse a tuple .
-Source Python:
-NA
-
-
-Target Python:
-Tuple = ( 10,20 ) 
- def sizeOfTuple(tup ) : 
-   return f'Size of Tuple : { str(Tuple.__sizeof _ ( ) ) } bytes ' 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to return the square root of a number
-Source Python:
-def get_sqrt(i ) : 
-     import math 
-     return(math.sqrt(i ) )
-
-
-Target Python:
-def square(x ) : 
-     return x**2 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python function to the push the first number to the end of a list .
-Source Python:
-def move_last(num_list ) : 
-     a = [ num_list[0 ] for i in range(num_list.count(num_list[0 ] ) ) ] 
-     x = [ i for i in num_list if i ! = num_list[0 ] ] 
-     x.extend(a ) 
-     return(x )
-
-
-Target Python:
-def move_last(num_list ) : 
-     a = [ num_list[0 ] for i in range(num_list.count(num_list[0 ] ) ) ) ] 
-     x = [ i for i in l ] 
-     x in l : 
-         x + = [ i for j in l ] 
-     return [ i for
-#########################################################################################################
-#########################################################################################################
-```
-
-
-
-### Model Output with min_freq = 2
-
-```
-Question: write a python function to return the content of a directory and the last modified date
-Source Python:
-import glob 
- import os 
- import time 
- def retrieve_files_bydate(src_dir_path,*args ) : 
-     if(os.path.exists(src_dir_path ) = = false ) : 
-         print("destination path does n't exist " ) 
-         return 
-     files_in_dir = glob.glob(src_dir_path+"/ * . * " ) 
-     if ( len(files_in_dir ) < = 0 ) : 
-         print("no files present in:",src_dir_path ) 
-         return 
-     file_date_list = [ ( filename , time.ctime(os.path.getmtime(filename)))for filename in files_in_dir ] 
-     return file_date_list
-
-
-Target Python:
-import math 
- def <unk> ) : 
-     if(os.path.exists(src_dir_path ) = = false ) : 
-         print("destination path does n't exist " ) 
-         return 
-     files_in_dir = glob.glob(src_dir_path+"/ * . * . * . * . * . * . * . * . 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function that takes a list of words and returns the longest one
-Source Python:
-def find_longest_word(words_list ) : 
- word_len = [ ] 
- for n in words_list : 
- word_len.append((len(n ) , n ) ) 
- word_len.sort ( ) 
- return word_len[-1][1 ] 
- print(find_longest_word(["php " , " python " , " zekelabs " ] ) )
-
-
-Target Python:
-def printwords(s ) : 
-     s = s.split ( ' ' ' ' ) 
-     for word in s : 
-         if len(word)%2==0 : 
-             print(word ) 
-#########################################################################################################
-#########################################################################################################
-Question: split strings
-Source Python:
-word = " hello world " 
- ksplit = word.split ( ' ' ) 
- print(f"splited strings : { ksplit } " )
-
-
-Target Python:
-word = " hello world " 
- ksplit = word.split ( ' ) 
- print(f"splited strings : { ksplit } " ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to find greatest common divisor
-Source Python:
-def greatest_common_divisor(x , y ) : 
-     print("for " , x , " and " , y , " , " ) 
-     r = x%y 
-     while r>0 : 
-         r = x%y 
-         if r = = 0 : 
-             print("the greatest common divisor is " , y , " . " ) 
-         else : 
-             q = y 
-             x = q 
-             y = r 
- greatest_common_divisor(1071,1029 )
-
-
-Target Python:
-def lcm(num1 , num2 ) : 
-     if num1 > num2 : 
-         return true 
-     else : 
-         return false 
-#########################################################################################################
-#########################################################################################################
-Question: write a python program to make use of maps
-Source Python:
-def square(number ) : 
-     return number * * 2 
- numbers = [ 1 , 2 , 3 , 4 , 5 ] 
- squared = map(square , numbers ) 
- print(f'mapped numbers:{list(squared ) } ' )
-
-
-Target Python:
-<unk> = ' <unk> ' 
- <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to print if a number is even or odd
-Source Python:
-def oddeven(num ) : 
-     if num % 2 = = 0 : 
-         print('even ' ) 
-     else : 
-         print('odd ' )
-
-
-Target Python:
-def <unk> ) : 
-     if num > 0 : 
-         return num 
-     else : 
-         return num % 10 
-     for i in range(2 , num ) : 
-         if num % i ) = = 0 : 
-             if num % i ) = = 0 :
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to find the number of ( i , j ) pairs where i < j and ar[i]+ar[j ] is divisible by k in a data list
-Source Python:
-def divisible_sum_pairs(arr , k ) : 
-     count = 0 
-     n = len(arr ) 
-     for i in range(n - 1 ) : 
-         j = i + 1 
-         while j < n : 
-             if ( ( arr[i ] + arr[j ] ) % k ) = = 0 : 
-                 count + = 1 
-             j + = 1 
-     return count 
- import math
-
-
-Target Python:
-def <unk> , k ) : 
-     count = 0 
-     for i in range(n ) : 
-         j = i + 1 
-         <unk> ] + = k 
-     return count 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to remove leading zeros from an ip address
-Source Python:
-import re 
- regex = ' \.[0 ] * ' 
- def remove_leading_zeros(ip ) : 
-     modified_ip = re.sub(regex , ' . ' , ip ) 
-     return modified_ip
-
-
-Target Python:
-import re 
- def <unk> ) : 
-     regex = ' <unk> ] 
-     return re.sub('[^a - za - z0 - <unk> ' , s ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to count the number of digits in a number
-Source Python:
-def count_digits(n ) : 
-     return len(str(n ) )
-
-
-Target Python:
-def <unk> ) : 
-     n = 0 
-     while n > 0 : 
-         n = n = n % 10 
-         n = n = n = n // 10 
-     return n 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to return the total surface area of a cube of side a
-Source Python:
-def cal_surface_area_cube(a ) : 
-     return 6*(a**2 )
-
-
-Target Python:
-def cal_surface_area_cube(a ) : 
-     return 6*(a**2 ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python program to implement linear search and print the key element if found
-Source Python:
-def linear_search(alist , key ) : 
-     " " " return index of key in alist . return -1 if key not present . " " " 
-     for i in range(len(alist ) ) : 
-         if alist[i ] = = key : 
-             return i 
-     return -1 
-
-
- alist = [ 2 , 3 , 5 , 6 , 4 , 5 ] 
- key = 6 
-
- index = linear_search(alist , key ) 
- if index < 0 : 
-     print(f'{key } was not found . ' ) 
- else : 
-     print(f'{key } was found at index { index } . ' )
-
-
-Target Python:
-def linear_search(alist , key ) : 
-     if key in range(len(alist ) : 
-         return -1 
-     return -1 
-     return -1 
-
-
- alist = [ 2 , 3 , 4 ] 
- index = [ 6 , 5 , 6 , 7 , 7 ] 
- index = [
-#########################################################################################################
-#########################################################################################################
-Question: write a function that removes all special characters
-Source Python:
-def clean_str(s ) : 
-     import re 
-     return re.sub('[^a - za - z0 - 9]+ ' , '' , s )
-
-
-Target Python:
-def <unk> ) : 
-     import re 
-     return re.sub('[^a - za - z0 - <unk> ' , s ) 
-#########################################################################################################
-#########################################################################################################
-Question: function to add two tuple
-Source Python:
-def add_tuple(tup1 , tup2 ) : 
-     return tup1+tup2
-
-
-Target Python:
-def <unk> , b ) : 
-     return ( a , b ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: function to print ascii value of a character .
-Source Python:
-def show_ascii(a : str ) : 
-     print(ord(a ) )
-
-
-Target Python:
-def <unk> ) : 
-   return <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to calculate the potential energy of an object of mass m at height h
-Source Python:
-def cal_pe(mass : float , height : float)->float : 
-     g = 9.8 
-     return ( mass*g*height )
-
-
-Target Python:
-def <unk> : float , height : float)->float : 
-     return ( <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: n⋅2n − 1 , with n ≥ 1 .
-Source Python:
-def woodall_number(n ) : 
-     if n > = 0 : 
-         return n * 2 * * n - 1
-
-
-Target Python:
-def <unk> ) : 
-     if n > = 0 : 
-         return 0 
-         return <unk> ) + <unk> ) + <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to return the area of a trapezium with base a base b and height h between parallel sides
-Source Python:
-def cal_area_trapezium(a , b , h ) : 
-     return h*(a+b)/2
-
-
-Target Python:
-def cal_area_trapezium(a , b , h ) : 
-     return h*(a+b)/2 
-#########################################################################################################
-#########################################################################################################
-Question: write a lambda function that gives true if the input number is even otherwise false
-Source Python:
-even = lambda a : true if a%2 = = 0 else false
-
-
-Target Python:
-<unk> = <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to calculate simple interest
-Source Python:
-def simple_interest(p , t , r ) : 
-
-     si = ( p * t * r)/100 
-     return si
-
-
-Target Python:
-def simple_interest(p , r , t , t , t ) : 
-     si = ( p * t * t * r)/100 
-     return si 
-#########################################################################################################
-#########################################################################################################
-Question: iterate through rows
-Source Python:
-for i in range(len(x ) ) : 
-    # iterate through columns 
-    for j in range(len(x[0 ] ) ) : 
-        result[i][j ] = x[i][j ] + y[i][j ] 
- for r in result : 
-    print(r )
-
-
-Target Python:
-for i in range(len(x ) ) : 
-    # iterate through columns 
-    for j in range(len(x[0 ] ) ) : 
-        result[j][i ] = x[i][j ] 
- for r in result : 
-    print(r ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to get the surface_area of a cone with radius & slant height as input
-Source Python:
-def cone_surface_area(radius , slant_height ) : 
-     surface_area =   3.14 * ( radius * * 2 ) + 3.14 * radius * slant_height 
-     return surface_area
-
-
-Target Python:
-def <unk> , height ) : 
-     surface_area = <unk> + ( <unk> ) + ( <unk> ) + ( <unk> ) ) * 3.14 * 3.14 ) 
-     return surface_area 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to read a csv file and print its content
-Source Python:
-def read_csv(filename ) : 
-     import csv 
-     with open(filename , newline= ' ' ) as f : 
-         reader = csv.reader(f ) 
-         for row in reader : 
-             print(row )
-
-
-Target Python:
-def <unk> ) : 
-     import csv 
-     with open(filename , newline= ' ' ' ' ' ) as f : 
-         reader = <unk> ) 
-         for row in reader : 
-             print(row ) 
-#########################################################################################################
-#########################################################################################################
-Question: usage of dictionary
-Source Python:
-dict = { ' name ' : ' zara ' , ' age ' : 7 , ' class ' : ' first ' } 
- print " dict['name ' ] : " , dict['name ' ] 
- print " dict['age ' ] : " , dict['age ' ]
-
-
-Target Python:
-k = 2 
- for i in <unk> ) : 
-     if i = = 1 : 
-         <unk> ) 
- <unk> ) 
-#########################################################################################################
-#########################################################################################################
-Question: given a two list of equal size create a set such that it shows the element from both lists in the pair
-Source Python:
-firstlist = [ 2 , 3 , 4 , 5 , 6 , 7 , 8 ] 
- secondlist = [ 4 , 9 , 16 , 25 , 36 , 49 , 64 ] 
- result = zip(firstlist , secondlist ) 
- resultset = set(result ) 
- print(resultset )
-
-
-Target Python:
-firstlist = [ 2 , 3 , 4 , 5 , 6 , 7 , 8 ] 
- secondlist = [ 4 , 9 , 16 , 25 , 36 , 49 , 64 ] 
- result = zip(firstlist , secondlist ) 
- resultset = set(result ) 
- print(resultset )
-#########################################################################################################
-#########################################################################################################
-Question: write a python function get the maximum number in passed list
-Source Python:
-def max_check(x ) : 
-     max_val = x[0 ] 
-     for check in x : 
-         if check > max_val : 
-             max_val = check 
-     return max_val 
- print(f'{max_check([2,4,5,7,98 ] ) } ' )
-
-
-Target Python:
-def <unk> ) : 
-     min_val = x[0 ] 
-     for check in lst : 
-         min_val = check 
-     return min_val 
- <unk> ] ) 
-#########################################################################################################
-#########################################################################################################
-```
 
