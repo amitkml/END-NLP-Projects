@@ -89,7 +89,486 @@ You can find the dataset [here (Links to an external site.)](https://drive.googl
 
 
 
-## Output from Mode
+## Final Model
+
+
+
+## Experimentations during Project
+
+I have done several experimentation during my capstone projects and have summarized below my experimentation.
+
+Key changes done in model architecture
+
+### Model with TEXT.build_vocab(train_data, min_freq = 2)
+
+
+
+### Model with TEXT.build_vocab(train_data, min_freq = 1)
+
+
+
+### Model with TEXT.build_vocab(train_data, min_freq = 1) and higher size of hidden layer
+
+### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special charecters
+
+Model Encoder and Decoder dimension has been increased from 512 to 1024
+
+```
+INPUT_DIM = len(TEXT.vocab)
+OUTPUT_DIM = len(TEXT.vocab)
+HID_DIM = 512
+ENC_LAYERS = 3
+DEC_LAYERS = 3
+ENC_HEADS = 8
+DEC_HEADS = 8
+ENC_PF_DIM = 1024
+DEC_PF_DIM = 1024
+ENC_DROPOUT = 0.1
+DEC_DROPOUT = 0.1
+```
+
+Model Performance
+
+```
+| Test Loss: 2.166 | Test PPL:   8.723 |
+```
+
+Model Prediction on Test Data
+
+```
+Question: Write a function to calculate Volume of Hexagonal Pyramid
+Source Python:
+def volumeHexagonal(a , b , h ) : 
+     return a * b * h
+
+
+Target Python:
+def cal_dist_from_orign(x : float , y : float)->float : 
+     return ( x**2+y**2)**(1/2 ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to multiply two list with list comprehensive
+Source Python:
+l1=[1,2,3 ] 
+ l2=[4,5,6 ] 
+ print([x*y for x in l1 for y in l2 ] )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ] 
+ for i , ( i ) for i , j in test_list : 
+     for i ) ] )
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Find the Intersection of Two Lists
+Source Python:
+def main(alist , blist ) : 
+     def intersection(a , b ) : 
+         return list(set(a ) & set(b ) ) 
+     return intersection(alist , blist )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ] 
+ for i , ( i ) for i , j in test_list : 
+     for i ) ] )
+#########################################################################################################
+#########################################################################################################
+Question: write a program to print count of number of unique matching characters in a pair of strings
+Source Python:
+str1="ababccd12@ " 
+ str2="bb123cca1@ " 
+ matched_chars = set(str1 ) & set(str2 ) 
+ print("No . of matching characters are : " + str(len(matched_chars ) ) )
+
+
+Target Python:
+str1 = " Hello ! " 
+ print("\"%s\ " 
+ print('"%s " 
+ print('"%s " 
+ print('"{}"'.format(str1 ) ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate median of a list of numbers given
+Source Python:
+def median(pool ) : 
+     copy = sorted(pool ) 
+     size = len(copy ) 
+     if size % 2 = = 1 : 
+         return copy[int((size - 1 ) / 2 ) ] 
+     else : 
+         return ( copy[int(size/2 - 1 ) ] + copy[int(size/2 ) ] ) / 2
+
+
+Target Python:
+def shift_and_scale(list_of_nums , mean , std ) : 
+     return [ ( x - mean ) / std for x in list_of_nums ] 
+#########################################################################################################
+#########################################################################################################
+Question: Given a list slice it into a 3 equal chunks and revert each list
+Source Python:
+sampleList = [ 11 , 45 , 8 , 23 , 14 , 12 , 78 , 45 , 89 ] 
+ length = len(sampleList ) 
+ chunkSize   = int(length/3 ) 
+ start = 0 
+ end = chunkSize 
+ for i in range(1 , 4 , 1 ) : 
+   indexes = slice(start , end , 1 ) 
+   listChunk = sampleList[indexes ] 
+   mylist = [ i for i in listChunk ] 
+   print("After reversing it " , mylist ) 
+   start = end 
+   if(i ! = 2 ) : 
+     end + = chunkSize 
+   else : 
+     end + = length - chunkSize
+
+
+Target Python:
+def Sort_Tuple(tup ) : 
+
+     lst = len(tup ) 
+     for i in range(0 , lst ) : 
+         for j in range(0 , lst ) : 
+             if ( tup[j][1 ] > tup[j + 1][1 ] ) : 
+                 tup[j + 1]= temp 
+     return tup 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to count ' a 's in the repetition of a given string ' n ' times .
+Source Python:
+def repeated_string(s , n ) : 
+     return s.count('a ' ) * ( n // len(s ) ) + s[:n % len(s)].count('a ' )
+
+
+Target Python:
+def check(string ) : 
+     s = False 
+     p = False 
+     if s = = = False : 
+         return True 
+     else : 
+         return False 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Check if a Number is a Perfect Number
+Source Python:
+def perfect_no_check(n ) : 
+     sum1 = 0 
+     for i in range(1 , n ) : 
+         if(n % i = = 0 ) : 
+             sum1 = sum1 + i 
+     if ( sum1 = = n ) : 
+         return True 
+     else : 
+         return False
+
+
+Target Python:
+num = 16 
+ if num < 0 : 
+    print("Enter a positive number " ) 
+ else : 
+    sum = 0 
+    # use while loop to iterate until zero 
+    while(num > 0 ) : 
+        sum + = num -= 1 
+    print("The sum is "
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate the total resistance of resistances in series in a given list
+Source Python:
+def cal_total_res_in_series(res_list : list)->float : 
+     return sum(res_list )
+
+
+Target Python:
+def shift_and_scale(list_of_nums , std ) : 
+     return [ ( x - mean ) / std for x in list_of_nums ] 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python program to check number either positive , negative or zero
+Source Python:
+num = int ( input ( " Enter Integer Number : ") ) 
+ if num = = 0 : 
+ print ( " Zero Entered " ) 
+ elif num > 0 : 
+ print ( " Positive Number Entered " ) 
+ elif num < 0 : 
+ print ( " Negative Number Entered " )
+
+
+Target Python:
+import random 
+ print random.sample(range(100 ) , 5 ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to print the uncommon elements in List
+Source Python:
+
+ test_list1 = [ [ 1 , 2 ] , [ 3 , 4 ] , [ 5 , 6 ] ] 
+ test_list2 = [ [ 3 , 4 ] , [ 5 , 7 ] , [ 1 , 2 ] ] 
+
+ res_list = [ ] 
+ for i in test_list1 : 
+     if i not in test_list2 : 
+         res_list.append(i ) 
+ for i in test_list2 : 
+     if i not in test_list1 : 
+         res_list.append(i ) 
+
+ print ( " The uncommon of two lists is : " + str(res_list ) )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ] 
+ for i , ( i ) for i , j in test_list : 
+     for i ) ] )
+#########################################################################################################
+#########################################################################################################
+Question: printing result
+Source Python:
+print("The filtered tuple : " + str(res ) )
+
+
+Target Python:
+print("The original dictionary is : " + str(test_dict ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to convert key - values list to flat dictionary
+Source Python:
+from itertools import product 
+ test_dict = { ' month ' : [ 1 , 2 , 3 ] , 
+              ' name ' : [ ' Jan ' , ' Feb ' , ' March ' ] } 
+
+ print("The original dictionary is : " + str(test_dict ) ) 
+
+ res = dict(zip(test_dict['month ' ] , test_dict['name ' ] ) ) 
+ print("Flattened dictionary : " + str(res ) )
+
+
+Target Python:
+test_list = [ ( ' gfg ' , ' ) , ( ' 5 ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' ' '
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the volume of a hemi sphere
+Source Python:
+def cal_hemisphere_volume(radius : float)->float : 
+     pi=3.14 
+     return ( 2/3)*pi*(radius**3 )
+
+
+Target Python:
+def cal_cylinder_surf_area(height , radius ) : 
+     pi=3.14 
+     return 2*pi*radius**2*+2*pi*radius*height 
+#########################################################################################################
+#########################################################################################################
+Question: write Python3 code to demonstrate working of   Sort tuple list by Nth element of tuple   using sort ( ) + lambda
+Source Python:
+test_list = [ ( 4 , 5 , 1 ) , ( 6 , 1 , 5 ) , ( 7 , 4 , 2 ) , ( 6 , 2 , 4 ) ] 
+ print("The original list is : " + str(test_list ) ) 
+ N = 1 
+ test_list.sort(key = lambda x : x[N ] ) 
+ print("List after sorting tuple by Nth index sort : " + str(test_list ) )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ( a , ( a , b ) for a , b ) for i , b , b ) in
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to check whether a person is eligible for voting or not based on their age
+Source Python:
+def vote_eligibility(age ) : 
+	 if age>=18 : 
+	     status="Eligible " 
+	 else : 
+	     status="Not Eligible " 
+	 return status
+
+
+Target Python:
+def cal_circumference(r ) : 
+     pi = 3.14 
+     return 2*pi*r 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to swap tuple elements in list of tuples . Print the output .
+Source Python:
+test_list = [ ( 3 , 4 ) , ( 6 , 5 ) , ( 7 , 8) ] 
+
+ res = [ ( sub[1 ] , sub[0 ] ) for sub in test_list ] 
+
+ print("The swapped tuple list is : " + str(res ) )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ( a , ( a , b ) for i , b ) for i , b in test_list ] 
+
+#########################################################################################################
+#########################################################################################################
+Question: Convert two lists into a dictionary
+Source Python:
+ItemId = [ 54 , 65 , 76 ] 
+ names = [ " Hard Disk " , " Laptop " , " RAM " ] 
+ itemDictionary = dict(zip(ItemId , names ) ) 
+ print(itemDictionary )
+
+
+Target Python:
+test_list = [ ( 1 , 5 ) , ( 1 ) , ( 3 ) , ( 1 ) , ( 3 ) ] 
+ res = [ ( a , ( a , b ) for i , b ) for i , b in test_list ] 
+
+#########################################################################################################
+#########################################################################################################
+Question: Write a program that calculates and prints the value according to the given formula : Q = Square root of [ ( 2 * C * D)/H ]
+Source Python:
+import math 
+ c=50 
+ h=30 
+ value = [ ] 
+ items=[x for x in raw_input().split ( ' , ' ) ] 
+ for d in items : 
+     value.append(str(int(round(math.sqrt(2*c*float(d)/h ) ) ) ) ) 
+ print ' , ' .join(value )
+
+
+Target Python:
+num = int(input("Enter a number : ") ) 
+ if num > 0 : 
+    print("Enter a positive number " ) 
+ else : 
+    # use while loop to iterate until zero 
+    while(num > 0 ) : 
+        sum + = num -= 1 
+    while(num > 0
+#########################################################################################################
+#########################################################################################################
+Question: create a tuple
+Source Python:
+tuplex = ( 2 , 4 , 3 , 5 , 4 , 6 , 7 , 8 , 6 , 1 )
+
+
+Target Python:
+test_list = [ ( 5 , 6 ) , ( 1 ) , ( 3 ) , ( 1 ) ] 
+ print("The original list is : " + str(test_list ) 
+ res = [ sub ) for ele in test_list : 
+     for ele in sub : 
+         res
+#########################################################################################################
+#########################################################################################################
+Question: In[102 ] :
+Source Python:
+NA
+
+
+Target Python:
+NA 
+#########################################################################################################
+#########################################################################################################
+Question: Counting total Upper Case in a string
+Source Python:
+str1 = " abc4234AFde " 
+ digitCount = 0 
+ for i in range(0,len(str1 ) ) : 
+   char = str1[i ] 
+   if(char.upper ( ) ) : 
+     digitCount + = 1 
+ print('Number total Upper Case : ' , digitCount )
+
+
+Target Python:
+str1 = " Hello ! It is a Good thing " 
+ substr1 = " 
+ substr2 = " 
+ substr2 = " bad " 
+ replaced_str = str1.replace(substr1 , substr2 ) 
+ print("String after replace : " + str(replaced_str ) ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python function which wil return True if list parenthesis used in a input expression is valid , False otherwise
+Source Python:
+def isValid(s ) : 
+     stack = [ ] 
+     mapping = { ' ) ' : ' ( ' , ' } ' : ' { ' , ' ] ' : ' [ ' } 
+     for char in s : 
+         if char in mapping : 
+             if not stack : 
+                 return False 
+             top = stack.pop ( ) 
+             if mapping[char ] ! = top : 
+                 return False 
+         else : 
+             stack.append(char ) 
+     return not stack
+
+
+Target Python:
+def Fibonacci(n ) : 
+     if n<0 : 
+         print("Incorrect input " ) 
+     elif n==1 : 
+         print("Incorrect input " ) 
+     elif n==1 : 
+         return 1 
+     elif n==1 : 
+         return 1 
+     else : 
+         return Fibonacci(n-1)+Fibonacci(n-2 ) 
+#########################################################################################################
+#########################################################################################################
+Question: The consequences of modifying a list when looping through it
+Source Python:
+a = [ 1 , 2 , 3 , 4 , 5 ] 
+ for i in a : 
+     if not i % 2 : 
+         a.remove(i ) 
+ print(a ) 
+ b = [ 2 , 4 , 5 , 6 ] 
+ for i in b : 
+      if not i % 2 : 
+          b.remove(i ) 
+ print(b )
+
+
+Target Python:
+for i in range(len(X ) ) : 
+    # iterate through columns of Y 
+    for j in range(len(Y[0 ] ) : 
+        for k in range(len(Y ) : 
+            result[i][j ] + = X[i][k ] * Y[k][j ] 
+ for r in result : 
+    print(r ) 
+#########################################################################################################
+
+Question: Write a function to remove punctuation from the string
+Source Python:
+def r_punc ( ) : 
+     test_str = " end , is best : for ! Nlp ; " 
+     print("The original string is : " + test_str ) 
+     punc = r'!()-[]{};:\ , < > ./?@#$%^&*_~ ' 
+     for ele in test_str : 
+         if ele in punc : 
+             test_str = test_str.replace(ele , " ") 
+     print("The string after punctuation filter : " + test_str )
+
+
+Target Python:
+def check(string ) : 
+     s = p = { ' 0 ' } 
+     if s = = { ' } or p = { ' } : 
+         return True 
+     else : 
+         return False 
+```
+
+
 
 ### Model Output with min_freq = 1
 
