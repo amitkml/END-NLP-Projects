@@ -529,13 +529,11 @@ str1 = " It is a great day "
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 2)
 
-
+This model has output quite a lot <unk> token as my min_freq was set to 2 and hence I did not generate output.  Model file has been loaded into 
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 1) and custom tokenizer to handle python special characters
 
-I have also set with min_freq = 1 during Vocab set to avoid output of <unk>. Model file has been loaded into [Model_Experiment_4]()
-
-
+I have also set with min_freq = 1 during Vocab set to avoid output of <unk>. Model file has been loaded into [Model_Experiment_4](https://github.com/amitkml/END-NLP-Projects/blob/main/transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer_4_0.ipynb) .
 
 **I have done following special charecter handling in my tokenizer**
 
