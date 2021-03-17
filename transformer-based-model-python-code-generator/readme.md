@@ -179,7 +179,55 @@ combined_question_answer_df = combined_question_answer[combined_question_answer[
 
 ## Embedding Strategy
 
-I did my experimentation on Tokenizer and Embedding. At last decided, to use embedding with random initialization and allow BP to train the embedding layer.
+I did my experimentation on Tokenizer and Embedding.  All my  embedding strategy are shared below. Have decided to use separate tokenizer for Question and Answers. Question is standard English text and standard spacy tokenizer works great while Answer is having python code which requires special charecter handling.
+
+```
+def custom_tokenizer(nlp):
+    infix_re = re.compile(r'''[.\,\?\:\;\...\‘\’\`\“\”\"\'\(\)\[\]\{\}\*\%\^\+\-\=\<\>\|\!(//)(\n)(\t)~]''')
+    prefix_re = compile_prefix_regex(nlp.Defaults.prefixes)
+    suffix_re = compile_suffix_regex(nlp.Defaults.suffixes)
+
+    return Tokenizer(nlp.vocab, prefix_search=prefix_re.search,
+                                suffix_search=suffix_re.search,
+                                infix_finditer=infix_re.finditer,
+                                token_match=None)
+
+spacy_que = spacy.load('en_core_web_sm')
+spacy_ans = spacy.load('en_core_web_sm')
+spacy_ans.tokenizer = custom_tokenizer(spacy_ans)
+
+def tokenize_que(text):
+    """
+    Tokenizes English text from a string into a list of strings
+    """
+    return [tok.text for tok in spacy_que.tokenizer(text)]
+
+def tokenize_ans(text):
+    """
+    Tokenizes Code text from a string into a list of strings
+    """
+    return [tok.text for tok in spacy_ans.tokenizer(text)]
+```
+
+```
+TEXT = Field(tokenize = tokenize_que, 
+            eos_token = '<eos>',
+            init_token = '<sos>', 
+            # lower = True,
+            batch_first = True)
+
+TEXTPYTHON = Field(tokenize = tokenize_ans, 
+            eos_token = '<eos>',
+            init_token = '<sos>', 
+            # lower = True,
+            batch_first = True)
+
+fields = [("Question", TEXT), ("Answer", TEXTPYTHON)]
+```
+
+### Other Experiments
+
+At last decided, to use embedding with random initialization and allow BP to train the embedding layer.
 
 Regarding tokenization logic, I have found that standard spacy worked better for me as shared below.
 
@@ -234,86 +282,393 @@ criterion = nn.CrossEntropyLoss(ignore_index = TRG_PAD_IDX)
 
 ## Final Model
 
-### Model with TEXT.build_vocab(train_data, min_freq = 1)
+### Model with TEXT.build_vocab(train_data, min_freq = 1) including custom tokenizer for Python Code
 
-Have kept min_freq to 1 and this has helped me to get rid of <unk>.
-
-Model output has been kept as default one with 3 Encoder and Decoder layer.
+Have kept min_freq to 1 and this has helped me to get rid of <unk>. Model output has been kept as default one with 3 Encoder and Decoder layer. I have also used custom tokenizer for Python code to ensure special characters' are handled properly.
 
 ```
+# INPUT_DIM = len(TEXTPYTHON.vocab)
+OUTPUT_DIM = len(TEXTPYTHON.vocab)
 INPUT_DIM = len(TEXT.vocab)
-OUTPUT_DIM = len(TEXT.vocab)
-HID_DIM = 256
+# OUTPUT_DIM = len(TRG.vocab)
+
+HID_DIM = 512
 ENC_LAYERS = 3
 DEC_LAYERS = 3
 ENC_HEADS = 8
 DEC_HEADS = 8
-ENC_PF_DIM = 512
-DEC_PF_DIM = 512
+ENC_PF_DIM = 1024
+DEC_PF_DIM = 1024
 ENC_DROPOUT = 0.1
 DEC_DROPOUT = 0.1
 ```
 
-**Model performance on Test data has been quite good and best among all my experimentation.** Model file has been loaded into [Model_experiment_2](https://github.com/amitkml/END-NLP-Projects/blob/main/transformer-based-model-python-code-generator/src/END_NLP_CAPSTONE_PROJECT_English_Python_Code_Transformer_3_0.ipynb) for review.
+Model PPL value on test data looks to be best among all my other model experimentation.
 
 ```
-| Test Loss: 2.119 | Test PPL:   8.325 |
+| Test Loss: 1.534 | Test PPL:   4.636 |
 ```
 
-Model Output has been quite good and quite a lot areas where model has worked quite well.
+Python Code Generated also looks better.
 
 ```
-Question: Use a list comprehension to square each odd number in a list . The list is input by a sequence of comma - separated numbers .
+Question: Write a function to calculate Volume of Hexagonal Pyramid
 Source Python:
-values = input ( ) 
- numbers = [ x for x in values.split ( " , " ) if int(x)%2!=0 ] 
- print(",".join(numbers ) )
+def volumeHexagonal ( a , b , h ) : 
+     return a * b * h
+
+
+Target Python:
+def cal_area_ellipse ( minor , major ) : 
+     pi = 3 . 14 
+     return pi * ( minor * major ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python program to multiply two list with list comprehensive
+Source Python:
+l1 = [ 1 , 2 , 3 ] 
+ l2 = [ 4 , 5 , 6 ] 
+ print ( [ x * y for x in l1 for y in l2 ] )
+
+
+Target Python:
+aList = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ] 
+ aList =   [ x * x for x in aList ] 
+ print ( aList ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Find the Intersection of Two Lists
+Source Python:
+def main ( alist , blist ) : 
+     def intersection ( a , b ) : 
+         return list ( set ( a ) & set ( b ) ) 
+     return intersection ( alist , blist )
 
 
 Target Python:
 list1 = [ 1 , 2 , 3 , 4 , 5 ] 
- list2 = [ 5 , 6 , 7 , 2 , 3 , 8 ] 
- final = [ a+b for a in list1 for b in list1 if a ! = count+1 ] 
- print("Odd
+ list2 = [ 5 , 6 , 7 , 8 , 7 ] 
+ final = [ a * b for a in list1 for a in list2 ] 
+ print ( f " Product of every pair of numbers from two lists : { final } " ) 
 #########################################################################################################
 #########################################################################################################
-Question: write a function to check if a lower case letter exists in a given string
+Question: write a program to print count of number of unique matching characters in a pair of strings
 Source Python:
-def check_lower(str1 ) : 
+str1 = " ababccd12@ " 
+ str2 = " bb123cca1@ " 
+ matched_chars = set ( str1 ) & set ( str2 ) 
+ print ( " No . of matching characters are : " + str ( len ( matched_chars ) ) )
 
-     for char in str1 : 
-         k = char.islower ( ) 
-         if k = = True : 
-             return True 
-     if(k ! = 1 ) : 
+
+Target Python:
+word = " Hello World " 
+ check = word . isdigit ( ) 
+ print ( f " String contains digits ? : { check } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to calculate median of a list of numbers given
+Source Python:
+def median ( pool ) : 
+     copy = sorted ( pool ) 
+     size = len ( copy ) 
+     if size % 2 = = 1 : 
+         return copy [ int ( ( size - 1 ) / 2 ) ] 
+     else : 
+         return ( copy [ int ( size / 2 - 1 ) ] + copy [ int ( size / 2 ) ] ) / 2
+
+
+Target Python:
+def median ( arr ) : 
+     return list ( arr ) / len ( arr ) 
+    return arr = [ 0 : - 1 ] 
+    else : 
+     return arr = [ 1 : : : : - 2 ] 
+ a = [ 2 , 3 ] 
+ a = [ 4 , 5 , 10 , 10 , 10 , 10 , 10 , 20 ] 
+ a = [ 4 , 2 , 5 ] 
+ a = [ 5 , 10 , 10 , 20 , 20 , 20 ] 
+ a = [ 5 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 ] 
+ a = [ 12 ] 
+ a = [ 13 , 15 , 20 , 15 , 15 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 15 ] 
+ a = [ 15 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 ] 
+ def finder ( a . insert ( a ) 
+ a . insert ( a ) 
+ a . insert ( a , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 , 20 ] 
+ return a . insert ( a . insert ( a ) 
+ def removeValue ( a ) 
+ def removeValue ( a . insert ( a ) 
+ def removeValue ( a ) 
+ def removeValue ( a ) 
+ def removeValue ( a . insert ( a ) 
+ return a . insert ( a . insert ( a ) 
+ def removeValue ( a . insert ( a ) 
+ a . insert ( a ) 
+ a . insert ( a ) 
+ a . insert ( a . insert ( a ) 
+ a . insert ( a ) 
+ a ) 
+ a . insert ( a . insert ( a
+#########################################################################################################
+#########################################################################################################
+Question: Given a list slice it into a 3 equal chunks and revert each list
+Source Python:
+sampleList = [ 11 , 45 , 8 , 23 , 14 , 12 , 78 , 45 , 89 ] 
+ length = len ( sampleList ) 
+ chunkSize   = int ( length / 3 ) 
+ start = 0 
+ end = chunkSize 
+ for i in range ( 1 , 4 , 1 ) : 
+   indexes = slice ( start , end , 1 ) 
+   listChunk = sampleList [ indexes ] 
+   mylist = [ i for i in listChunk ] 
+   print ( " After reversing it " , mylist ) 
+   start = end 
+   if ( i ! = 2 ) : 
+     end + = chunkSize 
+   else : 
+     end + = length - chunkSize
+
+
+Target Python:
+import numpy as np 
+ A = np . array ( [ [ [ [ 1 , 2 , 3 ] , [ 5 , [ 5 , 7 , 8 ] , [ 5 , [ 1 , [ 6 , 7 , 7 , 7 , 8 ] , [ 5 ] , [ 5 , [ 7 , [ 5 , 8 , 7 , 8 , 7 , 8 ] ] ] ] ] , [ [ [ [ 0 ] ] ] ] ] 
+ for i in range ( len ( A ) ) : 
+     for j in range ( A [ i ] ) : 
+         row = row + ' | ' 
+     for row in range ( row + ' ) ) : 
+         row [ row + ' | ' 
+     for row in range ( row [ row [ row ] [ row ] [ row ] [ row ] [ row ] [ row ] [ row ] [ row ] for row ] [ row ] for row in row ] [ row ] [ row ] [ row ] [ row ] [ row ] ] for row in row ] for row in row ] [ row ] [ row ] [ row ] [ row ] [ row ] for row in row ] [ row ] [ row ] 
+ print ( row in row ] for row in row ] 
+ print ( row in row ] ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a python function to count ' a 's in the repetition of a given string ' n ' times .
+Source Python:
+def repeated_string ( s , n ) : 
+     return s . count ( ' a ' ) * ( n / / len ( s ) ) + s [ : n % len ( s ) ] . count ( ' a ' )
+
+
+Target Python:
+def rev_sentence ( sentence ) : 
+ 
+      words = sentence . split ( ' ) 
+ 
+      reverse_sentence = ' .join ( reversed ( reversed ( words ) ) 
+ 
+ 
+ 
+      return reverse_sentence 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python Program to Check if a Number is a Perfect Number
+Source Python:
+def perfect_no_check ( n ) : 
+     sum1 = 0 
+     for i in range ( 1 , n ) : 
+         if ( n % i = = 0 ) : 
+             sum1 = sum1 + i 
+     if ( sum1 = = n ) : 
+         return True 
+     else : 
          return False
 
 
 Target Python:
-def check_upper(str1 ) : 
-
-     for char in str1 : 
-         k = char.isupper ( ) 
-         if k = = True : 
-             return True 
-     if(k ! = 1 ) : 
-         return False 
+num = int ( input ( " Enter a number : " ) ) 
+ if num > 1 : 
+    print ( " Positive number " ) 
+ elif num = = = 0 : 
+    print ( " Zero " ) 
+ else : 
+    print ( " Negative number " ) 
+ else : 
+    print ( " Negative number " ) 
 #########################################################################################################
 #########################################################################################################
-Question: access Last characters in a string
+Question: Write a function to calculate the total resistance of resistances in series in a given list
 Source Python:
-word = " Hello World " 
- letter = word[-1 ] 
- print(f"First Charecter in String:{letter } " )
+def cal_total_res_in_series ( res_list : list ) - > float : 
+     return sum ( res_list )
 
 
 Target Python:
-word = " Hello World " 
- check = word.isalpha ( ) 
- print(f"All char are alphabetic?:{check } " ) 
+def cal_total_res_in_parallel ( res_list : list ) - > float : 
+     return sum ( [ 1 / r for r in res_list ] ) 
 #########################################################################################################
 #########################################################################################################
-Question: Python Program to Make a Simple Calculator
+Question: Write a Python program to check number either positive , negative or zero
+Source Python:
+num = int ( input ( " Enter Integer Number : " ) ) 
+ if num = = 0 : 
+ print ( " Zero Entered " ) 
+ elif num > 0 : 
+ print ( " Positive Number Entered " ) 
+ elif num < 0 : 
+ print ( " Negative Number Entered " )
+
+
+Target Python:
+a = 60 
+ b = 13 
+ c = a ^ b 
+ print ( " XOR " , c ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to print the uncommon elements in List
+Source Python:
+
+ test_list1 = [ [ 1 , 2 ] , [ 3 , 4 ] , [ 5 , 6 ] ] 
+ test_list2 = [ [ 3 , 4 ] , [ 5 , 7 ] , [ 1 , 2 ] ] 
+ 
+ res_list = [ ] 
+ for i in test_list1 : 
+     if i not in test_list2 : 
+         res_list . append ( i ) 
+ for i in test_list2 : 
+     if i not in test_list1 : 
+         res_list . append ( i ) 
+ 
+ print ( " The uncommon of two lists is : " + str ( res_list ) )
+
+
+Target Python:
+list1 = [ 1 , 2 , 3 , 4 , 5 ] 
+ list2 = [ 5 , 6 , 7 , 8 , 7 ] 
+ final = [ i ] 
+ print ( f " pair of two lists : { final } " ) 
+#########################################################################################################
+#########################################################################################################
+Question: printing result
+Source Python:
+print ( " The filtered tuple : " + str ( res ) )
+
+
+Target Python:
+print ( " The extracted words : " + str ( res ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: write a program to convert key - values list to flat dictionary
+Source Python:
+from itertools import product 
+ test_dict = { ' month ' : [ 1 , 2 , 3 ] , 
+              ' name ' : [ ' Jan ' , ' Feb ' , ' March ' ] } 
+ 
+ print ( " The original dictionary is : " + str ( test_dict ) ) 
+ 
+ res = dict ( zip ( test_dict [ ' month ' ] , test_dict [ ' name ' ] ) ) 
+ print ( " Flattened dictionary : " + str ( res ) )
+
+
+Target Python:
+tuplex = ( ' , ' , ' r ' , ' , ' r ' , ' e ' , ' , ' , ' r ' , ' , ' r ' , ' e ' , ' , ' , ' , ' r ' , ' , ' e ' , ' , ' i ' , ' , ' , ' o ' , ' , ' e ' , ' , ' e ' , ' e ' , ' e ' , ' e ' i ' , ' , ' o ' , ' , ' , ' e ' e ' e ' , ' , ' , ' e ' e ' i ' o ' , ' , ' u ' .join ( tuplex ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a function to return the volume of a hemi sphere
+Source Python:
+def cal_hemisphere_volume ( radius : float ) - > float : 
+     pi = 3 . 14 
+     return ( 2 / 3 ) * pi * ( radius * * 3 )
+
+
+Target Python:
+def cal_area_hemisphere ( radius ) : 
+     pi = 3 . 14 
+     return 2 * pi * pi * pi * radius * height 
+#########################################################################################################
+#########################################################################################################
+Question: write Python3 code to demonstrate working of   Sort tuple list by Nth element of tuple   using sort ( ) + lambda
+Source Python:
+test_list = [ ( 4 , 5 , 1 ) , ( 6 , 1 , 5 ) , ( 7 , 4 , 2 ) , ( 6 , 2 , 4 ) ] 
+ print ( " The original list is : " + str ( test_list ) ) 
+ N = 1 
+ test_list . sort ( key = lambda x : x [ N ] ) 
+ print ( " List after sorting tuple by Nth index sort : " + str ( test_list ) )
+
+
+Target Python:
+test_list = [ ( ' Geeks ' , ' ) , ( ' ) , ( ' , ' ) , ( ' ) , ( " The original list is : " + str ( test_list ) ) 
+ res = [ ] 
+ for sub in test_list if res : 
+     res . append ( sub ) 
+ print ( " The list is : " + str ( res ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a Python function to check whether a person is eligible for voting or not based on their age
+Source Python:
+def vote_eligibility ( age ) : 
+ 	 if age > = 18 : 
+ 	      status = " Eligible " 
+ 	 else : 
+ 	      status = " Not Eligible " 
+ 	 return status
+
+
+Target Python:
+def isPalindrome ( s ) : 
+     return s = s [ : - 1 ] 
+#########################################################################################################
+#########################################################################################################
+Question: Write a python program to swap tuple elements in list of tuples . Print the output .
+Source Python:
+test_list = [ ( 3 , 4 ) , ( 6 , 5 ) , ( 7 , 8 ) ] 
+ 
+ res = [ ( sub [ 1 ] , sub [ 0 ] ) for sub in test_list ] 
+ 
+ print ( " The swapped tuple list is : " + str ( res ) )
+
+
+Target Python:
+test_list = [ ( ' gfg ' , ' is ' , ' ) , ( ' , ' ) , ( ' , ' ) , ( ' ) , ( ' x ' , ' ) , ( ' ) ] 
+ print ( " The original list is : " + str ( test_list ) ) 
+ res = [ ] 
+ for sub in test_list if res [ 0 ] 
+ print ( " The list after conversion is : " + str ( res ) ) 
+#########################################################################################################
+#########################################################################################################
+Question: Convert two lists into a dictionary
+Source Python:
+ItemId = [ 54 , 65 , 76 ] 
+ names = [ " Hard Disk " , " Laptop " , " RAM " ] 
+ itemDictionary = dict ( zip ( ItemId , names ) ) 
+ print ( itemDictionary )
+
+
+Target Python:
+ItemId = [ 54 , 65 , 76 ] 
+ names = [ " Hard Disk " , " RAM " ] 
+ itemDictionary = dict ( zip ( ItemId , names ) ) 
+ print ( itemDictionary ) 
+#########################################################################################################
+#########################################################################################################
+Question: Write a program that calculates and prints the value according to the given formula : Q = Square root of [ ( 2 * C * D)/H ]
+Source Python:
+import math 
+ c = 50 
+ h = 30 
+ value = [ ] 
+ items = [ x for x in raw_input ( ) . split ( ' , ' ) ] 
+ for d in items : 
+     value . append ( str ( int ( round ( math . sqrt ( 2 * c * float ( d ) / h ) ) ) ) ) 
+ print ' , ' .join ( value )
+
+
+Target Python:
+num1 = 12 
+ num2 = 12 
+ num3 = 14 
+ print ( f ' Product : { product } ' ) 
+#########################################################################################################
+#########################################################################################################
+Question: create a tuple
+Source Python:
+tuplex = ( 2 , 4 , 3 , 5 , 4 , 6 , 7 , 8 , 6 , 1 )
+
+
+Target Python:
+NA 
+#########################################################################################################
+#########################################################################################################
+Question: In[102 ] :
 Source Python:
 NA
 
@@ -322,349 +677,93 @@ Target Python:
 NA 
 #########################################################################################################
 #########################################################################################################
-Question: Write a function to return the area of a trapezium with base a base b and height h between parallel sides
+Question: Counting total Upper Case in a string
 Source Python:
-def cal_area_trapezium(a , b , h ) : 
-     return h*(a+b)/2
-
-
-Target Python:
-def cal_area_trapezium(a , b , h ) : 
-     return h*(a+b)/2 
-#########################################################################################################
-#########################################################################################################
-Question: Write a python function that prints the Contents of a File in Reverse Order
-Source Python:
-def reverse_content(filename ) : 
-     for line in reversed(list(open(filename ) ) ) : 
-         print(line.rstrip ( ) )
-
-
-Target Python:
-def read_and_print_file(filepath ) : 
-     with open(filepath , " r " ) as infile : 
-         print ( infile.read ( ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to remove i - th indexed character in a given string
-Source Python:
-def remove_char(string , i ) : 
-     str1 = string [ : i ] 
-     str2 = string[i + 1 : ] 
-
-     return str1 + str2
-
-
-Target Python:
-def remove(string , i ) : 
-     i = i + i 
-     return i 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python Program to Multiply All the Items in a Dictionary and print the result
-Source Python:
-d={'A':10,'B':10,'C':239 } 
- tot=1 
- for i in d : 
-     tot = tot*d[i ] 
- print(tot )
-
-
-Target Python:
-dict1 = { ' a ' : 10 , ' b ' : 10 } 
- dict2 = { ' : 300 , ' c ' : 300 } 
- for key in dict1 : 
-     if key in dict2 : 
-         dict2[key ] = dict2[key ] = dict2[key ]
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python function to return woodall numbers
-Source Python:
-NA
-
-
-Target Python:
-def is_prod_even(num1 , num2 ) : 
-    prod = num1 * num2 
-    return not prod % 2 
-#########################################################################################################
-#########################################################################################################
-Question: write a python function that would return the sum of first n natural numbers , where n is the input
-Source Python:
-def sum_first_n(n ) : 
-     return ( n * ( n+1 ) ) // 2
-
-
-Target Python:
-def sum_first_n_recursive(n ) : 
-     if n = = 0 : 
-         return 0 
-     return 0 
-     return sum_first_n_recursive(n-1 ) + n 
-#########################################################################################################
-#########################################################################################################
-Question: Python Challenges : Check a sequence of numbers is a geometric progression or not
-Source Python:
-def is_geometric(li ) : 
-     if len(li ) < = 1 : 
-         return True 
-     # Calculate ratio 
-     ratio = li[1]/float(li[0 ] ) 
-     # Check the ratio of the remaining 
-     for i in range(1 , len(li ) ) : 
-         if li[i]/float(li[i-1 ] ) ! = ratio : 
-             return False 
-     return True
-
-
-Target Python:
-def is_prod_even(num1 , num2 ) : 
-    sum = num1 + num2 
-    return not sum not sum % 2 
-#########################################################################################################
-#########################################################################################################
-Question: write a function to replace all occurances of a substring in a string
-Source Python:
-str1 = " Hello ! It is a Good thing " 
- substr1 = " Good " 
- substr2 = " bad " 
- replaced_str = str1.replace(substr1 , substr2 ) 
- print("String after replace : " + str(replaced_str ) )
-
-
-Target Python:
-str1 = " It is wonderful and sunny day for a picnic in the park " 
- str_len = 5 
- res_str = [ ] 
-
- text = str1.split ( " ") 
-
- for x in text : 
-     if len(x ) < str_len : 
-         res_str.append(x ) 
- print("Words
-#########################################################################################################
-#########################################################################################################
-Question: write a python function to check if a given string is a palindrome
-Source Python:
-def is_palindrome(string ) : 
-    return string = = string[::-1 ]
-
-
-Target Python:
-def isPalindrome(s ) : 
-     return s = = s[::-1 ] 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python function to calculate the geometric sum of n-1 .
-Source Python:
-def geometric_sum(n ) : 
-   if n < 0 : 
-     return 0 
-   else : 
-     return 1 / ( pow(2 , n ) ) + geometric_sum(n - 1 )
-
-
-Target Python:
-def factorial(n ) : 
-     if n = = 0 : 
-         return 1 
-     else : 
-         return n*factorial(n-1 ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a Python function to check whether a person is eligible for voting or not based on their age
-Source Python:
-def vote_eligibility(age ) : 
-	 if age>=18 : 
-	     status="Eligible " 
-	 else : 
-	     status="Not Eligible " 
-	 return status
-
-
-Target Python:
-def bmi_calculator(height , weight ) : 
-	 bmi = weight/(height**2 ) 
-	 return bmi 
-#########################################################################################################
-#########################################################################################################
-Question: use built - in function filter to filter empty value
-Source Python:
-new_str_list = list(filter(None , str_list ) ) 
- print("After removing empty strings " ) 
- print(new_str_list )
-
-
-Target Python:
-test_list = [ { ' gfg ' : [ 5 , 6 ] , 
-              ' best ' : [ 7 ] , 
-              ' : [ 10 ] , 
-              ' best ' : [ 10 ] , 
-              ' : [ 10 ] , 
-              ' CS '
-#########################################################################################################
-#########################################################################################################
-Question: 3 write a python program to convert a string to a char array
-Source Python:
-def char_array(string ) : 
-     return list(string )
+str1 = " abc4234AFde " 
+ digitCount = 0 
+ for i in range ( 0 , len ( str1 ) ) : 
+   char = str1 [ i ] 
+   if ( char . upper ( ) ) : 
+     digitCount + = 1 
+ print ( ' Number total Upper Case : ' , digitCount )
 
 
 Target Python:
 word = " Hello World " 
- check = word.isalpha ( ) 
- print(f"All char are alphabetic?:{check } " ) 
+ check = word . isdigit ( ) 
+ print ( f " String contains digits ? : { check } " ) 
 #########################################################################################################
 #########################################################################################################
-Question: Write a function to calculate volume of Triangular Pyramid
+Question: Write a python function which wil return True if list parenthesis used in a input expression is valid , False otherwise
 Source Python:
-def volumeTriangular(a , b , h ) : 
-     return ( 0.1666 ) * a * b * h
-
-
-Target Python:
-def dot_product(a , b ) : 
-     return sum ( e[0]*e[1 ] for e in zip(a , b ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: Write a function to find power of number using recursion
-Source Python:
-def power(N , P ) : 
-     if ( P = = 0 or P = = 1 ) : 
-         return N 
-     else : 
-         return ( N * power(N , P - 1 ) ) 
- print(power(5 , 2 ) )
-
-
-Target Python:
-def power(N , P ) : 
-     if ( P = = 0 and ( P = 1 ) : 
-         return N 
-     else : 
-         return ( N * power(N , P - 1 ) 
- print(power(5 , 2 ) ) 
-#########################################################################################################
-#########################################################################################################
-Question: write a program to print perfect numbers from the given list of integers
-Source Python:
-def checkPerfectNum(n ) : 
-	 i = 2;sum = 1 ; 
-	 while(i < = n//2 ) : 
-		 if ( n % i = = 0 ) : 
-			 sum + = i 
-
-		 i + = 1 
-		 if sum = = n : 
-			 print(n , end= ' ' ) 
- if _ _ name _ _ = = " _ _ main _ _ " : 
-	 print("Enter list of integers : ") 
-	 list_of_intgers = list(map(int , input().split ( ) ) ) 
-	 print("Given list of integers:",list_of_intgers ) 
-	 print("Perfect numbers present in the list is : ") 
-	 for num in list_of_intgers : 
-		 checkPerfectNum(num )
-
-
-Target Python:
-a = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 8 , 9 , 10 ] 
- b = [ 2 , 8 , 9 , 10 , 15 ] 
- for i in zip(a , b ) : 
-     print(matrix[i][1
-#########################################################################################################
-#########################################################################################################
-Question: 3x3 matrix
-Source Python:
-X = [ [ 12,7,3 ] , 
-     [ 4 , 5,6 ] , 
-     [ 7 , 8,9 ] ]
-
-
-Target Python:
-X = [ [ 12,7,3 ] , 
-     [ 4 , 5,6 ] , 
-     [ 7 , 8,9 ] ] 
-#########################################################################################################
-#########################################################################################################
-Question: Write a python program to print the uncommon elements in List
-Source Python:
-
- test_list1 = [ [ 1 , 2 ] , [ 3 , 4 ] , [ 5 , 6 ] ] 
- test_list2 = [ [ 3 , 4 ] , [ 5 , 7 ] , [ 1 , 2 ] ] 
-
- res_list = [ ] 
- for i in test_list1 : 
-     if i not in test_list2 : 
-         res_list.append(i ) 
- for i in test_list2 : 
-     if i not in test_list1 : 
-         res_list.append(i ) 
-
- print ( " The uncommon of two lists is : " + str(res_list ) )
-
-
-Target Python:
-list1 = [ 1 , 2 , 3 , 4 , 5 ] 
- list2 = [ 5 , 6 , 7 , 8 , 10 ] 
- final = [ a , b for a in list1 if b not in list1 ] 
- print("New list after removing all
-#########################################################################################################
-#########################################################################################################
-Question: Write a function to return the median of numbers in a list
-Source Python:
-def cal_median(num_list : list)->float : 
-     if num_list : 
-         if len(num_list)%2 ! = 0 : 
-             return sorted(num_list)[int(len(num_list)/2 ) - 1 ] 
+def isValid ( s ) : 
+     stack = [ ] 
+     mapping = { ' ) ' : ' ( ' , ' } ' : ' { ' , ' ] ' : ' [ ' } 
+     for char in s : 
+         if char in mapping : 
+             if not stack : 
+                 return False 
+             top = stack . pop ( ) 
+             if mapping [ char ] ! = top : 
+                 return False 
          else : 
-             return ( sorted(num_list)[int(len(num_list)/2 ) - 1 ] + sorted(num_list)[int(len(num_list)/2)])/2 
-     else : 
-         return None
+             stack . append ( char ) 
+     return not stack
 
 
 Target Python:
-def cal_median(num_list : list)->float : 
-     if num_list : 
-         if len(num_list)%2 ! = 0 : 
-             return sorted(num_list)[int(len(num_list)/2 ) - 1 ] - 1 ] - 1 ] + sorted(num_list)[int(len(num_list)/2)])/2 
-     else : 
-         return None 
+def load_pickle_data ( pickle_file ) : 
+   import pickle 
+   with open ( pickle_file , ' rb ' ) as f : 
+       data = pickle . load ( f ) 
+   return data 
 #########################################################################################################
 #########################################################################################################
-Question: Write a function to identify to count no of instances of a value   inside a dictionary
+Question: The consequences of modifying a list when looping through it
 Source Python:
-def count_value(d : dict , value)->bool : 
-     return list(v = = value for v in dict.values()).count(True )
+a = [ 1 , 2 , 3 , 4 , 5 ] 
+ for i in a : 
+     if not i % 2 : 
+         a . remove ( i ) 
+ print ( a ) 
+ b = [ 2 , 4 , 5 , 6 ] 
+ for i in b : 
+      if not i % 2 : 
+          b . remove ( i ) 
+ print ( b )
 
 
 Target Python:
-def invert_dict_non_unique(my_dict ) : 
-   my_inverted_dict = dict ( ) 
-   for key , value in my_dict.items ( ) : 
-       my_inverted_dict.setdefault(value , list()).append(key ) 
-   return my_inverted_dict 
+my_list = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ] 
+ print ( " The original list is : " + str ( my_list ) ) 
+ res = list ( map ( lambda x : x [ x [ i ] , my_list ) ) 
 #########################################################################################################
 #########################################################################################################
-Question: Python String Operations
+Question: Write a function to remove punctuation from the string
 Source Python:
-str1 = ' Good ' 
- str2 = ' Morning ! '
+def r_punc ( ) : 
+     test_str = " end , is best : for ! Nlp ; " 
+     print ( " The original string is : " + test_str ) 
+     punc = r ' ! ( ) - [ ] { } ; : \ , < > . / ? @#$ % ^ & * _ ~ ' 
+     for ele in test_str : 
+         if ele in punc : 
+             test_str = test_str . replace ( ele , " " ) 
+     print ( " The string after punctuation filter : " + test_str )
 
 
 Target Python:
-str1 = " It is a great day " 
- print("The string are : " , str1 ) 
- res = str1.split ( " + str(res ) ) 
+def r_punc ( ) : 
+     test_str = ' ' ' ' ' ' ' ' .join ( test_str . split ( ) 
+     print ( " The original string is : " + test_str ) 
+ htness_4 
+#########################################################################################
 ```
 
 
 
-## Experimentations during Project
+## Other Experimentations during Project
 
 I have done several experimentation during my capstone projects and have summarized below my experimentation.
-
-Key changes done in model architecture
 
 ### Model with TEXT.build_vocab(train_data, min_freq = 1)
 
