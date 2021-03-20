@@ -13,7 +13,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ## Reading Content
 
-General Machine Learning
+##General Machine Learning
 - [Machine Learning 101 from Google's Senior Creative Engineer explains Machine Learning for engineer's and executives alike](https://docs.google.com/presentation/d/1kSuQyW5DTnkVaZEjGYCkfOxvzCqGEFzWBy4e9Uedd9k/edit?usp=sharing)
 - [AI Playbook - a16z AI playbook is a great link to forward to your managers or content for your presentations](https://aiplaybook.a16z.com/)
 - [Ruder's Blog](http://ruder.io/#open) by [Sebastian Ruder](https://twitter.com/seb_ruder) for commentary on the best of NLP Research
@@ -21,17 +21,21 @@ General Machine Learning
 - [awesome-nlp](https://github.com/keon/awesome-nlp#books)
 - [Zero To One For NLP](https://pakodas.substack.com/p/nlp-metablog-a-blog-of-blogs-693e3a8f1e0c)
 
-Introductions and Guides to NLP
+### Introductions and Guides to NLP
 - [Deep Learning, NLP, and Representations](https://colah.github.io/posts/2014-07-NLP-RNNs-Representations/)
 - [The Illustrated BERT, ELMo, and co](https://jalammar.github.io/illustrated-bert/). (How NLP Cracked Transfer Learning) and The [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 - [The Super Duper NLP Repo (SDNLPR): Collection of Colab notebooks covering a wide array of NLP task implementations.](https://notebooks.quantumstat.com/)
 - [Natural Language Processing by Hal Daumé III](https://nlpers.blogspot.com/)
 
-Books
+
+### Books
 - [Speech and Language Processing - free, by Prof. Dan Jurafsy](https://web.stanford.edu/~jurafsky/slp3/)
 - [Natural Language Processing - free, NLP notes by Dr. Jacob Eisenstein at GeorgiaTech](https://github.com/jacobeisenstein/gt-nlp-class)
 - [NLP with PyTorch - Brian & Delip Rao](https://github.com/joosthub/PyTorchNLPBook)
 - [Natural Language Processing with Python](https://www.nltk.org/book/)
+
+## NLP Zero to One: Full Course
+- [NLP Zero to One: Full Course](https://medium.com/nerd-for-tech/nlp-zero-to-one-full-course-4f8e1902c379)
 
 ## Annotation Tools
 - [GATE - General Architecture and Text Engineering is 15+ years old, free and open source](https://gate.ac.uk/overview.html)
