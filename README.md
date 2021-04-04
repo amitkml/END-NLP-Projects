@@ -87,6 +87,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 ### BERT
 - [BERT (Word Embeddings)](https://charon.me/posts/nlp/bert/)
+- [BERT Text Classification Using Pytorch](https://towardsdatascience.com/bert-text-classification-using-pytorch-723dfb8b6b5b)
 
 ### GPT2
 - [How GPT 2 works](https://charon.me/posts/model/gpt-2/)
