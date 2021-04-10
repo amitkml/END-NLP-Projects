@@ -111,6 +111,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 - [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 1](https://www.youtube.com/watch?v=bHfXYQgn0Cc)
 - [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 2](https://www.youtube.com/watch?v=ZU12u6-ewP0)
 - [Natural Language Processing: the age of Transformers](https://blog.scaleway.com/building-a-machine-reading-comprehension-system-using-the-latest-advances-in-deep-learning-for-nlp/)
+- [10 Things You Need to Know About BERT and the Transformer Architecture That Are Reshaping the AI Landscape](https://neptune.ai/blog/bert-and-the-transformer-architecture-reshaping-the-ai-landscape)
  
 ## Curated repo for NLP
 - https://github.com/bentrevett/pytorch-seq2seq
