@@ -10,6 +10,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ## The Super Duper NLP Repo
 - [The Super Duper NLP Repo](https://notebooks.quantumstat.com/)
 - [Quantum Stat](https://quantumstat.medium.com/)
+- [Natural Language ProcessingPermalink and Deep Learning Portfolio](https://chriskhanhtran.github.io/portfolio/)
 
 ## Reading Content
 
