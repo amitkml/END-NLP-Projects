@@ -10,11 +10,11 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ## The Super Duper NLP Repo
 - [The Super Duper NLP Repo](https://notebooks.quantumstat.com/)
 - [Quantum Stat](https://quantumstat.medium.com/)
-- [Natural Language ProcessingPermalink and Deep Learning Portfolio](https://chriskhanhtran.github.io/portfolio/)
+- [Natural Language Processing and Deep Learning Portfolio](https://chriskhanhtran.github.io/portfolio/)
 
 ## Reading Content
 
-##General Machine Learning
+### General Machine Learning
 - [Machine Learning 101 from Google's Senior Creative Engineer explains Machine Learning for engineer's and executives alike](https://docs.google.com/presentation/d/1kSuQyW5DTnkVaZEjGYCkfOxvzCqGEFzWBy4e9Uedd9k/edit?usp=sharing)
 - [AI Playbook - a16z AI playbook is a great link to forward to your managers or content for your presentations](https://aiplaybook.a16z.com/)
 - [Ruder's Blog](http://ruder.io/#open) by [Sebastian Ruder](https://twitter.com/seb_ruder) for commentary on the best of NLP Research
