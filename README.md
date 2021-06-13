@@ -13,6 +13,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 - [Natural Language Processing and Deep Learning Portfolio](https://chriskhanhtran.github.io/portfolio/)
 - [Applied-Deep-Learning and NLP](https://github.com/maziarraissi/Applied-Deep-Learning)
 - [pytorch-sentiment-analysis](https://github.com/bentrevett/pytorch-sentiment-analysis)
+- [NLP Bert Posts](https://curiousily.com/posts)
 
 ## Reading Content
 
