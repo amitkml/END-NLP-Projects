@@ -26,6 +26,9 @@ This network has two components and they are Encoder and Decoder. Pictorically i
 - The encoders are all identical in structure (yet they do not share weights). Each one is broken down into two sub-layers.
 - The outputs of the self-attention layer are fed to a feed-forward neural network. The exact same feed-forward network is independently applied to each position.
 - The encoder’s inputs first flow through a self-attention layer – a layer that helps the encoder look at other words in the input sentence as it encodes a specific word. We’ll look closer at self-attention later in the post. ![im](https://jalammar.github.io/images/t/Transformer_encoder.png)
+
+### Transformer Reference Architecture
+![im](https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/encoder.png)
 - The decoder has both those layers, but between them is an attention layer that helps the decoder focus on relevant parts of the input sentence.
 
 ![im](https://jalammar.github.io/images/t/Transformer_decoder.png)
