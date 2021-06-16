@@ -13,7 +13,7 @@ This network has two components and they are Encoder and Decoder. Pictorically i
 - Final state of the Encoder fed into Decoder
 - Information from initial state gets faded slowly
 
-** Attention**
+**Attention**
 - We can explain the relationship between words in one sentence or close context. When we see “eating”, we expect to encounter a food word very soon. The color term describes the food, but probably not so much with “eating” directly. ![im](https://lilianweng.github.io/lil-log/assets/images/sentence-example-attention.png)
 - Global context vector
 - Ues all input sequence and last state from encoder
