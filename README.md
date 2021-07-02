@@ -15,6 +15,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 - [pytorch-sentiment-analysis](https://github.com/bentrevett/pytorch-sentiment-analysis)
 - [NLP Bert Posts](https://curiousily.com/posts)
 - [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [Deep Learning Blogs](https://www.ravirajag.dev/)
 
 ## Reading Content
 
