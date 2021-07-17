@@ -7,6 +7,9 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## Hugging Face
+- [Transformers-Tutorials](https://github.com/NielsRogge/Transformers-Tutorials)
+- [Hugging Face Course](https://huggingface.co/course/chapter1)
 ## The Super Duper NLP Repo
 - [The Super Duper NLP Repo](https://notebooks.quantumstat.com/)
 - [Quantum Stat](https://quantumstat.medium.com/)
