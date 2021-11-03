@@ -10,6 +10,11 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ## Hugging Face
 - [Transformers-Tutorials using Hugging Face](https://github.com/NielsRogge/Transformers-Tutorials)
 - [Hugging Face Course](https://huggingface.co/course/chapter1)
+
+## NLP Pipeline framework - Production
+- [end-to-end framework that enables you to build powerful and production-ready pipelines](https://github.com/deepset-ai/haystack)
+![im](https://raw.githubusercontent.com/deepset-ai/haystack/master/docs/_src/img/concepts_haystack_handdrawn.png)
+
 ## The Super Duper NLP Repo
 - [The Super Duper NLP Repo](https://notebooks.quantumstat.com/)
 - [Quantum Stat](https://quantumstat.medium.com/)
