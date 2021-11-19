@@ -7,6 +7,9 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## GPT3
+- [The ultimate guide to building GPT-3 powered apps](https://www.youtube.com/watch?v=CksRzeRZ5tk)
+
 ## Hugging Face
 - [Transformers-Tutorials using Hugging Face](https://github.com/NielsRogge/Transformers-Tutorials)
 - [Hugging Face Course](https://huggingface.co/course/chapter1)
