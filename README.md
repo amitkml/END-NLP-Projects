@@ -9,6 +9,7 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ## GPT3
 - [The ultimate guide to building GPT-3 powered apps](https://www.youtube.com/watch?v=CksRzeRZ5tk)
+- [Open AI Tokenizer](https://beta.openai.com/tokenizer)
 
 ## Hugging Face
 - [Transformers-Tutorials using Hugging Face](https://github.com/NielsRogge/Transformers-Tutorials)
