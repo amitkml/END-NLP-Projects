@@ -7,6 +7,10 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## Open source tools for deep learning researchers
+- https://www.linkedin.com/company/labmlai/
+
+
 ## GPT3
 - [The ultimate guide to building GPT-3 powered apps](https://www.youtube.com/watch?v=CksRzeRZ5tk)
 - [Open AI Tokenizer](https://beta.openai.com/tokenizer)
