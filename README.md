@@ -134,6 +134,14 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 ![img](https://github.com/amitkml/END-NLP-Projects/blob/main/imgs/Seq2SeqTransformer.JPG?raw=true)
 
+- [How Transformers work in deep learning and NLP: an intuitive introduction](https://theaisummer.com/transformer/)
+- [Visual Guide to Transformer Neural Networks - (Episode 2) Multi-Head & Self-Attention](https://www.youtube.com/watch?v=mMa2PmYJlCo&list=PL86uXYUJ7999zE8u2-97i4KG_2Zpufkfb)
+- 
+
+- [Transformers from Scratch](https://e2eml.school/transformers.html)
+- [The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html)
+- [TRANSFORMERS FROM SCRATCH](http://peterbloem.nl/blog/transformers)
+
 - [🤗 Transformers Notebooks](https://huggingface.co/transformers/notebooks.html)
 - [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 1](https://www.youtube.com/watch?v=bHfXYQgn0Cc)
 - [Live Session- Encoder Decoder,Attention Models, Transformers, Bert Part 2](https://www.youtube.com/watch?v=ZU12u6-ewP0)
