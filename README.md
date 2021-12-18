@@ -134,6 +134,7 @@ For NLP, [@quantum_stat](https://twitter.com/Quantum_Stat),[amitness](https://tw
 
 ![img](https://github.com/amitkml/END-NLP-Projects/blob/main/imgs/Seq2SeqTransformer.JPG?raw=true)
 
+- [Transformer videos](https://www.youtube.com/c/JamesBriggs/videos)
 - [How Transformers work in deep learning and NLP: an intuitive introduction](https://theaisummer.com/transformer/)
 - [Visual Guide to Transformer Neural Networks - (Episode 2) Multi-Head & Self-Attention](https://www.youtube.com/watch?v=mMa2PmYJlCo&list=PL86uXYUJ7999zE8u2-97i4KG_2Zpufkfb)
 - 
