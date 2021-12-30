@@ -18,7 +18,8 @@ This repo contains all my nlp work and learning. Made public so that others can 
 - [NLP Data Augmentation using Transformers](https://towardsdatascience.com/nlp-data-augmentation-using-transformers-89a44a993bab)
 - [Data Augmentation Approaches in Natural Language Processing: A Survey](https://arxiv.org/abs/2110.01852)r](https://neptune.ai/blog/data-augmentation-nlp)
 - [Data Augmentation in NLP: Best Practices From a Kaggle Master](https://neptune.ai/blog/data-augmentation-nlp)
-
+## BERT
+- [Combining Categorical and Numerical Features with Text in BERT](https://mccormickml.com/2021/06/29/combining-categorical-numerical-features-with-bert/)
 
 ## GPT3
 - [The ultimate guide to building GPT-3 powered apps](https://www.youtube.com/watch?v=CksRzeRZ5tk)
