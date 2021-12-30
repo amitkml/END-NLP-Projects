@@ -10,6 +10,9 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ## Open source tools for deep learning researchers
 - https://www.linkedin.com/company/labmlai/
 
+## Explaining Natural Language Processing models using interactive visualizations
+- [python library for exploring and explaining Natural Language Processing models using interactive visualizations](https://github.com/jalammar/ecco)
+
 ## NLP Data Augmentation
 - [Data Augmentation in NLP](https://towardsdatascience.com/data-augmentation-in-nlp-2801a34dfc28)
 - [NLP Data Augmentation using Transformers](https://towardsdatascience.com/nlp-data-augmentation-using-transformers-89a44a993bab)
