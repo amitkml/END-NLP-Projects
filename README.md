@@ -19,9 +19,12 @@ This repo contains all my nlp work and learning. Made public so that others can 
 - [Data Augmentation Approaches in Natural Language Processing: A Survey](https://arxiv.org/abs/2110.01852)r](https://neptune.ai/blog/data-augmentation-nlp)
 - [Data Augmentation in NLP: Best Practices From a Kaggle Master](https://neptune.ai/blog/data-augmentation-nlp)
 
-## BERT
+## BERT and T5
 - [Combining Categorical and Numerical Features with Text in BERT](https://mccormickml.com/2021/06/29/combining-categorical-numerical-features-with-bert/)
 - [PyTorch Transformers Tutorials](https://github.com/abhimishra91/transformers-tutorials)
+- [Question Generation](https://github.com/patil-suraj/question_generation)
+- [New Sumamry by T5](https://github.com/sunnysai12345/News_Summary)
+- [Sentiment Classification](https://github.com/abhimishra91/transformers-tutorials/blob/master/transformers_sentiment_wandb.ipynb)
 
 ## GPT3
 - [The ultimate guide to building GPT-3 powered apps](https://www.youtube.com/watch?v=CksRzeRZ5tk)
