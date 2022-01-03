@@ -13,6 +13,9 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ## Explaining Natural Language Processing models using interactive visualizations
 - [python library for exploring and explaining Natural Language Processing models using interactive visualizations](https://github.com/jalammar/ecco)
 
+## Transformer
+- [A gentle visual intro to Transformer models](https://www.youtube.com/watch?v=VzvG23gmcYU)
+
 ## NLP Data Augmentation
 - [Data Augmentation in NLP](https://towardsdatascience.com/data-augmentation-in-nlp-2801a34dfc28)
 - [NLP Data Augmentation using Transformers](https://towardsdatascience.com/nlp-data-augmentation-using-transformers-89a44a993bab)
