@@ -7,6 +7,10 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## Preprocessing Text Python Package
+
+- [Preprocessing Text Python Package](https://github.com/laxmimerit/preprocess_kgptalkie)
+
 ## Open source tools for deep learning researchers
 - https://www.linkedin.com/company/labmlai/
 
