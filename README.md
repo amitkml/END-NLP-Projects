@@ -8,6 +8,8 @@ This repo contains all my nlp work and learning. Made public so that others can 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
 ## links to learn important topics 
+Core machine learning topics such as Bayesian inference, Graph Neural Networks, Reinforcement Learning, Game Theory & ML fairness. Focus on graph neural networks because most of the data out there are unstructured and graph nets are widely used by companies such as Swiggy Amazon Flipkart Uber Walmart which are regularly analyzing million nodes graphs, he added
+
 - [Graph Neural Networks](https://www.youtube.com/watch?v=JAB_plj2rbA&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn)
 - [Bayesian Statistics](https://www.coursera.org/learn/bayesian#syllabus)
 
