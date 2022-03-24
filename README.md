@@ -7,6 +7,11 @@ This repo contains all my nlp work and learning. Made public so that others can 
 
 ![image](https://media.giphy.com/media/3o6Ztg5jGKDQSjaZ1K/giphy.gif)
 
+## links to learn important topics 
+- [Graph Neural Networks](https://www.youtube.com/watch?v=JAB_plj2rbA&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn)
+- [Bayesian Statistics](https://www.coursera.org/learn/bayesian#syllabus)
+
+
 ## Preprocessing Text Python Package
 
 - [Preprocessing Text Python Package](https://github.com/laxmimerit/preprocess_kgptalkie)
