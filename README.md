@@ -32,6 +32,7 @@ Core machine learning topics such as Bayesian inference, Graph Neural Networks, 
 - [NLP Data Augmentation using Transformers](https://towardsdatascience.com/nlp-data-augmentation-using-transformers-89a44a993bab)
 - [Data Augmentation Approaches in Natural Language Processing: A Survey](https://arxiv.org/abs/2110.01852)r](https://neptune.ai/blog/data-augmentation-nlp)
 - [Data Augmentation in NLP: Best Practices From a Kaggle Master](https://neptune.ai/blog/data-augmentation-nlp)
+- [A Visual Survey of Data Augmentation in NLP](https://amitness.com/2020/05/data-augmentation-for-nlp/)
 
 ## BERT and T5
 - [Combining Categorical and Numerical Features with Text in BERT](https://mccormickml.com/2021/06/29/combining-categorical-numerical-features-with-bert/)
